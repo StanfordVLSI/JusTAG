@@ -19,11 +19,6 @@
 //;   $self->error("IO $io->{name} (IO\# $cnt) has an invalid bsr flag -->$io->{bsr}<--! ".
 //;		   "(allowed values: yes/no)") 
 //;	unless ($io->{bsr} =~ m/^(yes|no)$/i);
-//;   $self->error("IO $io->{name} (IO\# $cnt) does not specify pad type (analog/digital)!") 
-//;	unless defined $io->{pad};
-//;   $self->error("IO $io->{name} (IO\# $cnt) has an invalid pad flag -->$io->{pad}<--! ".
-//;		   "(allowed values: analog/digital)") 
-//;	unless ($io->{pad} =~ m/^(anl|analog|dig)/i);
 //;   $cnt++;
 //; } # end of "foreach my $io..."
 //;
@@ -47,17 +42,17 @@ interface `mname`(input Clk, input Reset);
    //;      $value = $io->{bitwidth} -1;
    //;      $bitwidth_string = '[' . $value . ':0]' ;
    //;   }
-   //;   } else {
+   //;   } elsif ($io->{bitwidth}){
    //;      $value = $io->{bitwidth}. -1;
    //;      $bitwidth_string = '[' . $value . ':0]' ;
    //;   }
-   //;   if (looks_like_number($io->{arraywidth})) {
-   //;   if ($io->{arraywidth} > 1){
-   //;      $value = $io->{arraywidth} -1;
+   //;   if (looks_like_number($io->{array})) {
+   //;   if ($io->{array} > 1){
+   //;      $value = $io->{array} -1;
    //;      $arraywidth_string = '[' . $value . ':0]' ;
    //;   }
-   //;   } else {
-   //;      $value = $io->{arraywidth}. -1;
+   //;   } elsif ($io->{array}) {
+   //;      $value = $io->{array}. -1;
    //;      $arraywidth_string = '[' . $value . ':0]' ;
    //;   }
     `$type . ' '. $signed_string . ' ' . $bitwidth_string . ' '. $io->{name} . $arraywidth_string`; 

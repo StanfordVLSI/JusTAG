@@ -10,12 +10,13 @@ list_of_files = sys.argv[1:]
 sort_files = {
                 'intf': interfaces,
                 'pack': const_packs
+                
              }
 
 for dir_file_name in list_of_files:
     tokens    = dir_file_name.strip().split('/')
     directory = tokens[0]
-    file_name = tokens[1]
+    file_name = tokens[-1]
    
     sort_files[directory][file_name] = []
 
@@ -71,33 +72,176 @@ for interface in interfaces:
                             io_properties['array'] = evaluate(bounds[0]) + 1
                 io_list[tokens[name_loc]] = io_properties
             if (tokens[0]  == 'input') and not is_JTAG_modport:
-                io_list[tokens[1].strip(',')]['ioe'] = 'in'
-            if (tokens[0]  == 'output') and not is_JTAG_modport:
                 io_list[tokens[1].strip(',')]['ioe'] = 'out'
+            if (tokens[0]  == 'output') and not is_JTAG_modport:
+                io_list[tokens[1].strip(',')]['ioe'] = 'in'
             if tokens[0] == 'modport':
                 is_JTAG_modport = (tokens[1] == 'jtag')
 
 
+#Put all the non-array IO into a single JTAG register file
+#Put all the array IO into their own JTAG register file
+reg_files = {0 : {}}
+max_sc_width = 0
+max_sc_addr  = 0
+max_tc_width = 0
+max_tc_addr = 0 
 io_list_strings = []
 num_io_list = 0
+num_reg_file = 1
+num_bank_0_reg = 0
 for name in io_list:
-    if io_list[name]['array'] == 1:
-        io_list_strings.append("{{name => \'{}\', width => {},  direction => \'{}\',  bsr => \'yes\', orientation => \'top\'}}".format(
+    io_list_strings.append("{{name => \'{}\', bitwidth => {}, array=>{},  direction => \'{}\',  bsr => \'yes\', orientation => \'top\'}}".format(
             name, 
             io_list[name]['width'],
+            io_list[name]['array'],
             io_list[name]['ioe']))
-        num_io_list += 1
+    num_io_list += 1
+    if io_list[name]['array'] == 1:
+        reg_files[0][num_bank_0_reg] = {
+                    "Name": "{}".format(name),
+                    "Width" : io_list[name]['width'],
+                    "IEO"   : io_list[name]['ioe'][0]
+                    }
+        num_bank_0_reg += 1
     else:
-        for ii in range(io_list[name]['array']):
-            io_list_strings.append( "{{name => \'{}\', width => {},  direction => \'{}\',  bsr => \'yes\', orientation => \'top\'}}".format(
-                "{}_{}".format(name, str(ii)), 
-                io_list[name]['width'],
-                io_list[name]['ioe']))
-            num_io_list += 1
+        num_bank = io_list[name]['array']
+        reg_files[num_reg_file] = {"num_bank":num_bank}
+        for ii in range(num_bank):
+            reg_files[num_reg_file][ii] = {
+                    "Name": "{}_{}".format(name, ii),
+                    "Width" : io_list[name]['width'],
+                    "IEO"   : io_list[name]['ioe'][0]
+                    }
+        num_reg_file += 1
+    if max_sc_width < io_list[name]['width']:
+        max_sc_width = io_list[name]['width']
+reg_files[0]["num_bank"] = num_bank_0_reg
 
-
+io_list_gen_str = ""
 for ii in range(num_io_list):
-    begin_token = '\\\\;'
+    begin_token = '//;\t\t\t'
     end_token = ',\n'
-    print(begin_token + ' ' + io_list_strings[ii], end=end_token)
+    io_list_gen_str += begin_token + ' ' + io_list_strings[ii] + end_token
+io_list_gen_str = io_list_gen_str[0:-1]
 
+max_sc_addr = clog2(num_bank*64)
+
+intf_regfile_gen_str = ""
+intf_regfile_int_str = ""
+reg_file_gen_str = ""
+sc_rf2rf_gen_str = ""
+sc_rf2rf_int_str = ""
+tc_rf2rf_gen_str = ""
+tc_rf2rf_int_str = ""
+cfg_bus_info_str = ""
+sc_jtag_regfile_con_str = ""
+tc_jtag_regfile_con_str = ""
+jtag_regfile_gen_str = ""
+ 
+for ii in range(num_reg_file):
+    reg_file_gen_str += '//Register Bank {}:\n'.format(ii)
+    reg_file_gen_str += '//;my $regfile{}_on_sysclk = generate(\'reg_file\', \'regfile{}_on_sysclk\',\n'.format(ii, ii)
+    reg_file_gen_str += '//;\t\t\tCfgBusPtr => $sc_jtag2rf0_ifc,\n'
+    reg_file_gen_str += '//;\t\t\tCfgOpcodes => $sc_cfg_ops,\n'
+    reg_file_gen_str += '//;\t\t\tBaseAddr => {},\n'.format(hex(ii*64))
+    reg_file_gen_str += '//;\t\t\tRegList =>[\n'
+    num_bank = reg_files[ii]["num_bank"]
+    for jj in range(num_bank-1):
+        reg = reg_files[ii][jj]
+        out_str =  "{{Name => \'{}\', Width=>{}, IEO=>\'{}\'}}".format(reg["Name"], reg["Width"], reg["IEO"])
+        reg_file_gen_str += '//;\t\t\t\t\t{},\n'.format(out_str)
+    reg = reg_files[ii][num_bank-1]
+    out_str =  "{{Name => \'{}\', Width=>{}, IEO=>\'{}\'}}".format(reg["Name"], reg["Width"], reg["IEO"])
+    reg_file_gen_str += '//;\t\t\t\t\t{}\n'.format(out_str)
+    reg_file_gen_str += '//;\t\t\t\t]\n'
+    reg_file_gen_str += '//;\t\t\t);\n'
+    
+    reg_file_gen_str += '`$regfile{}_on_sysclk->instantiate` (.Clk(ifc.Clk),\n'.format(ii)
+    reg_file_gen_str += '\t\t\t.Reset(ifc.Reset),\n'
+    if ii == 0:
+        reg_file_gen_str += '\t\t\t.cfgIn(`$sc_jtag2rf{}_ifc->iname`.cfgIn),\n'.format(ii)
+        reg_file_gen_str += '\t\t\t.cfgOut(`$sc_rf{}2rf{}_ifc->iname`.cfgOut),\n'.format(ii, ii+1)
+        sc_rf2rf_gen_str    += '//; my $sc_jtag2rf{}_ifc = generate(\'cfg_ifc\', \'sc_jtag2rf{}_ifc\',\n'.format(ii,ii)
+        sc_rf2rf_gen_str    += '//;\t\t\t\tDataWidth => $sc_cfg_bus_width,\n'
+        sc_rf2rf_gen_str    += '//;\t\t\t\tAddrWidth => $sc_cfg_addr_width);\n'
+        sc_rf2rf_int_str    += '`$sc_jtag2rf{}_ifc->instantiate`();\n'.format(ii)
+        sc_jtag_regfile_con_str += '\t\t\t.sc_cfgReq(`$sc_jtag2rf{}_ifc->iname`.cfgOut),\n'.format(ii)
+        jtag_regfile_gen_str += '//; my $cfg_dbg = generate(\'cfg_and_dbg\', \'cfg_and_dbg\',\n'
+        sc_jtag_regfile_gen_str = 'SC_CFG_BUS => \'yes\', SC_CFG_IFC_REF => $sc_jtag2rf{}_ifc'.format(ii)
+        tc_jtag_regfile_gen_str = 'tTC_CFG_BUS => \'yes\', TC_CFG_IFC_REF => $tc_jtag2rf{}_ifc'.format(ii)
+        jtag_regfile_gen_str += '//;\t\t\t{});'.format(sc_jtag_regfile_gen_str)
+    elif ii == (num_reg_file-1):
+        reg_file_gen_str += '\t\t\t.cfgIn(`$sc_rf{}2rf{}_ifc->iname`.cfgIn),\n'.format(ii-1, ii)
+        reg_file_gen_str += '\t\t\t.cfgOut(`$sc_rf{}2jtag_ifc->iname`.cfgOut),\n'.format(ii)
+        sc_rf2rf_gen_str    += '//; my $sc_rf{}2jtag_ifc = clone($sc_jtag2rf{}_ifc, \'sc_rf{}2jtag_ifc\');\n'.format(ii, 0, ii)
+        sc_rf2rf_gen_str    += '//; my $sc_rf{}2rf{}_ifc = clone($sc_jtag2rf{}_ifc, \'sc_rf{}2rf2_ifc\');\n'.format(ii-1,ii, 0,ii-1, ii)
+        sc_rf2rf_int_str    += '`$sc_rf{}2jtag_ifc->instantiate`();\n'.format(ii)
+        sc_rf2rf_int_str    += '`$sc_rf{}2rf{}_ifc->instantiate`();\n'.format(ii-1,ii)
+        sc_jtag_regfile_con_str += '\t\t\t.sc_cfgRep(`$sc_rf{}2jtag_ifc->iname`.cfgIn),\n'.format(ii)
+    else:
+        reg_file_gen_str += '\t\t\t.cfgIn(`$sc_rf{}2rf{}_ifc->iname`.cfgIn),\n'.format(ii-1,ii)
+        reg_file_gen_str += '\t\t\t.cfgOut(`$sc_rf{}2rf{}_ifc->iname`.cfgOut),\n'.format(ii, ii+1)
+        sc_rf2rf_gen_str    += '//; my $sc_rf{}2rf{}_ifc = clone($sc_jtag2rf{}_ifc, \'sc_rf{}2rf{}_ifc\');\n'.format(ii-1,ii,0,ii-1,ii)
+        sc_rf2rf_int_str    += '`$sc_rf{}2rf{}_ifc->instantiate`();\n'.format(ii-1,ii)
+    if ii==0: 
+        for jj in range(num_bank-1):
+            reg = reg_files[ii][jj]
+            reg_file_gen_str += '\t\t\t{}_{}(ifc.{}),\n'.format(reg["Name"], 'd' if reg['IEO']=='i' else 'q', reg["Name"] )
+        reg = reg_files[ii][num_bank-1]
+        reg_file_gen_str += '\t\t\t{}_{}(ifc.{})\n'.format(reg["Name"], 'd' if reg['IEO']=='i' else 'q', reg["Name"] )
+        reg_file_gen_str += '\t\t\t);\n'
+    else:
+        intf_regfile_gen_str += '// Register Bank {} and Interface Mapping\n'.format(ii)
+        for jj in range(num_bank-1):
+            reg = reg_files[ii][jj]
+            reg_file_gen_str += '\t\t\t{}_{}({}),\n'.format(reg["Name"], 'd' if reg['IEO']=='i' else 'q', reg["Name"] )
+            intf_regfile_int_str += 'wire logic {};\n'.format(reg["Name"])
+            name_ = "_".join(reg["Name"].split('_')[0:-1])
+            pos_  = reg["Name"].split('_')[-1]
+            intf_regfile_gen_str += 'assign ifc.{}[{}] = {};\n'.format(name_, pos_, reg["Name"])
+        reg = reg_files[ii][num_bank-1]
+        reg_file_gen_str += '\t\t\t{}_{}({})\n'.format(reg["Name"], 'd' if reg['IEO']=='i' else 'q', reg["Name"] )
+        reg_file_gen_str += '\t\t\t);\n'
+        intf_regfile_int_str += 'wire logic {};\n\n\n'.format(reg["Name"])
+        name_ = "_".join(reg["Name"].split('_')[0:-1])
+        pos_  = reg["Name"].split('_')[-1]
+        intf_regfile_gen_str += 'assign ifc.{}[{}] = {};\n\n\n'.format(name_, pos_, reg["Name"])
+
+cfg_bus_info_str += "//; my $sc_cfg_bus_width = $self->define_param(SYSCLK_CFG_BUS_WIDTH => {});\n".format(max_sc_width)
+cfg_bus_info_str += "//; my $sc_cfg_addr_width =  $self->define_param(SYSCLK_CFG_ADDR_WIDTH => {});\n".format(max_sc_addr)
+cfg_bus_info_str += "//; my $tc_cfg_bus_width =  $self->define_param(TESTCLK_CFG_BUS_WIDTH => {});\n".format(32)
+cfg_bus_info_str += "//; my $tc_cfg_addr_width =  $self->define_param(TESTCLK_CFG_ADDR_WIDTH => {});\n".format(12)
+
+insertion_strings = {}
+
+insertion_strings['cfg_bus_info'] = cfg_bus_info_str
+insertion_strings['io_list_gen'] =  io_list_gen_str
+insertion_strings['intf_regfile_gen'] = intf_regfile_gen_str
+insertion_strings['intf_regfile_int'] = intf_regfile_int_str
+insertion_strings['sc_regfile_gen'] = reg_file_gen_str
+insertion_strings['tc_regfile_gen'] = "\n"
+insertion_strings['sc_rf2rf_gen'] = sc_rf2rf_gen_str
+insertion_strings['sc_rf2rf_int']= sc_rf2rf_int_str
+insertion_strings['tc_rf2rf_gen'] = "\n"
+insertion_strings['tc_rf2rf_int']= "\n"
+insertion_strings['sc_jtag_regfile_con']= sc_jtag_regfile_con_str
+insertion_strings['jtag_regfile_gen']= jtag_regfile_gen_str
+insertion_strings['tc_jtag_regfile_con']= "\n"
+
+
+actions = {
+            'INSERT' : insertion_strings
+          }
+
+with open('rtl/digital/pre_template.svp', 'r') as fin:
+    with open('rtl/digital/template.svp','w') as fout:
+        for line in fin:
+            tokens = line.strip().split()
+            if not tokens:
+                print(file=fout)
+                continue
+            if tokens[0] == '$$':
+                print(actions[tokens[1]][tokens[2]], file=fout)
+            else:
+                print(line, file=fout, end="")

@@ -1,0 +1,277 @@
+o/* *****************************************************************************
+ * File: template.vp
+ * Author: Ofer Shacham
+ * 
+ * Description:
+ * This module is the top of the actual design.
+ * 
+ * REQUIRED GENESIS PARAMETERS:
+ * ----------------------------
+ * * IOList -  List of main design IOs. For each IO you must specify:
+ *   * name
+ *   * width
+ *   * direction - allowed directions are 'in'/'out'
+ *   * bsr - put IO on boundary scan? (yes/no)
+ *   * pad - pad type (analog or anl/digital or dig)
+ *   * orientation - Orientation of the IO pad. allowed values are {left, right, 
+ *		     top, bottom}
+ * 
+ * SYSCLK_CFG_BUS_WIDTH (48) -  Bus width for system clocked configuration entities
+ * SYSCLK_CFG_ADDR_WIDTH (18) - Address width for system clocked configuration entities
+ * TESTCLK_CFG_BUS_WIDTH (32) - Bus width for test clocked configuration entities
+ * TESTCLK_CFG_ADDR_WIDTH (12) - Address width for test clocked configuration entities
+ * 
+ * ds
+ * Inputs:
+ * -------
+ * Main design inputs, plus  
+ * inputs that regard the boundary scan and pads control
+ * 
+ * Outputs:
+ * --------
+ * Main design outputs, plus 
+ * outputs that regard the boundary scan and pads control
+ * 
+ * Change bar:
+ * -----------
+ * Date          Author   Description
+ * Mar 28, 2010  shacham  init version  --  
+ * May 18, 2010  shacham  Added orientation feild to IO parameter list
+ * May 24, 2010  shacham  Pulled config bus parameters to top level
+ *			  Added cfg_ifc as the proper way to implement config
+ *			  bus uniformity amongst modules.
+ *			  Made declaration of IO params into a force_param to
+ *			  make it immutable
+ * ****************************************************************************/
+// ACTUAL GENESIS2 PARAMETERIZATIONS
+//; my $io_list = parameter(Name=>'IOList', Val=> 
+//;		[	
+//;		# Digital IOs
+//;			# Some random signals for illustration. (connected to the reg file for no good reason)
+//;			{name => 'signalA_in',	bitwidth => 1, arraywidth =>2,  direction => 'in',  bsr => 'yes', pad => 'digital', orientation => 'top'}, 
+//;			{name => 'signalB_out', bitwidth => 7,  direction => 'out', bsr => 'yes', pad => 'digital', orientation => 'bottom'}, 
+//;			{name => 'signalD_in',	bitwidth => 9,  direction => 'in',  bsr => 'yes', pad => 'digital', orientation => 'right'}, 
+//;			{name => 'signalE_out', bitwidth => 11, direction => 'out', bsr => 'yes', pad => 'digital', orientation => 'left'},
+//;							     				       
+//;		# Digital, non-design specific IOs	     				       
+//;			{name => 'tck',		bitwidth => 1,  direction => 'in',  bsr => 'no',  pad => 'digital', orientation => 'right'},
+//;			{name => 'trst_n',	bitwidth => 1,  direction => 'in',  bsr => 'no',  pad => 'digital', orientation => 'right'},
+//;			{name => 'tms',		bitwidth => 1,  direction => 'in',  bsr => 'no',  pad => 'digital', orientation => 'right'},
+//;			{name => 'tdi',		bitwidth => 1,  direction => 'in',  bsr => 'no',  pad => 'digital', orientation => 'right'},
+//;			{name => 'tdo',		bitwidth => 1,  direction => 'out', bsr => 'no',  pad => 'digital', orientation => 'right'},
+//;			{name => 'tdo_en',	bitwidth => 1,  direction => 'out', bsr => 'no',  pad => 'digital', orientation => 'right'}
+//;		], 
+//;		Doc=>"List of all IOs of the chip with meta information about 'width', 'direction' (in/out), 'bsr' which is boundry scan register (yes/no), ".
+//; 		     " 'pad' (digital/analog), and 'orientation' (top/bottom/left/right)",
+//;             Force=>1 );
+//; my $num_ios = scalar(@{$io_list});
+//;
+//;# Verify correctness of IO parameters:
+//; my $cnt = 0;
+//; foreach my $io (@{$io_list}){
+//;   $self->error("IO $cnt is missing it's name!") 
+//;	unless defined $io->{name};
+//;   $self->error("IO $io->{name} (IO\# $cnt) is missing its width!") 
+//;	unless defined $io->{bitwidth};
+//;   $self->error("IO $io->{name} (IO\# $cnt) has an illegal width -->$io->{bitwidth}<--!") 
+//;	if ($io->{bitwidth} < 1);
+//;   $self->error("IO $io->{name} (IO\# $cnt) is missing its direction!") 
+//;	unless defined $io->{direction};
+//;   $self->error("IO $io->{name} (IO\# $cnt) has an invalid direction -->$io->{direction}<--! ".
+//;		   "(allowed values: in/out)") 
+//;	unless ($io->{direction} =~ m/^(in|out)$/i);
+//;   $self->error("IO $io->{name} (IO\# $cnt) does not specify whether it's on the boundary scan!") 
+//;	unless defined $io->{bsr};
+//;   $self->error("IO $io->{name} (IO\# $cnt) has an invalid bsr flag -->$io->{bsr}<--! ".
+//;		   "(allowed values: yes/no)") 
+//;	unless ($io->{bsr} =~ m/^(yes|no)$/i);
+//;   $self->error("IO $io->{name} (IO\# $cnt) does not specify pad type (analog/digital)!") 
+//;	unless defined $io->{pad};
+//;   $self->error("IO $io->{name} (IO\# $cnt) has an invalid pad flag -->$io->{pad}<--! ".
+//;		   "(allowed values: analog/digital)") 
+//;	unless ($io->{pad} =~ m/^(anl|analog|dig)/i);
+//;   $self->error("IO $io->{name} (IO\# $cnt) does not specify pad orientation (left, right, top, bottom)!") 
+//;	unless defined $io->{orientation};
+//;   $self->error("IO $io->{name} (IO\# $cnt) has an invalid pad orientation -->$io->{orientation}<--!".
+//;		   "(allowed values: left, right, top, bottom)") 
+//;	unless ($io->{orientation} =~ m/^(left|right|top|bottom)$/i);
+//;   $cnt++;
+//; } # end of "foreach my $io..."
+//;
+//;
+//; # First we create an interface for this chip
+//; my $ifc = generate('template_ifc', 'ifc', IOList => $io_list);
+//;
+//; # this would enable others to use this interface
+//; parameter(Name=>'IfcPtr', Val=>$ifc, force=>1, Doc=>"Declaring our interface object for others to use");
+//;
+//;  
+//; # Now, let's decide upon the parameters of the two configuration buses:
+//; my $sc_cfg_bus_width = $self->define_param(SYSCLK_CFG_BUS_WIDTH => 48);
+//; my $sc_cfg_addr_width =  $self->define_param(SYSCLK_CFG_ADDR_WIDTH => 18);
+//; my $tc_cfg_bus_width =  $self->define_param(TESTCLK_CFG_BUS_WIDTH => 32);
+//; my $tc_cfg_addr_width =  $self->define_param(TESTCLK_CFG_ADDR_WIDTH => 12);
+//;
+
+module `mname`
+  (
+   // main IOs
+   `$ifc->mname`.des ifc,
+     
+   // Signals for the Boundary Scan Register (these are not chip IOs though)
+   output logic bsr_tdi,
+   output logic bsr_sample,
+   output logic	bsr_intest,
+   output logic bsr_extest,
+   output logic bsr_update_en,
+   output logic bsr_capture_en,
+   output logic bsr_shift_dr,
+   input logic	bsr_tdo
+   );
+
+
+   // wires to configure and read the comparator:
+   logic [2:0] 				rf2cmp_offset;
+   logic 				cmp2rf_result;
+				
+   //  Config interfaces for system and test clock domains
+   //; my $sc_jtag2rf_ifc = generate('cfg_ifc', 'sc_jtag2rf_ifc',
+   //;				      DataWidth => $sc_cfg_bus_width, 
+   //;				      AddrWidth => $sc_cfg_addr_width); 
+   //; my $sc_rf2rf_ifc = clone($sc_jtag2rf_ifc, 'sc_rf2rf_ifc'); 
+   //; my $sc_rf2jtag_ifc = clone($sc_jtag2rf_ifc, 'sc_rf2jtag_ifc');
+   `$sc_jtag2rf_ifc->instantiate`();
+   `$sc_rf2rf_ifc->instantiate`();
+   `$sc_rf2jtag_ifc->instantiate`();
+
+   //;
+   //; my $tc_jtag2rf_ifc = generate('cfg_ifc', 'tc_jtag2rf_ifc',
+   //;				      DataWidth => $tc_cfg_bus_width, 
+   //;				      AddrWidth => $tc_cfg_addr_width); 
+   //; my $tc_rf2jtag_ifc = clone($tc_jtag2rf_ifc, 'tc_rf2jtag_ifc'); 
+   `$tc_jtag2rf_ifc->instantiate`();
+   `$tc_rf2jtag_ifc->instantiate`();
+
+   // Reset to the test clock domain (this is different than the trst signal)
+   logic 				test_logic_reset;
+
+
+   //;
+   //;
+   //;
+   //; # Create the JTAG to reg-files controller object
+   //; my $cfg_dbg = generate('cfg_and_dbg', 'cfg_and_dbg',
+   //;				SC_CFG_BUS => 'yes', SC_CFG_IFC_REF => $sc_jtag2rf_ifc, 
+   //;				TC_CFG_BUS => 'yes', TC_CFG_IFC_REF => $tc_jtag2rf_ifc);
+   //;
+			
+   // Instantiate the JTAG to reg-files controller
+   `$cfg_dbg->instantiate`
+     (
+      // JTAG signals
+      .tms(ifc.tms),
+      .tck(ifc.tck),
+      .trst_n(ifc.trst_n),
+      .tdi(ifc.tdi),
+      .tdo(ifc.tdo),
+      .tdo_en(ifc.tdo_en),
+      
+      // BSR interface
+      .bsr_extest(bsr_extest),
+      .bsr_intest(bsr_intest),
+      .bsr_sample(bsr_sample),
+      .bsr_capture_en(bsr_capture_en),
+      .bsr_shift_dr(bsr_shift_dr),
+      .bsr_update_en(bsr_update_en),
+      .bsr_tdo(bsr_tdo),
+      .bsr_tdi(bsr_tdi),
+      
+      // signals to the system clocked regfile
+      .sc_cfgReq(`$sc_jtag2rf_ifc->iname`.cfgOut),
+      .sc_cfgRep(`$sc_rf2jtag_ifc->iname`.cfgIn),
+      .Clk(ifc.Clk),
+      .Reset(ifc.Reset),
+      
+      // signals to the jtag clocked regfile
+      .tc_cfgReq(`$tc_jtag2rf_ifc->iname`.cfgOut),
+      .tc_cfgRep(`$tc_rf2jtag_ifc->iname`.cfgIn),
+      .test_logic_reset(test_logic_reset)
+      );
+
+   
+   // Instantiate a couple of SYSTEM CLOCK domain reg-files and concatenate them
+   // Note that signals A and B are IO's to the system. We'll also define signal C here:
+   logic [47:0] 			signalC;
+   //; # First we read the definition of the ops (why? because I can... and it would keep my modules consistent)
+   //; my $sc_cfg_ops = $cfg_dbg->get_param('SC_CFG_OPCODES');
+   //;
+   //; my $regfile1_on_sysclk = generate('reg_file','regfile1_on_sysclk',
+   //;				   CfgBusPtr => $sc_jtag2rf_ifc,
+   //;				   CfgOpcodes => $sc_cfg_ops,
+   //;				   BaseAddr => 0x300,
+   //;				   RegList => [{Name => 'signalA', Width => 5, Default => 0xa, IEO => 'i'}, 
+   //;				   	       {Name => 'signalB', Width => 7, IEO => 'o'}, 
+   //;					       {Name => 'signalC', Width => 48, IEO => 'o'}
+   //;					       ]   
+   //;				  );
+   `$regfile1_on_sysclk->instantiate` (.Clk(ifc.Clk),
+				       .Reset(ifc.Reset),
+				       .cfgIn(`$sc_jtag2rf_ifc->iname`.cfgIn),
+				       .cfgOut(`$sc_rf2rf_ifc->iname`.cfgOut),
+				       .signalA_d(ifc.signalA_in),
+				       .signalB_q(ifc.signalB_out),
+				       .signalC_q(signalC)
+				       );
+
+   // This one actually does control the comparator
+   //; my $regfile2_on_sysclk = generate('reg_file','regfile2_on_sysclk',
+   //;				   CfgBusPtr => $sc_jtag2rf_ifc,
+   //;				   CfgOpcodes => $sc_cfg_ops,
+   //;				   BaseAddr => 0x400,
+   //;				   RegList => [{Name => 'rf2cmp_offset', Width => 3, Default => 0, IEO => 'o'}, 
+   //;					       {Name => 'cmp2rf_result', Width => 1, IEO => 'i'}
+   //;					       ]   
+   //;				  );
+   `$regfile2_on_sysclk->instantiate` (.Clk(ifc.Clk),
+				       .Reset(ifc.Reset),
+				       .cfgIn(`$sc_rf2rf_ifc->iname`.cfgIn),
+				       .cfgOut(`$sc_rf2jtag_ifc->iname`.cfgOut),
+				       .cmp2rf_result_d(cmp2rf_result),
+				       .rf2cmp_offset_q(rf2cmp_offset)
+				       );
+
+   
+   // Instantiate a JTAG CLOCK domain reg-file
+   // Note that signals D and E are IO's to the system. We'll also define signal F here.
+   // for testing purposes well init this signal (non synthesizable!)
+   logic [31:0] 			signalF;
+   initial begin
+      signalF = $random();
+   end
+   
+   //; # Again, we read the definition of the ops (why? because I can... and it would keep my modules consistent)
+   //; my $tc_cfg_ops = $cfg_dbg->get_param('TC_CFG_OPCODES');
+   //;
+   //; my $regfile_tck = generate('reg_file','regfile_tck',
+   //;				  CfgBusPtr => $tc_jtag2rf_ifc,
+   //;				  CfgOpcodes => $tc_cfg_ops,
+   //;				  BaseAddr => 0x500,
+   //;				  RegList => [	{Name => 'signalD', Width => 9, Default => 3, IEO => 'ie'}, 
+   //;				  		{Name => 'signalE', Width => 11, IEO => 'o'}, 
+   //;				  		{Name => 'signalF', Width => 32, IEO => 'i'}
+   //;					      ]    
+   //;				 );
+   `$regfile_tck->instantiate`(.Clk(ifc.tck),
+			       .Reset(test_logic_reset),
+			       .cfgIn(`$tc_jtag2rf_ifc->iname`.cfgIn),
+			       .cfgOut(`$tc_rf2jtag_ifc->iname`.cfgOut),
+			       .signalD_d(ifc.signalD_in),
+			       .signalD_en((ifc.signalD_in==9'd13)?1'b1:1'b0), // only write it if it is exactly 13
+			       .signalF_d(signalF),
+			       .signalE_q(ifc.signalE_out)
+			       );
+
+
+   
+endmodule // `mname`
+
