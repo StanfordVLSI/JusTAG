@@ -1,0 +1,95 @@
+//; use Scalar::Util qw(looks_like_number);
+//; my $io_list = $self->define_param(IOList => []);
+//; my $num_ios = scalar(@{$io_list});
+//; my $const_pack = $self->define_param(Constants => "");
+//;# Verify correctness of IO parameters:
+//; my $cnt = 0;
+//; foreach my $io (@{$io_list}){
+//;   $self->error("IO $cnt is missing it's name!") 
+//;	unless defined $io->{name};
+//;   $self->error("IO $io->{name} (IO\# $cnt) is missing its width!") 
+//;	unless defined $io->{bitwidth};
+//;   $self->error("IO $io->{name} (IO\# $cnt) is missing its direction!") 
+//;	unless defined $io->{direction};
+//;   $self->error("IO $io->{name} (IO\# $cnt) has an invalid direction -->$io->{direction}<--! ".
+//;		   "(allowed values: in/out)") 
+//;	unless ($io->{direction} =~ m/^(in|out)$/i);
+//;   $self->error("IO $io->{name} (IO\# $cnt) does not specify whether it's on the boundary scan!") 
+//;	unless defined $io->{bsr};
+//;   $self->error("IO $io->{name} (IO\# $cnt) has an invalid bsr flag -->$io->{bsr}<--! ".
+//;		   "(allowed values: yes/no)") 
+//;	unless ($io->{bsr} =~ m/^(yes|no)$/i);
+//;   $self->error("IO $io->{name} (IO\# $cnt) does not specify pad type (analog/digital)!") 
+//;	unless defined $io->{pad};
+//;   $self->error("IO $io->{name} (IO\# $cnt) has an invalid pad flag -->$io->{pad}<--! ".
+//;		   "(allowed values: analog/digital)") 
+//;	unless ($io->{pad} =~ m/^(anl|analog|dig)/i);
+//;   $cnt++;
+//; } # end of "foreach my $io..."
+//;
+//; if($const_pack) {
+interface `mname`(input Clk, input Reset) import `$const_pack`::*; (
+);
+//; } else {
+interface `mname`(input Clk, input Reset);
+//;}
+   //; foreach my $io (@{$io_list}){
+   //; my $type = 'logic';
+   //; my $value = 0;
+   //; my $bitwidth_string = '';
+   //; my $arraywidth_string = '';
+   //; my $signed_string = '';
+   //;   if ($io->{signed}) {
+   //;      $signed_string = 'signed';
+   //;   }
+   //;   if (looks_like_number($io->{bitwidth})) {
+   //;   if ($io->{bitwidth} > 1){
+   //;      $value = $io->{bitwidth} -1;
+   //;      $bitwidth_string = '[' . $value . ':0]' ;
+   //;   }
+   //;   } else {
+   //;      $value = $io->{bitwidth}. -1;
+   //;      $bitwidth_string = '[' . $value . ':0]' ;
+   //;   }
+   //;   if (looks_like_number($io->{arraywidth})) {
+   //;   if ($io->{arraywidth} > 1){
+   //;      $value = $io->{arraywidth} -1;
+   //;      $arraywidth_string = '[' . $value . ':0]' ;
+   //;   }
+   //;   } else {
+   //;      $value = $io->{arraywidth}. -1;
+   //;      $arraywidth_string = '[' . $value . ':0]' ;
+   //;   }
+    `$type . ' '. $signed_string . ' ' . $bitwidth_string . ' '. $io->{name} . $arraywidth_string`; 
+   //; }
+   //;
+   
+
+   modport des(
+   //; foreach my $io (@{$io_list}){
+   //;   my $dir = 'input'; # default is digital input
+   //;   $dir = 'output' if ($io->{direction} =~ m/^out$/i);
+    `$dir`				`$io->{name}`,
+   //; }
+   //;
+	       
+   input Clk,
+   input Reset
+	       );
+    
+   
+   // define testing modport
+   modport test 
+     (
+      //; foreach my $io (@{$io_list}){
+      //;   my $dir = 'output'; # default is digital input
+      //;   $dir = 'input' if ($io->{direction} =~ m/^out$/i);
+      `$dir`				`$io->{name}`,
+      //; }
+      //;
+    input Clk,
+    input Reset
+      );
+   
+      
+    endinterface: `mname`
