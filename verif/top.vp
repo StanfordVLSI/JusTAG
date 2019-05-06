@@ -1,0 +1,94 @@
+/*************************************************************************
+ ** From Perforce:
+ **
+ ** $Id: //Smart_design/ChipGen/moduleTest/Primitives/top.vp#5 $
+ ** $DateTime: 2010/03/25 11:23:45 $
+ ** $Change: 8474 $
+ ** $Author: shacham $
+ *************************************************************************/
+
+/* *****************************************************************************
+ * File: top.vp
+ * Author: Ofer Shacham
+ * 
+ * Description:
+ * simple top that instantiate the test and the dut
+ * 
+ *
+ * Change bar:
+ * -----------
+ * Date          Author   Description
+ * Mar 19, 2010  shacham  initial version
+ *  
+ * 
+ * ****************************************************************************/
+
+/*******************************************************************************
+ * Generation Control Definitions
+ ******************************************************************************/
+//; my $mode = parameter(Name=>'GenMode', Val=>'Sim', List=>['Sim', 'GateSim', 'Synth'], 
+//;		       Doc=>"Generation Mode. Can be 'Sim', 'GateSim', or 'Synth'");
+//; include ("analog_defs.vph");
+
+/*******************************************************************************
+ * Simulation Control Definitions
+ ******************************************************************************/
+//; my $max_cyc      = parameter(Name=>'MaxCycles', Val=>100000, Min=>1, Step=>1, 
+//;			         Doc=>'Max number of simulation cycles');
+//; my $design_name  = parameter(Name=>'DesignName', Val=>'template', 
+//;				 Doc=>"This is a generic top, so what is the".
+//;                                   " design name to use?");
+//; # The default IDCODE is just TMP1 in hex
+//; my $IDCODE    = parameter(Name=>'IDCODE',
+//;			   Val=>"TMP", 
+//;			   Doc=>"The JTAG IDCODE. Can be a 32bits number. ".
+//;			   "LSB will be masked with 1'b1. ".
+//;			   "Can also be upto 3 charcters (and right most byte is 8'h1.".
+//;			   "Example: TMP should yield 0x544d5001." );
+
+/*******************************************************************************
+ * Module top:
+ ******************************************************************************/
+\`define DUT(mod) \`ifndef GATES  mod  \`else  mod\`\`_svsim  \`endif
+
+module `mname`();
+   logic Clk;
+   logic Reset;
+
+   
+   /****************************************************************************
+    * Instantiate clocks
+    * *************************************************************************/
+    //; my $clocker_obj = generate('clocker', 'clocker', CLK_PERIOD=>1000, RST_PERIOD=>20);
+    `$clocker_obj->instantiate` (.Clk(Clk), .Reset(Reset));
+
+   // timer:
+   initial begin
+      repeat(`$max_cyc`) @(posedge Clk);
+      $display("\n%0t\tERROR: The `$max_cyc` cycles marker has passed!",$time);
+      $finish(2);
+   end
+
+
+   
+
+   /****************************************************************************
+    * Instantiate DUT interface and DUT
+    * *************************************************************************/
+   //; # We use generate_base when there is for sure just one of X
+   //; my $dut_obj = generate('phy_top', 'dut', DesignName => $design_name);
+   //; my $dut_ifc_path = $dut_obj->get_param('IfcPtr');
+   //; my $dut_ifc = clone($dut_ifc_path, 'dut_ifc');
+   `$dut_ifc->instantiate` (.Clk(Clk), .Reset(Reset));
+   
+   \`DUT(`$dut_obj->mname()`) `$dut_obj->iname()`(.ifc(`$dut_ifc->iname()`) );
+   
+
+   /****************************************************************************
+    * Instantiate Test
+    * **************************************************************************/
+    //; my $tst_obj = generate('test', 'tst');
+    `$tst_obj->instantiate` (.ifc(`$dut_ifc->iname()`));
+      
+endmodule
+ 

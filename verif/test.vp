@@ -1,0 +1,191 @@
+/* *****************************************************************************
+ * File: test.v
+ * Author: Ofer Shacham
+ * 
+ * Description:
+ * simple test bench for template
+ * 
+ *
+ * Change bar:
+ * -----------
+ * Date          Author   Description
+ * Apr 3,  2010  shacham  initial version
+ * May 19, 2014  jingpu   flow update
+ * 
+ * ****************************************************************************/
+
+////////////////////////////// IMPORTANT MESSAGE: //////////////////////////////
+// Note that programs are written using object oriented programming. They
+// are closer to software than to hardware. There is therefore no real need
+// in a genesis type parameterization.
+////////////////////////////////////////////////////////////////////////////////
+
+   program automatic `mname`(interface ifc);
+   
+   // some variables to control the test
+   int                           seed;
+   int                           dummy;
+   int 				 svf_file;
+   
+   // Instantiate a jtag driver
+   //; my $jtag_drvr_obj = generate_base('JTAGDriver', 'jdrv');
+   `$jtag_drvr_obj->instantiate`;
+
+   /****************************************************************************
+    * Main: Main flow of the test
+    * *************************************************************************/
+   initial begin
+      get_command_line_args();
+      $display("%t: TESTBENCH IS ALIVE (SEED = %0d)", $time, seed);  
+      dummy = $urandom(seed);
+      
+      @(posedge ifc.Reset);    
+      svf_file = $fopen("scan.svf", "w");
+      init_test();
+      
+      repeat (10) @(posedge ifc.Clk);
+      run_test();
+      repeat (10) @(posedge ifc.Clk);
+      
+      $fdisplay(svf_file, "!End Test Program");
+      $display("%t: TESTBENCH IS DONE -- \033[0;32mTEST PASS\033[0m", $time);
+      $fclose(svf_file);
+      $finish(0);
+   end
+
+         
+   /*******************************************************************************
+    * The Test Sequence: configure the analog block and read the result
+    *   #	Offset Pos_in     Neg_in      Out
+    *   1	0      0.1V-4mV   0.1+4mV     0
+    *   2	0      0.1V-2mV   0.1V+2mV    1
+    *   3	0      0.1V	  0.1V	      1
+    *   4	0      0.1V+2mV   0.1V-2mV    1
+    *   	       	   	       
+    *   5	6      0.1V-4mV   0.1+4mV     0
+    *   6	6      0.1V-2mV   0.1V+2mV    0
+    *   7	6      0.1V	  0.1V	      0
+    *   8	6      0.1V+2mV   0.1V-2mV    0
+    *   9	6      0.1V+4mV   0.1V-4mV    1
+    * ****************************************************************************/
+   int offset_vals[9] = {0, 0, 0, 0, 6, 6, 6, 6, 6};
+   real pos_in_vals[9] = {0.996, 0.998, 1.000, 1.002,
+			  0.996, 0.998, 1.000, 1.002, 1.004};
+   real neg_in_vals[9] = {1.004, 1.002, 1.000, 0.998,
+			  1.004, 1.002, 1.000, 0.998, 0.996};
+   logic expect_out[9] = {'b0, 'b1, 'b1, 'b1, 'b0, 'b0, 'b0, 'b0, 'b1};
+   
+   task run_test;
+      begin
+	 logic [47:0] data_out;
+	 int 	      i;
+	 jtag_regfile_trans_t jtag_trans;
+	 // Check IDCODE
+	 $fdisplay(svf_file, "! Check IDCODE");
+	 jdrv.ReadID(jtag_trans);
+	 // Run some test
+	 for (i = 0; i < 9; i++) begin
+	    @(posedge ifc.Clk);
+	    jtag_write_reg(sc_domain, 18'h400, offset_vals[i]);
+	    ifc.cmp_pos_in = pos_in_vals[i];
+	    ifc.cmp_neg_in = neg_in_vals[i];
+	    jtag_read_reg(sc_domain, 18'h408, data_out);
+	    $display("%t: \033[0;36mTrans %2d\033[0m: offset=%0d, pos=%.3f, neg=%.3f, output=%0x\n",  
+		     $time, i+1, offset_vals[i], ifc.cmp_pos_in, ifc.cmp_neg_in, data_out);
+	    if (data_out != expect_out[i]) begin
+	       $display("%t: \033[0;31mERROR Found\033[0m", $time);
+	       $finish(2);
+	    end
+	 end
+      end
+   endtask // run_test
+   
+   task init_test();
+      begin
+	 // init the environment
+	 jdrv = new(ifc, svf_file);
+	 jdrv.Zero();
+	 jdrv.Reset();
+	 
+	 ifc.signalA_in = '0;
+	 ifc.signalD_in = '0;
+	 ifc.cmp_Iref_in = 0;
+	 ifc.cmp_pos_in = 0;
+	 ifc.cmp_neg_in = 0;
+	 repeat (2) @(posedge ifc.Clk); 
+      end
+   endtask // init_test
+
+   /****************************************************************************
+    * JTAG transaction wrappers:
+    * *************************************************************************/
+   task jtag_write_reg(input regfile_t clk_domain, input [17:0] addr ,input[47:0] data);
+      jtag_regfile_trans_t jtag_trans;
+      jtag_trans.domain = clk_domain;
+      jtag_trans.addr = addr;  // First register in the DP block
+      jtag_trans.op = write;
+      jtag_trans.data_out = 'h0;
+      jtag_trans.data_in = data;
+      jtag_trans.done = 0;
+      $display("%t: \033[0;34mJTAG Write\033[0m -- ADDR: 0x%4h  Data: 0x%16h", $time, addr, data);
+      $fdisplay(svf_file, "! JTAG Write -- ADDR: 0x%4h  Data: 0x%16h",addr, data);
+      jdrv.Send(jtag_trans);  
+   endtask // jtag_write_reg 
+
+   task jtag_read_reg(input regfile_t clk_domain, input [17:0] addr, output [47:0] data);
+      jtag_regfile_trans_t jtag_trans;
+      jtag_trans.domain = clk_domain;
+      jtag_trans.addr = addr;  // First register in the DP block
+      jtag_trans.op = read;
+      jtag_trans.data_out = 'h0;
+      jtag_trans.data_in = 'hABCD;   //we don't really care data_in, since it is a read op
+      jtag_trans.done = 0;
+      $fdisplay(svf_file, "! JTAG Read -- ADDR: 0x%4h",addr);
+      jdrv.Send(jtag_trans);
+      jtag_trans = jdrv.GetResult();
+      data = jtag_trans.data_out;
+      $display("%t: \033[0;34mJTAG Read\033[0m  -- ADDR: 0x%4h  Data: 0x%16h", $time, addr, data);
+   endtask // jtag_write_reg
+   
+   /****************************************************************************
+    * Other Tasks:
+    * *************************************************************************/
+   task get_command_line_args ();
+      $display("%t:\t************Loading Arguments*************",$time);
+      begin
+         // if this is a "+wave" run, it must record all signals
+         if ( $test$plusargs("wave") ) begin
+            //         levels  instance
+            $display("time=%10t Starting Wave Capture", $time);
+            $vcdpluson(0,        top);
+         end
+         // if this is a "+memwave" run, it must record all memories
+         if ( $test$plusargs("memwave") ) begin
+            //         levels  instance
+            $display("time=%10t Starting Memories Capture", $time);
+            CaptureMemoriesOn();
+         end
+         // find the seed for this run
+         if ( $test$plusargs("seed") ) begin
+	    $value$plusargs("seed=%d", seed);
+	 end else begin
+            seed = 12345;
+         end
+	 $display("%t:\tUsing seed %d",$time, seed);
+      end
+   endtask // get_command_line_args
+   
+   task CaptureMemoriesOn;
+      begin
+         $vcdplusmemon(0,        top);
+      end
+   endtask // CaptureMemoriesOn
+   
+   task CaptureMemoriesOff;
+      begin
+         $vcdplusmemoff(0,        top);
+      end
+   endtask // CaptureMemoriesOff
+   
+endprogram : `mname`
+  

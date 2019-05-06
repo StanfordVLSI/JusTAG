@@ -1,0 +1,43 @@
+/* *****************************************************************************
+ * File: analog_defs.vph
+ * Author: Ofer Shacham
+ * 
+ * Description:
+ * Definitions for analog signals for simulation and for synthesis
+ * It contains definitions for $input_real, $output_real, $wire_real and 
+ * a macro $parameter_real($name, $value)
+ * 
+ * REQUIRED GENESIS PARAMETERS:
+ * ----------------------------
+ * * GenMode - Generation Mode. Can be 'Sim', 'GateSim', or 'Synth'
+ * 
+ * Change bar:
+ * -----------
+ * Date          Author   Description
+ * Mar 31, 2010  shacham  init version  --  
+ * 
+ * ****************************************************************************/
+//; # declare the macros
+//; my ($mode, $input_real, $output_real, $wire_real);
+//; $mode = $self->get_top_param('GenMode');
+//;
+//; # declare the macros
+//; my ($input_real, $output_real, $wire_real);
+//;
+//; if ($mode =~ m/^Synth$/i){
+//; 	$input_real = 'input logic';
+//; 	$output_real = 'output logic'; 
+//; 	$wire_real = 'wire';
+//;	sub parameter_real($$){ #let's be stricked and allow exactly two inputs
+//;		my ($name, $value) = @_;
+//;		return "parameter $name = 0";
+//;	}
+//; } else{
+//; 	$input_real = 'input real';
+//; 	$output_real = 'output real'; 
+//; 	$wire_real = 'real';
+//;	sub parameter_real($$){ #let's be stricked and allow exactly two inputs
+//;		my ($name, $value) = @_;
+//;		return "parameter real $name = $value";
+//;	}
+//; }

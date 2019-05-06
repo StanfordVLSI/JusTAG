@@ -1,0 +1,34 @@
+
+Genesis2::Manager->print_cmdline: Your Complete Genesis2 Command Line:
+/usr/class/ee/genesis2/r11012/PerlLibs/Genesis2/Genesis2.pl                                         \
+    -parse                                                                                          \
+    -srcpath /afs/ir/users/j/i/jingpu/tmp/src-template/src                                          \
+    -srcpath /afs/ir/users/j/i/jingpu/tmp/src-template/src/digital                                  \
+    -incpath /afs/ir/users/j/i/jingpu/tmp/src-template/src/analog                                   \
+    -srcpath /afs/ir/users/j/i/jingpu/tmp/src-template/verif                                        \
+    -incpath /afs/ir/users/j/i/jingpu/tmp/src-template/src/digital                                  \
+    -incpath /afs/ir/users/j/i/jingpu/tmp/src-template/src/analog                                   \
+    -incpath /afs/ir/users/j/i/jingpu/tmp/src-template/verif                                        \
+    -debug 0                                                                                        \
+    -input top.vp 
+
+-----------------------------------------------
+--- Genesis Is Starting Work On Your Design ---
+-----------------------------------------------
+
+-----------------------------------------------
+|            Genesis Release Info             |
+|  $Change: 11012 $ --- $Date: 2012/09/13 $   |
+-----------------------------------------------
+
+
+Genesis2::Manager->execute: Starting Source File Parsing Phase
+Genesis2::Manager->parse_files: Now parsing file top.vp
+Genesis2::Manager->execute: Done With Source File Parsing Phase
+
+Genesis2::Manager->execute: Starting Auxiliary File Generation Phase
+Use of uninitialized value in concatenation (.) or string at /usr/class/ee/genesis2/r11012/PerlLibs/Genesis2/Manager.pm line 933.
+Use of uninitialized value in concatenation (.) or string at /usr/class/ee/genesis2/r11012/PerlLibs/Genesis2/Manager.pm line 933.
+Use of uninitialized value in concatenation (.) or string at /usr/class/ee/genesis2/r11012/PerlLibs/Genesis2/Manager.pm line 933.
+Genesis2::Manager->execute: Done With Auxiliary File Generation Phase
+
