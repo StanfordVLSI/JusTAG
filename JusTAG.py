@@ -97,6 +97,7 @@ for name in io_list:
 
 
 for ii in range(num_io_list):
+    begin_token = '\\\\;'
     end_token = ',\n'
-    print(io_list_strings[ii], end=end_token)
+    print(begin_token + ' ' + io_list_strings[ii], end=end_token)
 
