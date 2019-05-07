@@ -81,14 +81,8 @@
 //;			 {name => 'sel_ext_pd_offset', bitwidth => 1, array=>1,  direction => 'out',  bsr => 'yes', orientation => 'top'},
 //;			 {name => 'pd_offset_ext', bitwidth => 8, array=>1,  direction => 'out',  bsr => 'yes', orientation => 'top'},
 //;			 {name => 'in_addr', bitwidth => 10, array=>1,  direction => 'out',  bsr => 'yes', orientation => 'top'},
-//;			 {name => 'in_load_addr', bitwidth => 1, array=>1,  direction => 'out',  bsr => 'yes', orientation => 'top'},
-//;			 {name => 'in_load_max', bitwidth => 1, array=>1,  direction => 'out',  bsr => 'yes', orientation => 'top'},
-//;			 {name => 'read', bitwidth => 1, array=>1,  direction => 'out',  bsr => 'yes', orientation => 'top'},
-//;			 {name => 'write', bitwidth => 1, array=>1,  direction => 'out',  bsr => 'yes', orientation => 'top'},
-//;			 {name => 'out_data', bitwidth => 128, array=>1,  direction => 'in',  bsr => 'yes', orientation => 'top'},
+//;			 {name => 'out_data', bitwidth => 8, array=>16,  direction => 'in',  bsr => 'yes', orientation => 'top'},
 //;			 {name => 'addr', bitwidth => 10, array=>1,  direction => 'in',  bsr => 'yes', orientation => 'top'},
-//;			 {name => 'counter_overflow', bitwidth => 1, array=>1,  direction => 'in',  bsr => 'yes', orientation => 'top'},
-//;			 {name => 'done', bitwidth => 1, array=>1,  direction => 'in',  bsr => 'yes', orientation => 'top'},
 //;							     				       
 //;		# Digital, non-design specific IOs	     				       
 //;			{name => 'tck',		bitwidth => 1,  direction => 'in',  bsr => 'no',  pad => 'digital', orientation => 'right'},
@@ -134,7 +128,7 @@
 //;
 //;  
 //; # Now, let's decide upon the parameters of the two configuration buses:
-//; my $sc_cfg_bus_width = $self->define_param(SYSCLK_CFG_BUS_WIDTH => 128);
+//; my $sc_cfg_bus_width = $self->define_param(SYSCLK_CFG_BUS_WIDTH => 32);
 //; my $sc_cfg_addr_width =  $self->define_param(SYSCLK_CFG_ADDR_WIDTH => 10);
 //; my $tc_cfg_bus_width =  $self->define_param(TESTCLK_CFG_BUS_WIDTH => 32);
 //; my $tc_cfg_addr_width =  $self->define_param(TESTCLK_CFG_ADDR_WIDTH => 12);
@@ -146,15 +140,185 @@ module `mname`
    `$ifc->mname`.des ifc,
 
    // Signals for the Boundary Scan Register (these are not chip IOs though)
-   output logic bsr_tdi,
-   output logic bsr_sample,
-   output logic	bsr_intest,
-   output logic bsr_extest,
-   output logic bsr_update_en,
-   output logic bsr_capture_en,
-   output logic bsr_shift_dr,
-   input logic	bsr_tdo
+   output wire logic bsr_tdi,
+   output wire logic bsr_sample,
+   output wire logic	bsr_intest,
+   output wire logic bsr_extest,
+   output wire logic bsr_update_en,
+   output wire logic bsr_capture_en,
+   output wire logic bsr_shift_dr,
+   input wire logic	bsr_tdo
    );
+
+wire logic [8:0] ext_pi_ctl_offset_0;
+wire logic [8:0] ext_pi_ctl_offset_1;
+wire logic [8:0] ext_pi_ctl_offset_2;
+wire logic [8:0] ext_pi_ctl_offset_3;
+wire logic [3:0] ext_v2t_ctl_0;
+wire logic [3:0] ext_v2t_ctl_1;
+wire logic [3:0] ext_v2t_ctl_2;
+wire logic [3:0] ext_v2t_ctl_3;
+wire logic [3:0] ext_v2t_ctl_4;
+wire logic [3:0] ext_v2t_ctl_5;
+wire logic [3:0] ext_v2t_ctl_6;
+wire logic [3:0] ext_v2t_ctl_7;
+wire logic [3:0] ext_v2t_ctl_8;
+wire logic [3:0] ext_v2t_ctl_9;
+wire logic [3:0] ext_v2t_ctl_10;
+wire logic [3:0] ext_v2t_ctl_11;
+wire logic [3:0] ext_v2t_ctl_12;
+wire logic [3:0] ext_v2t_ctl_13;
+wire logic [3:0] ext_v2t_ctl_14;
+wire logic [3:0] ext_v2t_ctl_15;
+wire logic [31:0] ext_mismatch_ctl_0;
+wire logic [31:0] ext_mismatch_ctl_1;
+wire logic [31:0] ext_mismatch_ctl_2;
+wire logic [31:0] ext_mismatch_ctl_3;
+wire logic [7:0] ext_pfd_offset_0;
+wire logic [7:0] ext_pfd_offset_1;
+wire logic [7:0] ext_pfd_offset_2;
+wire logic [7:0] ext_pfd_offset_3;
+wire logic [7:0] ext_pfd_offset_4;
+wire logic [7:0] ext_pfd_offset_5;
+wire logic [7:0] ext_pfd_offset_6;
+wire logic [7:0] ext_pfd_offset_7;
+wire logic [7:0] ext_pfd_offset_8;
+wire logic [7:0] ext_pfd_offset_9;
+wire logic [7:0] ext_pfd_offset_10;
+wire logic [7:0] ext_pfd_offset_11;
+wire logic [7:0] ext_pfd_offset_12;
+wire logic [7:0] ext_pfd_offset_13;
+wire logic [7:0] ext_pfd_offset_14;
+wire logic [7:0] ext_pfd_offset_15;
+wire logic [1:0] init_0;
+wire logic [1:0] init_1;
+wire logic [1:0] init_2;
+wire logic [1:0] init_3;
+wire logic [1:0] init_4;
+wire logic [1:0] init_5;
+wire logic [1:0] init_6;
+wire logic [1:0] init_7;
+wire logic [1:0] init_8;
+wire logic [1:0] init_9;
+wire logic [1:0] init_10;
+wire logic [1:0] init_11;
+wire logic [1:0] init_12;
+wire logic [1:0] init_13;
+wire logic [1:0] init_14;
+wire logic [1:0] init_15;
+wire logic [7:0] adcout_0;
+wire logic [7:0] adcout_1;
+wire logic [7:0] adcout_2;
+wire logic [7:0] adcout_3;
+wire logic [7:0] adcout_4;
+wire logic [7:0] adcout_5;
+wire logic [7:0] adcout_6;
+wire logic [7:0] adcout_7;
+wire logic [7:0] adcout_8;
+wire logic [7:0] adcout_9;
+wire logic [7:0] adcout_10;
+wire logic [7:0] adcout_11;
+wire logic [7:0] adcout_12;
+wire logic [7:0] adcout_13;
+wire logic [7:0] adcout_14;
+wire logic [7:0] adcout_15;
+wire logic [7:0] adcout_avg_0;
+wire logic [7:0] adcout_avg_1;
+wire logic [7:0] adcout_avg_2;
+wire logic [7:0] adcout_avg_3;
+wire logic [7:0] adcout_avg_4;
+wire logic [7:0] adcout_avg_5;
+wire logic [7:0] adcout_avg_6;
+wire logic [7:0] adcout_avg_7;
+wire logic [7:0] adcout_avg_8;
+wire logic [7:0] adcout_avg_9;
+wire logic [7:0] adcout_avg_10;
+wire logic [7:0] adcout_avg_11;
+wire logic [7:0] adcout_avg_12;
+wire logic [7:0] adcout_avg_13;
+wire logic [7:0] adcout_avg_14;
+wire logic [7:0] adcout_avg_15;
+wire logic [23:0] adcout_sum_0;
+wire logic [23:0] adcout_sum_1;
+wire logic [23:0] adcout_sum_2;
+wire logic [23:0] adcout_sum_3;
+wire logic [23:0] adcout_sum_4;
+wire logic [23:0] adcout_sum_5;
+wire logic [23:0] adcout_sum_6;
+wire logic [23:0] adcout_sum_7;
+wire logic [23:0] adcout_sum_8;
+wire logic [23:0] adcout_sum_9;
+wire logic [23:0] adcout_sum_10;
+wire logic [23:0] adcout_sum_11;
+wire logic [23:0] adcout_sum_12;
+wire logic [23:0] adcout_sum_13;
+wire logic [23:0] adcout_sum_14;
+wire logic [23:0] adcout_sum_15;
+wire logic [15:0] adcout_hist_center_0;
+wire logic [15:0] adcout_hist_center_1;
+wire logic [15:0] adcout_hist_center_2;
+wire logic [15:0] adcout_hist_center_3;
+wire logic [15:0] adcout_hist_center_4;
+wire logic [15:0] adcout_hist_center_5;
+wire logic [15:0] adcout_hist_center_6;
+wire logic [15:0] adcout_hist_center_7;
+wire logic [15:0] adcout_hist_center_8;
+wire logic [15:0] adcout_hist_center_9;
+wire logic [15:0] adcout_hist_center_10;
+wire logic [15:0] adcout_hist_center_11;
+wire logic [15:0] adcout_hist_center_12;
+wire logic [15:0] adcout_hist_center_13;
+wire logic [15:0] adcout_hist_center_14;
+wire logic [15:0] adcout_hist_center_15;
+wire logic [15:0] adcout_hist_side_0;
+wire logic [15:0] adcout_hist_side_1;
+wire logic [15:0] adcout_hist_side_2;
+wire logic [15:0] adcout_hist_side_3;
+wire logic [15:0] adcout_hist_side_4;
+wire logic [15:0] adcout_hist_side_5;
+wire logic [15:0] adcout_hist_side_6;
+wire logic [15:0] adcout_hist_side_7;
+wire logic [15:0] adcout_hist_side_8;
+wire logic [15:0] adcout_hist_side_9;
+wire logic [15:0] adcout_hist_side_10;
+wire logic [15:0] adcout_hist_side_11;
+wire logic [15:0] adcout_hist_side_12;
+wire logic [15:0] adcout_hist_side_13;
+wire logic [15:0] adcout_hist_side_14;
+wire logic [15:0] adcout_hist_side_15;
+wire logic [7:0] adcout_pfd_offset_0;
+wire logic [7:0] adcout_pfd_offset_1;
+wire logic [7:0] adcout_pfd_offset_2;
+wire logic [7:0] adcout_pfd_offset_3;
+wire logic [7:0] adcout_pfd_offset_4;
+wire logic [7:0] adcout_pfd_offset_5;
+wire logic [7:0] adcout_pfd_offset_6;
+wire logic [7:0] adcout_pfd_offset_7;
+wire logic [7:0] adcout_pfd_offset_8;
+wire logic [7:0] adcout_pfd_offset_9;
+wire logic [7:0] adcout_pfd_offset_10;
+wire logic [7:0] adcout_pfd_offset_11;
+wire logic [7:0] adcout_pfd_offset_12;
+wire logic [7:0] adcout_pfd_offset_13;
+wire logic [7:0] adcout_pfd_offset_14;
+wire logic [7:0] adcout_pfd_offset_15;
+wire logic [7:0] out_data_0;
+wire logic [7:0] out_data_1;
+wire logic [7:0] out_data_2;
+wire logic [7:0] out_data_3;
+wire logic [7:0] out_data_4;
+wire logic [7:0] out_data_5;
+wire logic [7:0] out_data_6;
+wire logic [7:0] out_data_7;
+wire logic [7:0] out_data_8;
+wire logic [7:0] out_data_9;
+wire logic [7:0] out_data_10;
+wire logic [7:0] out_data_11;
+wire logic [7:0] out_data_12;
+wire logic [7:0] out_data_13;
+wire logic [7:0] out_data_14;
+wire logic [7:0] out_data_15;
+
 // Register Bank 1 and Interface Mapping
 assign ifc.ext_pi_ctl_offset[0] = ext_pi_ctl_offset_0;
 assign ifc.ext_pi_ctl_offset[1] = ext_pi_ctl_offset_1;
@@ -340,180 +504,23 @@ assign ifc.adcout_pfd_offset[14] = adcout_pfd_offset_14;
 assign ifc.adcout_pfd_offset[15] = adcout_pfd_offset_15;
 
 
-
-
-wire logic ext_pi_ctl_offset_0;
-wire logic ext_pi_ctl_offset_1;
-wire logic ext_pi_ctl_offset_2;
-wire logic ext_pi_ctl_offset_3;
-
-
-wire logic ext_v2t_ctl_0;
-wire logic ext_v2t_ctl_1;
-wire logic ext_v2t_ctl_2;
-wire logic ext_v2t_ctl_3;
-wire logic ext_v2t_ctl_4;
-wire logic ext_v2t_ctl_5;
-wire logic ext_v2t_ctl_6;
-wire logic ext_v2t_ctl_7;
-wire logic ext_v2t_ctl_8;
-wire logic ext_v2t_ctl_9;
-wire logic ext_v2t_ctl_10;
-wire logic ext_v2t_ctl_11;
-wire logic ext_v2t_ctl_12;
-wire logic ext_v2t_ctl_13;
-wire logic ext_v2t_ctl_14;
-wire logic ext_v2t_ctl_15;
-
-
-wire logic ext_mismatch_ctl_0;
-wire logic ext_mismatch_ctl_1;
-wire logic ext_mismatch_ctl_2;
-wire logic ext_mismatch_ctl_3;
-
-
-wire logic ext_pfd_offset_0;
-wire logic ext_pfd_offset_1;
-wire logic ext_pfd_offset_2;
-wire logic ext_pfd_offset_3;
-wire logic ext_pfd_offset_4;
-wire logic ext_pfd_offset_5;
-wire logic ext_pfd_offset_6;
-wire logic ext_pfd_offset_7;
-wire logic ext_pfd_offset_8;
-wire logic ext_pfd_offset_9;
-wire logic ext_pfd_offset_10;
-wire logic ext_pfd_offset_11;
-wire logic ext_pfd_offset_12;
-wire logic ext_pfd_offset_13;
-wire logic ext_pfd_offset_14;
-wire logic ext_pfd_offset_15;
-
-
-wire logic init_0;
-wire logic init_1;
-wire logic init_2;
-wire logic init_3;
-wire logic init_4;
-wire logic init_5;
-wire logic init_6;
-wire logic init_7;
-wire logic init_8;
-wire logic init_9;
-wire logic init_10;
-wire logic init_11;
-wire logic init_12;
-wire logic init_13;
-wire logic init_14;
-wire logic init_15;
-
-
-wire logic adcout_0;
-wire logic adcout_1;
-wire logic adcout_2;
-wire logic adcout_3;
-wire logic adcout_4;
-wire logic adcout_5;
-wire logic adcout_6;
-wire logic adcout_7;
-wire logic adcout_8;
-wire logic adcout_9;
-wire logic adcout_10;
-wire logic adcout_11;
-wire logic adcout_12;
-wire logic adcout_13;
-wire logic adcout_14;
-wire logic adcout_15;
-
-
-wire logic adcout_avg_0;
-wire logic adcout_avg_1;
-wire logic adcout_avg_2;
-wire logic adcout_avg_3;
-wire logic adcout_avg_4;
-wire logic adcout_avg_5;
-wire logic adcout_avg_6;
-wire logic adcout_avg_7;
-wire logic adcout_avg_8;
-wire logic adcout_avg_9;
-wire logic adcout_avg_10;
-wire logic adcout_avg_11;
-wire logic adcout_avg_12;
-wire logic adcout_avg_13;
-wire logic adcout_avg_14;
-wire logic adcout_avg_15;
-
-
-wire logic adcout_sum_0;
-wire logic adcout_sum_1;
-wire logic adcout_sum_2;
-wire logic adcout_sum_3;
-wire logic adcout_sum_4;
-wire logic adcout_sum_5;
-wire logic adcout_sum_6;
-wire logic adcout_sum_7;
-wire logic adcout_sum_8;
-wire logic adcout_sum_9;
-wire logic adcout_sum_10;
-wire logic adcout_sum_11;
-wire logic adcout_sum_12;
-wire logic adcout_sum_13;
-wire logic adcout_sum_14;
-wire logic adcout_sum_15;
-
-
-wire logic adcout_hist_center_0;
-wire logic adcout_hist_center_1;
-wire logic adcout_hist_center_2;
-wire logic adcout_hist_center_3;
-wire logic adcout_hist_center_4;
-wire logic adcout_hist_center_5;
-wire logic adcout_hist_center_6;
-wire logic adcout_hist_center_7;
-wire logic adcout_hist_center_8;
-wire logic adcout_hist_center_9;
-wire logic adcout_hist_center_10;
-wire logic adcout_hist_center_11;
-wire logic adcout_hist_center_12;
-wire logic adcout_hist_center_13;
-wire logic adcout_hist_center_14;
-wire logic adcout_hist_center_15;
-
-
-wire logic adcout_hist_side_0;
-wire logic adcout_hist_side_1;
-wire logic adcout_hist_side_2;
-wire logic adcout_hist_side_3;
-wire logic adcout_hist_side_4;
-wire logic adcout_hist_side_5;
-wire logic adcout_hist_side_6;
-wire logic adcout_hist_side_7;
-wire logic adcout_hist_side_8;
-wire logic adcout_hist_side_9;
-wire logic adcout_hist_side_10;
-wire logic adcout_hist_side_11;
-wire logic adcout_hist_side_12;
-wire logic adcout_hist_side_13;
-wire logic adcout_hist_side_14;
-wire logic adcout_hist_side_15;
-
-
-wire logic adcout_pfd_offset_0;
-wire logic adcout_pfd_offset_1;
-wire logic adcout_pfd_offset_2;
-wire logic adcout_pfd_offset_3;
-wire logic adcout_pfd_offset_4;
-wire logic adcout_pfd_offset_5;
-wire logic adcout_pfd_offset_6;
-wire logic adcout_pfd_offset_7;
-wire logic adcout_pfd_offset_8;
-wire logic adcout_pfd_offset_9;
-wire logic adcout_pfd_offset_10;
-wire logic adcout_pfd_offset_11;
-wire logic adcout_pfd_offset_12;
-wire logic adcout_pfd_offset_13;
-wire logic adcout_pfd_offset_14;
-wire logic adcout_pfd_offset_15;
+// Register Bank 12 and Interface Mapping
+assign ifc.out_data[0] = out_data_0;
+assign ifc.out_data[1] = out_data_1;
+assign ifc.out_data[2] = out_data_2;
+assign ifc.out_data[3] = out_data_3;
+assign ifc.out_data[4] = out_data_4;
+assign ifc.out_data[5] = out_data_5;
+assign ifc.out_data[6] = out_data_6;
+assign ifc.out_data[7] = out_data_7;
+assign ifc.out_data[8] = out_data_8;
+assign ifc.out_data[9] = out_data_9;
+assign ifc.out_data[10] = out_data_10;
+assign ifc.out_data[11] = out_data_11;
+assign ifc.out_data[12] = out_data_12;
+assign ifc.out_data[13] = out_data_13;
+assign ifc.out_data[14] = out_data_14;
+assign ifc.out_data[15] = out_data_15;
 
 
 
@@ -532,8 +539,9 @@ wire logic adcout_pfd_offset_15;
 //; my $sc_rf72rf8_ifc = clone($sc_jtag2rf0_ifc, 'sc_rf72rf8_ifc');
 //; my $sc_rf82rf9_ifc = clone($sc_jtag2rf0_ifc, 'sc_rf82rf9_ifc');
 //; my $sc_rf92rf10_ifc = clone($sc_jtag2rf0_ifc, 'sc_rf92rf10_ifc');
-//; my $sc_rf112jtag_ifc = clone($sc_jtag2rf0_ifc, 'sc_rf112jtag_ifc');
-//; my $sc_rf102rf11_ifc = clone($sc_jtag2rf0_ifc, 'sc_rf102rf2_ifc');
+//; my $sc_rf102rf11_ifc = clone($sc_jtag2rf0_ifc, 'sc_rf102rf11_ifc');
+//; my $sc_rf122jtag_ifc = clone($sc_jtag2rf0_ifc, 'sc_rf122jtag_ifc');
+//; my $sc_rf112rf12_ifc = clone($sc_jtag2rf0_ifc, 'sc_rf112rf2_ifc');
 
 `$sc_jtag2rf0_ifc->instantiate`();
 `$sc_rf02rf1_ifc->instantiate`();
@@ -546,8 +554,9 @@ wire logic adcout_pfd_offset_15;
 `$sc_rf72rf8_ifc->instantiate`();
 `$sc_rf82rf9_ifc->instantiate`();
 `$sc_rf92rf10_ifc->instantiate`();
-`$sc_rf112jtag_ifc->instantiate`();
 `$sc_rf102rf11_ifc->instantiate`();
+`$sc_rf122jtag_ifc->instantiate`();
+`$sc_rf112rf12_ifc->instantiate`();
 
 
 
@@ -589,7 +598,7 @@ wire logic adcout_pfd_offset_15;
 
       // signals to the system clocked regfile
 			.sc_cfgReq(`$sc_jtag2rf0_ifc->iname`.cfgOut),
-			.sc_cfgRep(`$sc_rf112jtag_ifc->iname`.cfgIn),
+			.sc_cfgRep(`$sc_rf122jtag_ifc->iname`.cfgIn),
 
       .Clk(ifc.Clk),
       .Reset(ifc.Reset),
@@ -632,50 +641,36 @@ wire logic adcout_pfd_offset_15;
 //;					{Name => 'sel_ext_pd_offset', Width=>1, IEO=>'o'},
 //;					{Name => 'pd_offset_ext', Width=>8, IEO=>'o'},
 //;					{Name => 'in_addr', Width=>10, IEO=>'o'},
-//;					{Name => 'in_load_addr', Width=>1, IEO=>'o'},
-//;					{Name => 'in_load_max', Width=>1, IEO=>'o'},
-//;					{Name => 'read', Width=>1, IEO=>'o'},
-//;					{Name => 'write', Width=>1, IEO=>'o'},
-//;					{Name => 'out_data', Width=>128, IEO=>'i'},
-//;					{Name => 'addr', Width=>10, IEO=>'i'},
-//;					{Name => 'counter_overflow', Width=>1, IEO=>'i'},
-//;					{Name => 'done', Width=>1, IEO=>'i'}
+//;					{Name => 'addr', Width=>10, IEO=>'i'}
 //;				]
 //;			);
 `$regfile0_on_sysclk->instantiate` (.Clk(ifc.Clk),
 			.Reset(ifc.Reset),
 			.cfgIn(`$sc_jtag2rf0_ifc->iname`.cfgIn),
 			.cfgOut(`$sc_rf02rf1_ifc->iname`.cfgOut),
-			en_v2t_q(ifc.en_v2t),
-			en_pi_arb_q(ifc.en_pi_arb),
-			en_ext_pi_ctl_cdr_q(ifc.en_ext_pi_ctl_cdr),
-			ext_pi_ctl_cdr_q(ifc.ext_pi_ctl_cdr),
-			en_ext_pi_ctl_offset_q(ifc.en_ext_pi_ctl_offset),
-			en_ext_v2t_ctl_q(ifc.en_ext_v2t_ctl),
-			en_ext_mismatch_ctl_q(ifc.en_ext_mismatch_ctl),
-			en_ext_pfd_offset_q(ifc.en_ext_pfd_offset),
-			en_skew_cal_q(ifc.en_skew_cal),
-			en_v2t_cal_q(ifc.en_v2t_cal),
-			en_mismatch_cal_q(ifc.en_mismatch_cal),
-			en_pfd_cal_q(ifc.en_pfd_cal),
-			Navg_adc_q(ifc.Navg_adc),
-			Nbin_adc_q(ifc.Nbin_adc),
-			DZ_hist_adc_q(ifc.DZ_hist_adc),
-			DZ_v2t_cal_q(ifc.DZ_v2t_cal),
-			en_mdll_q(ifc.en_mdll),
-			sel_ext_pi_q(ifc.sel_ext_pi),
-			pi_ctl_ext_q(ifc.pi_ctl_ext),
-			sel_ext_pd_offset_q(ifc.sel_ext_pd_offset),
-			pd_offset_ext_q(ifc.pd_offset_ext),
-			in_addr_q(ifc.in_addr),
-			in_load_addr_q(ifc.in_load_addr),
-			in_load_max_q(ifc.in_load_max),
-			read_q(ifc.read),
-			write_q(ifc.write),
-			out_data_d(ifc.out_data),
-			addr_d(ifc.addr),
-			counter_overflow_d(ifc.counter_overflow),
-			done_d(ifc.done)
+			.en_v2t_q(ifc.en_v2t),
+			.en_pi_arb_q(ifc.en_pi_arb),
+			.en_ext_pi_ctl_cdr_q(ifc.en_ext_pi_ctl_cdr),
+			.ext_pi_ctl_cdr_q(ifc.ext_pi_ctl_cdr),
+			.en_ext_pi_ctl_offset_q(ifc.en_ext_pi_ctl_offset),
+			.en_ext_v2t_ctl_q(ifc.en_ext_v2t_ctl),
+			.en_ext_mismatch_ctl_q(ifc.en_ext_mismatch_ctl),
+			.en_ext_pfd_offset_q(ifc.en_ext_pfd_offset),
+			.en_skew_cal_q(ifc.en_skew_cal),
+			.en_v2t_cal_q(ifc.en_v2t_cal),
+			.en_mismatch_cal_q(ifc.en_mismatch_cal),
+			.en_pfd_cal_q(ifc.en_pfd_cal),
+			.Navg_adc_q(ifc.Navg_adc),
+			.Nbin_adc_q(ifc.Nbin_adc),
+			.DZ_hist_adc_q(ifc.DZ_hist_adc),
+			.DZ_v2t_cal_q(ifc.DZ_v2t_cal),
+			.en_mdll_q(ifc.en_mdll),
+			.sel_ext_pi_q(ifc.sel_ext_pi),
+			.pi_ctl_ext_q(ifc.pi_ctl_ext),
+			.sel_ext_pd_offset_q(ifc.sel_ext_pd_offset),
+			.pd_offset_ext_q(ifc.pd_offset_ext),
+			.in_addr_q(ifc.in_addr),
+			.addr_d(ifc.addr)
 			);
 //Register Bank 1:
 //;my $regfile1_on_sysclk = generate('reg_file', 'regfile1_on_sysclk',
@@ -693,10 +688,10 @@ wire logic adcout_pfd_offset_15;
 			.Reset(ifc.Reset),
 			.cfgIn(`$sc_rf02rf1_ifc->iname`.cfgIn),
 			.cfgOut(`$sc_rf12rf2_ifc->iname`.cfgOut),
-			ext_pi_ctl_offset_0_q(ext_pi_ctl_offset_0),
-			ext_pi_ctl_offset_1_q(ext_pi_ctl_offset_1),
-			ext_pi_ctl_offset_2_q(ext_pi_ctl_offset_2),
-			ext_pi_ctl_offset_3_q(ext_pi_ctl_offset_3)
+			.ext_pi_ctl_offset_0_q(ext_pi_ctl_offset_0),
+			.ext_pi_ctl_offset_1_q(ext_pi_ctl_offset_1),
+			.ext_pi_ctl_offset_2_q(ext_pi_ctl_offset_2),
+			.ext_pi_ctl_offset_3_q(ext_pi_ctl_offset_3)
 			);
 //Register Bank 2:
 //;my $regfile2_on_sysclk = generate('reg_file', 'regfile2_on_sysclk',
@@ -726,22 +721,22 @@ wire logic adcout_pfd_offset_15;
 			.Reset(ifc.Reset),
 			.cfgIn(`$sc_rf12rf2_ifc->iname`.cfgIn),
 			.cfgOut(`$sc_rf22rf3_ifc->iname`.cfgOut),
-			ext_v2t_ctl_0_q(ext_v2t_ctl_0),
-			ext_v2t_ctl_1_q(ext_v2t_ctl_1),
-			ext_v2t_ctl_2_q(ext_v2t_ctl_2),
-			ext_v2t_ctl_3_q(ext_v2t_ctl_3),
-			ext_v2t_ctl_4_q(ext_v2t_ctl_4),
-			ext_v2t_ctl_5_q(ext_v2t_ctl_5),
-			ext_v2t_ctl_6_q(ext_v2t_ctl_6),
-			ext_v2t_ctl_7_q(ext_v2t_ctl_7),
-			ext_v2t_ctl_8_q(ext_v2t_ctl_8),
-			ext_v2t_ctl_9_q(ext_v2t_ctl_9),
-			ext_v2t_ctl_10_q(ext_v2t_ctl_10),
-			ext_v2t_ctl_11_q(ext_v2t_ctl_11),
-			ext_v2t_ctl_12_q(ext_v2t_ctl_12),
-			ext_v2t_ctl_13_q(ext_v2t_ctl_13),
-			ext_v2t_ctl_14_q(ext_v2t_ctl_14),
-			ext_v2t_ctl_15_q(ext_v2t_ctl_15)
+			.ext_v2t_ctl_0_q(ext_v2t_ctl_0),
+			.ext_v2t_ctl_1_q(ext_v2t_ctl_1),
+			.ext_v2t_ctl_2_q(ext_v2t_ctl_2),
+			.ext_v2t_ctl_3_q(ext_v2t_ctl_3),
+			.ext_v2t_ctl_4_q(ext_v2t_ctl_4),
+			.ext_v2t_ctl_5_q(ext_v2t_ctl_5),
+			.ext_v2t_ctl_6_q(ext_v2t_ctl_6),
+			.ext_v2t_ctl_7_q(ext_v2t_ctl_7),
+			.ext_v2t_ctl_8_q(ext_v2t_ctl_8),
+			.ext_v2t_ctl_9_q(ext_v2t_ctl_9),
+			.ext_v2t_ctl_10_q(ext_v2t_ctl_10),
+			.ext_v2t_ctl_11_q(ext_v2t_ctl_11),
+			.ext_v2t_ctl_12_q(ext_v2t_ctl_12),
+			.ext_v2t_ctl_13_q(ext_v2t_ctl_13),
+			.ext_v2t_ctl_14_q(ext_v2t_ctl_14),
+			.ext_v2t_ctl_15_q(ext_v2t_ctl_15)
 			);
 //Register Bank 3:
 //;my $regfile3_on_sysclk = generate('reg_file', 'regfile3_on_sysclk',
@@ -759,10 +754,10 @@ wire logic adcout_pfd_offset_15;
 			.Reset(ifc.Reset),
 			.cfgIn(`$sc_rf22rf3_ifc->iname`.cfgIn),
 			.cfgOut(`$sc_rf32rf4_ifc->iname`.cfgOut),
-			ext_mismatch_ctl_0_q(ext_mismatch_ctl_0),
-			ext_mismatch_ctl_1_q(ext_mismatch_ctl_1),
-			ext_mismatch_ctl_2_q(ext_mismatch_ctl_2),
-			ext_mismatch_ctl_3_q(ext_mismatch_ctl_3)
+			.ext_mismatch_ctl_0_q(ext_mismatch_ctl_0),
+			.ext_mismatch_ctl_1_q(ext_mismatch_ctl_1),
+			.ext_mismatch_ctl_2_q(ext_mismatch_ctl_2),
+			.ext_mismatch_ctl_3_q(ext_mismatch_ctl_3)
 			);
 //Register Bank 4:
 //;my $regfile4_on_sysclk = generate('reg_file', 'regfile4_on_sysclk',
@@ -792,22 +787,22 @@ wire logic adcout_pfd_offset_15;
 			.Reset(ifc.Reset),
 			.cfgIn(`$sc_rf32rf4_ifc->iname`.cfgIn),
 			.cfgOut(`$sc_rf42rf5_ifc->iname`.cfgOut),
-			ext_pfd_offset_0_q(ext_pfd_offset_0),
-			ext_pfd_offset_1_q(ext_pfd_offset_1),
-			ext_pfd_offset_2_q(ext_pfd_offset_2),
-			ext_pfd_offset_3_q(ext_pfd_offset_3),
-			ext_pfd_offset_4_q(ext_pfd_offset_4),
-			ext_pfd_offset_5_q(ext_pfd_offset_5),
-			ext_pfd_offset_6_q(ext_pfd_offset_6),
-			ext_pfd_offset_7_q(ext_pfd_offset_7),
-			ext_pfd_offset_8_q(ext_pfd_offset_8),
-			ext_pfd_offset_9_q(ext_pfd_offset_9),
-			ext_pfd_offset_10_q(ext_pfd_offset_10),
-			ext_pfd_offset_11_q(ext_pfd_offset_11),
-			ext_pfd_offset_12_q(ext_pfd_offset_12),
-			ext_pfd_offset_13_q(ext_pfd_offset_13),
-			ext_pfd_offset_14_q(ext_pfd_offset_14),
-			ext_pfd_offset_15_q(ext_pfd_offset_15)
+			.ext_pfd_offset_0_q(ext_pfd_offset_0),
+			.ext_pfd_offset_1_q(ext_pfd_offset_1),
+			.ext_pfd_offset_2_q(ext_pfd_offset_2),
+			.ext_pfd_offset_3_q(ext_pfd_offset_3),
+			.ext_pfd_offset_4_q(ext_pfd_offset_4),
+			.ext_pfd_offset_5_q(ext_pfd_offset_5),
+			.ext_pfd_offset_6_q(ext_pfd_offset_6),
+			.ext_pfd_offset_7_q(ext_pfd_offset_7),
+			.ext_pfd_offset_8_q(ext_pfd_offset_8),
+			.ext_pfd_offset_9_q(ext_pfd_offset_9),
+			.ext_pfd_offset_10_q(ext_pfd_offset_10),
+			.ext_pfd_offset_11_q(ext_pfd_offset_11),
+			.ext_pfd_offset_12_q(ext_pfd_offset_12),
+			.ext_pfd_offset_13_q(ext_pfd_offset_13),
+			.ext_pfd_offset_14_q(ext_pfd_offset_14),
+			.ext_pfd_offset_15_q(ext_pfd_offset_15)
 			);
 //Register Bank 5:
 //;my $regfile5_on_sysclk = generate('reg_file', 'regfile5_on_sysclk',
@@ -837,22 +832,22 @@ wire logic adcout_pfd_offset_15;
 			.Reset(ifc.Reset),
 			.cfgIn(`$sc_rf42rf5_ifc->iname`.cfgIn),
 			.cfgOut(`$sc_rf52rf6_ifc->iname`.cfgOut),
-			init_0_q(init_0),
-			init_1_q(init_1),
-			init_2_q(init_2),
-			init_3_q(init_3),
-			init_4_q(init_4),
-			init_5_q(init_5),
-			init_6_q(init_6),
-			init_7_q(init_7),
-			init_8_q(init_8),
-			init_9_q(init_9),
-			init_10_q(init_10),
-			init_11_q(init_11),
-			init_12_q(init_12),
-			init_13_q(init_13),
-			init_14_q(init_14),
-			init_15_q(init_15)
+			.init_0_q(init_0),
+			.init_1_q(init_1),
+			.init_2_q(init_2),
+			.init_3_q(init_3),
+			.init_4_q(init_4),
+			.init_5_q(init_5),
+			.init_6_q(init_6),
+			.init_7_q(init_7),
+			.init_8_q(init_8),
+			.init_9_q(init_9),
+			.init_10_q(init_10),
+			.init_11_q(init_11),
+			.init_12_q(init_12),
+			.init_13_q(init_13),
+			.init_14_q(init_14),
+			.init_15_q(init_15)
 			);
 //Register Bank 6:
 //;my $regfile6_on_sysclk = generate('reg_file', 'regfile6_on_sysclk',
@@ -882,22 +877,22 @@ wire logic adcout_pfd_offset_15;
 			.Reset(ifc.Reset),
 			.cfgIn(`$sc_rf52rf6_ifc->iname`.cfgIn),
 			.cfgOut(`$sc_rf62rf7_ifc->iname`.cfgOut),
-			adcout_0_d(adcout_0),
-			adcout_1_d(adcout_1),
-			adcout_2_d(adcout_2),
-			adcout_3_d(adcout_3),
-			adcout_4_d(adcout_4),
-			adcout_5_d(adcout_5),
-			adcout_6_d(adcout_6),
-			adcout_7_d(adcout_7),
-			adcout_8_d(adcout_8),
-			adcout_9_d(adcout_9),
-			adcout_10_d(adcout_10),
-			adcout_11_d(adcout_11),
-			adcout_12_d(adcout_12),
-			adcout_13_d(adcout_13),
-			adcout_14_d(adcout_14),
-			adcout_15_d(adcout_15)
+			.adcout_0_d(adcout_0),
+			.adcout_1_d(adcout_1),
+			.adcout_2_d(adcout_2),
+			.adcout_3_d(adcout_3),
+			.adcout_4_d(adcout_4),
+			.adcout_5_d(adcout_5),
+			.adcout_6_d(adcout_6),
+			.adcout_7_d(adcout_7),
+			.adcout_8_d(adcout_8),
+			.adcout_9_d(adcout_9),
+			.adcout_10_d(adcout_10),
+			.adcout_11_d(adcout_11),
+			.adcout_12_d(adcout_12),
+			.adcout_13_d(adcout_13),
+			.adcout_14_d(adcout_14),
+			.adcout_15_d(adcout_15)
 			);
 //Register Bank 7:
 //;my $regfile7_on_sysclk = generate('reg_file', 'regfile7_on_sysclk',
@@ -927,22 +922,22 @@ wire logic adcout_pfd_offset_15;
 			.Reset(ifc.Reset),
 			.cfgIn(`$sc_rf62rf7_ifc->iname`.cfgIn),
 			.cfgOut(`$sc_rf72rf8_ifc->iname`.cfgOut),
-			adcout_avg_0_d(adcout_avg_0),
-			adcout_avg_1_d(adcout_avg_1),
-			adcout_avg_2_d(adcout_avg_2),
-			adcout_avg_3_d(adcout_avg_3),
-			adcout_avg_4_d(adcout_avg_4),
-			adcout_avg_5_d(adcout_avg_5),
-			adcout_avg_6_d(adcout_avg_6),
-			adcout_avg_7_d(adcout_avg_7),
-			adcout_avg_8_d(adcout_avg_8),
-			adcout_avg_9_d(adcout_avg_9),
-			adcout_avg_10_d(adcout_avg_10),
-			adcout_avg_11_d(adcout_avg_11),
-			adcout_avg_12_d(adcout_avg_12),
-			adcout_avg_13_d(adcout_avg_13),
-			adcout_avg_14_d(adcout_avg_14),
-			adcout_avg_15_d(adcout_avg_15)
+			.adcout_avg_0_d(adcout_avg_0),
+			.adcout_avg_1_d(adcout_avg_1),
+			.adcout_avg_2_d(adcout_avg_2),
+			.adcout_avg_3_d(adcout_avg_3),
+			.adcout_avg_4_d(adcout_avg_4),
+			.adcout_avg_5_d(adcout_avg_5),
+			.adcout_avg_6_d(adcout_avg_6),
+			.adcout_avg_7_d(adcout_avg_7),
+			.adcout_avg_8_d(adcout_avg_8),
+			.adcout_avg_9_d(adcout_avg_9),
+			.adcout_avg_10_d(adcout_avg_10),
+			.adcout_avg_11_d(adcout_avg_11),
+			.adcout_avg_12_d(adcout_avg_12),
+			.adcout_avg_13_d(adcout_avg_13),
+			.adcout_avg_14_d(adcout_avg_14),
+			.adcout_avg_15_d(adcout_avg_15)
 			);
 //Register Bank 8:
 //;my $regfile8_on_sysclk = generate('reg_file', 'regfile8_on_sysclk',
@@ -972,22 +967,22 @@ wire logic adcout_pfd_offset_15;
 			.Reset(ifc.Reset),
 			.cfgIn(`$sc_rf72rf8_ifc->iname`.cfgIn),
 			.cfgOut(`$sc_rf82rf9_ifc->iname`.cfgOut),
-			adcout_sum_0_d(adcout_sum_0),
-			adcout_sum_1_d(adcout_sum_1),
-			adcout_sum_2_d(adcout_sum_2),
-			adcout_sum_3_d(adcout_sum_3),
-			adcout_sum_4_d(adcout_sum_4),
-			adcout_sum_5_d(adcout_sum_5),
-			adcout_sum_6_d(adcout_sum_6),
-			adcout_sum_7_d(adcout_sum_7),
-			adcout_sum_8_d(adcout_sum_8),
-			adcout_sum_9_d(adcout_sum_9),
-			adcout_sum_10_d(adcout_sum_10),
-			adcout_sum_11_d(adcout_sum_11),
-			adcout_sum_12_d(adcout_sum_12),
-			adcout_sum_13_d(adcout_sum_13),
-			adcout_sum_14_d(adcout_sum_14),
-			adcout_sum_15_d(adcout_sum_15)
+			.adcout_sum_0_d(adcout_sum_0),
+			.adcout_sum_1_d(adcout_sum_1),
+			.adcout_sum_2_d(adcout_sum_2),
+			.adcout_sum_3_d(adcout_sum_3),
+			.adcout_sum_4_d(adcout_sum_4),
+			.adcout_sum_5_d(adcout_sum_5),
+			.adcout_sum_6_d(adcout_sum_6),
+			.adcout_sum_7_d(adcout_sum_7),
+			.adcout_sum_8_d(adcout_sum_8),
+			.adcout_sum_9_d(adcout_sum_9),
+			.adcout_sum_10_d(adcout_sum_10),
+			.adcout_sum_11_d(adcout_sum_11),
+			.adcout_sum_12_d(adcout_sum_12),
+			.adcout_sum_13_d(adcout_sum_13),
+			.adcout_sum_14_d(adcout_sum_14),
+			.adcout_sum_15_d(adcout_sum_15)
 			);
 //Register Bank 9:
 //;my $regfile9_on_sysclk = generate('reg_file', 'regfile9_on_sysclk',
@@ -1017,22 +1012,22 @@ wire logic adcout_pfd_offset_15;
 			.Reset(ifc.Reset),
 			.cfgIn(`$sc_rf82rf9_ifc->iname`.cfgIn),
 			.cfgOut(`$sc_rf92rf10_ifc->iname`.cfgOut),
-			adcout_hist_center_0_d(adcout_hist_center_0),
-			adcout_hist_center_1_d(adcout_hist_center_1),
-			adcout_hist_center_2_d(adcout_hist_center_2),
-			adcout_hist_center_3_d(adcout_hist_center_3),
-			adcout_hist_center_4_d(adcout_hist_center_4),
-			adcout_hist_center_5_d(adcout_hist_center_5),
-			adcout_hist_center_6_d(adcout_hist_center_6),
-			adcout_hist_center_7_d(adcout_hist_center_7),
-			adcout_hist_center_8_d(adcout_hist_center_8),
-			adcout_hist_center_9_d(adcout_hist_center_9),
-			adcout_hist_center_10_d(adcout_hist_center_10),
-			adcout_hist_center_11_d(adcout_hist_center_11),
-			adcout_hist_center_12_d(adcout_hist_center_12),
-			adcout_hist_center_13_d(adcout_hist_center_13),
-			adcout_hist_center_14_d(adcout_hist_center_14),
-			adcout_hist_center_15_d(adcout_hist_center_15)
+			.adcout_hist_center_0_d(adcout_hist_center_0),
+			.adcout_hist_center_1_d(adcout_hist_center_1),
+			.adcout_hist_center_2_d(adcout_hist_center_2),
+			.adcout_hist_center_3_d(adcout_hist_center_3),
+			.adcout_hist_center_4_d(adcout_hist_center_4),
+			.adcout_hist_center_5_d(adcout_hist_center_5),
+			.adcout_hist_center_6_d(adcout_hist_center_6),
+			.adcout_hist_center_7_d(adcout_hist_center_7),
+			.adcout_hist_center_8_d(adcout_hist_center_8),
+			.adcout_hist_center_9_d(adcout_hist_center_9),
+			.adcout_hist_center_10_d(adcout_hist_center_10),
+			.adcout_hist_center_11_d(adcout_hist_center_11),
+			.adcout_hist_center_12_d(adcout_hist_center_12),
+			.adcout_hist_center_13_d(adcout_hist_center_13),
+			.adcout_hist_center_14_d(adcout_hist_center_14),
+			.adcout_hist_center_15_d(adcout_hist_center_15)
 			);
 //Register Bank 10:
 //;my $regfile10_on_sysclk = generate('reg_file', 'regfile10_on_sysclk',
@@ -1062,22 +1057,22 @@ wire logic adcout_pfd_offset_15;
 			.Reset(ifc.Reset),
 			.cfgIn(`$sc_rf92rf10_ifc->iname`.cfgIn),
 			.cfgOut(`$sc_rf102rf11_ifc->iname`.cfgOut),
-			adcout_hist_side_0_d(adcout_hist_side_0),
-			adcout_hist_side_1_d(adcout_hist_side_1),
-			adcout_hist_side_2_d(adcout_hist_side_2),
-			adcout_hist_side_3_d(adcout_hist_side_3),
-			adcout_hist_side_4_d(adcout_hist_side_4),
-			adcout_hist_side_5_d(adcout_hist_side_5),
-			adcout_hist_side_6_d(adcout_hist_side_6),
-			adcout_hist_side_7_d(adcout_hist_side_7),
-			adcout_hist_side_8_d(adcout_hist_side_8),
-			adcout_hist_side_9_d(adcout_hist_side_9),
-			adcout_hist_side_10_d(adcout_hist_side_10),
-			adcout_hist_side_11_d(adcout_hist_side_11),
-			adcout_hist_side_12_d(adcout_hist_side_12),
-			adcout_hist_side_13_d(adcout_hist_side_13),
-			adcout_hist_side_14_d(adcout_hist_side_14),
-			adcout_hist_side_15_d(adcout_hist_side_15)
+			.adcout_hist_side_0_d(adcout_hist_side_0),
+			.adcout_hist_side_1_d(adcout_hist_side_1),
+			.adcout_hist_side_2_d(adcout_hist_side_2),
+			.adcout_hist_side_3_d(adcout_hist_side_3),
+			.adcout_hist_side_4_d(adcout_hist_side_4),
+			.adcout_hist_side_5_d(adcout_hist_side_5),
+			.adcout_hist_side_6_d(adcout_hist_side_6),
+			.adcout_hist_side_7_d(adcout_hist_side_7),
+			.adcout_hist_side_8_d(adcout_hist_side_8),
+			.adcout_hist_side_9_d(adcout_hist_side_9),
+			.adcout_hist_side_10_d(adcout_hist_side_10),
+			.adcout_hist_side_11_d(adcout_hist_side_11),
+			.adcout_hist_side_12_d(adcout_hist_side_12),
+			.adcout_hist_side_13_d(adcout_hist_side_13),
+			.adcout_hist_side_14_d(adcout_hist_side_14),
+			.adcout_hist_side_15_d(adcout_hist_side_15)
 			);
 //Register Bank 11:
 //;my $regfile11_on_sysclk = generate('reg_file', 'regfile11_on_sysclk',
@@ -1106,23 +1101,68 @@ wire logic adcout_pfd_offset_15;
 `$regfile11_on_sysclk->instantiate` (.Clk(ifc.Clk),
 			.Reset(ifc.Reset),
 			.cfgIn(`$sc_rf102rf11_ifc->iname`.cfgIn),
-			.cfgOut(`$sc_rf112jtag_ifc->iname`.cfgOut),
-			adcout_pfd_offset_0_d(adcout_pfd_offset_0),
-			adcout_pfd_offset_1_d(adcout_pfd_offset_1),
-			adcout_pfd_offset_2_d(adcout_pfd_offset_2),
-			adcout_pfd_offset_3_d(adcout_pfd_offset_3),
-			adcout_pfd_offset_4_d(adcout_pfd_offset_4),
-			adcout_pfd_offset_5_d(adcout_pfd_offset_5),
-			adcout_pfd_offset_6_d(adcout_pfd_offset_6),
-			adcout_pfd_offset_7_d(adcout_pfd_offset_7),
-			adcout_pfd_offset_8_d(adcout_pfd_offset_8),
-			adcout_pfd_offset_9_d(adcout_pfd_offset_9),
-			adcout_pfd_offset_10_d(adcout_pfd_offset_10),
-			adcout_pfd_offset_11_d(adcout_pfd_offset_11),
-			adcout_pfd_offset_12_d(adcout_pfd_offset_12),
-			adcout_pfd_offset_13_d(adcout_pfd_offset_13),
-			adcout_pfd_offset_14_d(adcout_pfd_offset_14),
-			adcout_pfd_offset_15_d(adcout_pfd_offset_15)
+			.cfgOut(`$sc_rf112rf12_ifc->iname`.cfgOut),
+			.adcout_pfd_offset_0_d(adcout_pfd_offset_0),
+			.adcout_pfd_offset_1_d(adcout_pfd_offset_1),
+			.adcout_pfd_offset_2_d(adcout_pfd_offset_2),
+			.adcout_pfd_offset_3_d(adcout_pfd_offset_3),
+			.adcout_pfd_offset_4_d(adcout_pfd_offset_4),
+			.adcout_pfd_offset_5_d(adcout_pfd_offset_5),
+			.adcout_pfd_offset_6_d(adcout_pfd_offset_6),
+			.adcout_pfd_offset_7_d(adcout_pfd_offset_7),
+			.adcout_pfd_offset_8_d(adcout_pfd_offset_8),
+			.adcout_pfd_offset_9_d(adcout_pfd_offset_9),
+			.adcout_pfd_offset_10_d(adcout_pfd_offset_10),
+			.adcout_pfd_offset_11_d(adcout_pfd_offset_11),
+			.adcout_pfd_offset_12_d(adcout_pfd_offset_12),
+			.adcout_pfd_offset_13_d(adcout_pfd_offset_13),
+			.adcout_pfd_offset_14_d(adcout_pfd_offset_14),
+			.adcout_pfd_offset_15_d(adcout_pfd_offset_15)
+			);
+//Register Bank 12:
+//;my $regfile12_on_sysclk = generate('reg_file', 'regfile12_on_sysclk',
+//;			CfgBusPtr => $sc_jtag2rf0_ifc,
+//;			CfgOpcodes => $sc_cfg_ops,
+//;			BaseAddr => 0x300,
+//;			RegList =>[
+//;					{Name => 'out_data_0', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_1', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_2', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_3', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_4', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_5', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_6', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_7', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_8', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_9', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_10', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_11', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_12', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_13', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_14', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_15', Width=>8, IEO=>'i'}
+//;				]
+//;			);
+`$regfile12_on_sysclk->instantiate` (.Clk(ifc.Clk),
+			.Reset(ifc.Reset),
+			.cfgIn(`$sc_rf112rf12_ifc->iname`.cfgIn),
+			.cfgOut(`$sc_rf122jtag_ifc->iname`.cfgOut),
+			.out_data_0_d(out_data_0),
+			.out_data_1_d(out_data_1),
+			.out_data_2_d(out_data_2),
+			.out_data_3_d(out_data_3),
+			.out_data_4_d(out_data_4),
+			.out_data_5_d(out_data_5),
+			.out_data_6_d(out_data_6),
+			.out_data_7_d(out_data_7),
+			.out_data_8_d(out_data_8),
+			.out_data_9_d(out_data_9),
+			.out_data_10_d(out_data_10),
+			.out_data_11_d(out_data_11),
+			.out_data_12_d(out_data_12),
+			.out_data_13_d(out_data_13),
+			.out_data_14_d(out_data_14),
+			.out_data_15_d(out_data_15)
 			);
 
 

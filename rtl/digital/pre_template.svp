@@ -102,18 +102,18 @@ module `mname`
    `$ifc->mname`.des ifc,
      
    // Signals for the Boundary Scan Register (these are not chip IOs though)
-   output logic bsr_tdi,
-   output logic bsr_sample,
-   output logic	bsr_intest,
-   output logic bsr_extest,
-   output logic bsr_update_en,
-   output logic bsr_capture_en,
-   output logic bsr_shift_dr,
-   input logic	bsr_tdo
+   output wire logic bsr_tdi,
+   output wire logic bsr_sample,
+   output wire logic	bsr_intest,
+   output wire logic bsr_extest,
+   output wire logic bsr_update_en,
+   output wire logic bsr_capture_en,
+   output wire logic bsr_shift_dr,
+   input wire logic	bsr_tdo
    );
-$$ INSERT intf_regfile_gen
 
 $$ INSERT intf_regfile_int
+$$ INSERT intf_regfile_gen
 				
    //  Config interfaces for system and test clock domains
 $$	INSERT sc_rf2rf_gen

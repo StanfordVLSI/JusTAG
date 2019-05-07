@@ -20,6 +20,18 @@ genesis:
 						        rtl/digital/cfg_and_dbg.svp\
 						        rtl/primitives/reg_file.svp 
 
+genesis_test:
+	Genesis2.pl -parse -generate -top top -input  verif/top.svp \
+								verif/clocker.svp \
+								verif/JTAGDriver.svp \
+								verif/test.svp \
+								rtl/digital/template.svp \
+							    rtl/primitives/cfg_ifc.svp \
+						        rtl/digital/template_ifc.svp \
+						        rtl/primitives/flop.svp \
+						        rtl/digital/tap.svp \
+						        rtl/digital/cfg_and_dbg.svp\
+						        rtl/primitives/reg_file.svp 
 
 genesis_clean:
 	@echo ""

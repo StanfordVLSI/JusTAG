@@ -80,33 +80,33 @@ module `$self->get_module_name()`
    // Required commands by the IEEE Standard 1149.1 for a synchronous boundary scan register
    // Note to all: INTEST is optional part of the standard but we'll put it in anyway.
    // Note to me: In bsr cells, connect both update clk and capture clk to tck.
-   output logic bsr_extest, // Test Sellect Data Reg: EXTEST
-   output logic bsr_intest, // Test Sellect Data Reg: INTEST
-   output logic bsr_sample, // Test Sellect Data Reg: SAMPLE
-   output logic bsr_capture_en, // required by bsr cells
-   output logic bsr_shift_dr, // required by bsr cells	  
-   output logic bsr_update_en, // required by bsr cells
-   input logic 	bsr_tdo, // data from the boundary scan register
+   output wire logic bsr_extest, // Test Sellect Data Reg: EXTEST
+   output wire logic bsr_intest, // Test Sellect Data Reg: INTEST
+   output wire logic bsr_sample, // Test Sellect Data Reg: SAMPLE
+   output wire logic bsr_capture_en, // required by bsr cells
+   output wire logic bsr_shift_dr, // required by bsr cells	  
+   output wire logic bsr_update_en, // required by bsr cells
+   input wire logic 	bsr_tdo, // data from the boundary scan register
   
    // Special registers
    //; foreach my $jtag_inst (@{$special_jtag_insts}){
-   output logic `$jtag_inst->{name}`_capture_dr, // Test Sellect Data Reg: `$jtag_inst->{name}`
-   output logic `$jtag_inst->{name}`_shift_dr, // Test Sellect Data Reg: `$jtag_inst->{name}`
-   output logic `$jtag_inst->{name}`_update_dr, // Test Sellect Data Reg: `$jtag_inst->{name}`
+   output wire logic `$jtag_inst->{name}`_capture_dr, // Test Sellect Data Reg: `$jtag_inst->{name}`
+   output wire logic `$jtag_inst->{name}`_shift_dr, // Test Sellect Data Reg: `$jtag_inst->{name}`
+   output wire logic `$jtag_inst->{name}`_update_dr, // Test Sellect Data Reg: `$jtag_inst->{name}`
    //;}
 
    // Special TDOs
    //; foreach my $jtag_inst (@{$special_jtag_insts}){
-   input logic 	`$jtag_inst->{name}`_tdo, // serial data out from DATA register `$jtag_inst->{name}`
+   input wire logic 	`$jtag_inst->{name}`_tdo, // serial data out from DATA register `$jtag_inst->{name}`
    //;}
 
    // the standard JTAG IOs
-   input logic 	tms, // JTAG Test Mode Select
-   input logic 	tck, // JTAG Test Clock
-   input logic 	trst_n, // JTAG Test Reset
-   input logic 	tdi, // JTAG Test Data Input
-   output logic tdo, // JTAG Test Data Output
-   output logic tdo_en	        // JTAG Test Data Output
+   input wire logic 	tms, // JTAG Test Mode Select
+   input wire logic 	tck, // JTAG Test Clock
+   input wire logic 	trst_n, // JTAG Test Reset
+   input wire logic 	tdi, // JTAG Test Data Input
+   output wire logic tdo, // JTAG Test Data Output
+   output wire logic tdo_en	        // JTAG Test Data Output
    );
 
    

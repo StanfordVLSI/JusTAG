@@ -38,14 +38,14 @@
 module `mname`(
 	       //inputs
 	       //; if ($type !~ m/constant/i) {
-	       input logic 		   Clk,
-	       input logic [`$width-1`:0]  din,
+	       input wire logic 		   Clk,
+	       input wire logic [`$width-1`:0]  din,
 	       //; }
 	       //; if ($type =~ m/rflop/i || $type =~ m/reflop/i) {
-	       input logic 		   Reset,
+	       input wire logic 		   Reset,
 	       //; }
 	       //; if ($type =~ m/eflop/i || $type =~ m/reflop/i) {
-	       input logic 		   en,
+	       input wire logic 		   en,
 	       //; }
 
 	       //outputs

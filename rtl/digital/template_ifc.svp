@@ -23,7 +23,7 @@
 //; } # end of "foreach my $io..."
 //;
 //; if($const_pack) {
-interface `mname`(input Clk, input Reset) import `$const_pack`::*; (
+interface `mname`(input wire Clk, input wire Reset) import `$const_pack`::*; (
 );
 //; } else {
 interface `mname`(input Clk, input Reset);

@@ -70,6 +70,10 @@ for interface in interfaces:
                             io_properties['width'] = evaluate(bounds[0]) + 1
                         elif ii > name_loc:
                             io_properties['array'] = evaluate(bounds[0]) + 1
+                if tokens[name_loc] in io_list:
+                    print(io_properties)
+                    print(tokens[name_loc])
+                    exit()
                 io_list[tokens[name_loc]] = io_properties
             if (tokens[0]  == 'input') and not is_JTAG_modport:
                 io_list[tokens[1].strip(',')]['ioe'] = 'out'
@@ -187,23 +191,23 @@ for ii in range(num_reg_file):
     if ii==0: 
         for jj in range(num_bank-1):
             reg = reg_files[ii][jj]
-            reg_file_gen_str += '\t\t\t{}_{}(ifc.{}),\n'.format(reg["Name"], 'd' if reg['IEO']=='i' else 'q', reg["Name"] )
+            reg_file_gen_str += '\t\t\t.{}_{}(ifc.{}),\n'.format(reg["Name"], 'd' if reg['IEO']=='i' else 'q', reg["Name"] )
         reg = reg_files[ii][num_bank-1]
-        reg_file_gen_str += '\t\t\t{}_{}(ifc.{})\n'.format(reg["Name"], 'd' if reg['IEO']=='i' else 'q', reg["Name"] )
+        reg_file_gen_str += '\t\t\t.{}_{}(ifc.{})\n'.format(reg["Name"], 'd' if reg['IEO']=='i' else 'q', reg["Name"] )
         reg_file_gen_str += '\t\t\t);\n'
     else:
         intf_regfile_gen_str += '// Register Bank {} and Interface Mapping\n'.format(ii)
         for jj in range(num_bank-1):
             reg = reg_files[ii][jj]
-            reg_file_gen_str += '\t\t\t{}_{}({}),\n'.format(reg["Name"], 'd' if reg['IEO']=='i' else 'q', reg["Name"] )
-            intf_regfile_int_str += 'wire logic {};\n'.format(reg["Name"])
+            reg_file_gen_str += '\t\t\t.{}_{}({}),\n'.format(reg["Name"], 'd' if reg['IEO']=='i' else 'q', reg["Name"] )
+            intf_regfile_int_str += 'wire logic [{}:0] {};\n'.format(reg["Width"]-1, reg["Name"])
             name_ = "_".join(reg["Name"].split('_')[0:-1])
             pos_  = reg["Name"].split('_')[-1]
             intf_regfile_gen_str += 'assign ifc.{}[{}] = {};\n'.format(name_, pos_, reg["Name"])
         reg = reg_files[ii][num_bank-1]
-        reg_file_gen_str += '\t\t\t{}_{}({})\n'.format(reg["Name"], 'd' if reg['IEO']=='i' else 'q', reg["Name"] )
+        reg_file_gen_str += '\t\t\t.{}_{}({})\n'.format(reg["Name"], 'd' if reg['IEO']=='i' else 'q', reg["Name"] )
         reg_file_gen_str += '\t\t\t);\n'
-        intf_regfile_int_str += 'wire logic {};\n\n\n'.format(reg["Name"])
+        intf_regfile_int_str += 'wire logic [{}:0] {};\n'.format(reg["Width"]-1, reg["Name"])
         name_ = "_".join(reg["Name"].split('_')[0:-1])
         pos_  = reg["Name"].split('_')[-1]
         intf_regfile_gen_str += 'assign ifc.{}[{}] = {};\n\n\n'.format(name_, pos_, reg["Name"])
@@ -215,19 +219,19 @@ cfg_bus_info_str += "//; my $tc_cfg_addr_width =  $self->define_param(TESTCLK_CF
 
 insertion_strings = {}
 
-insertion_strings['cfg_bus_info'] = cfg_bus_info_str
-insertion_strings['io_list_gen'] =  io_list_gen_str
-insertion_strings['intf_regfile_gen'] = intf_regfile_gen_str
-insertion_strings['intf_regfile_int'] = intf_regfile_int_str
-insertion_strings['sc_regfile_gen'] = reg_file_gen_str
-insertion_strings['tc_regfile_gen'] = "\n"
-insertion_strings['sc_rf2rf_gen'] = sc_rf2rf_gen_str
-insertion_strings['sc_rf2rf_int']= sc_rf2rf_int_str
-insertion_strings['tc_rf2rf_gen'] = "\n"
-insertion_strings['tc_rf2rf_int']= "\n"
-insertion_strings['sc_jtag_regfile_con']= sc_jtag_regfile_con_str
-insertion_strings['jtag_regfile_gen']= jtag_regfile_gen_str
-insertion_strings['tc_jtag_regfile_con']= "\n"
+insertion_strings['cfg_bus_info'        ] = cfg_bus_info_str
+insertion_strings['io_list_gen'         ] =  io_list_gen_str
+insertion_strings['intf_regfile_gen'    ] = intf_regfile_gen_str
+insertion_strings['intf_regfile_int'    ] = intf_regfile_int_str
+insertion_strings['sc_regfile_gen'      ] = reg_file_gen_str
+insertion_strings['tc_regfile_gen'      ] = "\n"
+insertion_strings['sc_rf2rf_gen'        ] = sc_rf2rf_gen_str
+insertion_strings['sc_rf2rf_int'        ] = sc_rf2rf_int_str
+insertion_strings['tc_rf2rf_gen'        ] = "\n"
+insertion_strings['tc_rf2rf_int'        ] = "\n"
+insertion_strings['sc_jtag_regfile_con' ] = sc_jtag_regfile_con_str
+insertion_strings['jtag_regfile_gen'    ] = jtag_regfile_gen_str
+insertion_strings['tc_jtag_regfile_con' ] = "\n"
 
 
 actions = {

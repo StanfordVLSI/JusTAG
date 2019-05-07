@@ -167,10 +167,10 @@ module `mname`
    //; foreach my $reg (@{$reg_list}){
    //;   if ($reg->{IEO} =~ m/i/i){
     // inputs for register `$reg->{Name}`
-    input logic [`$reg->{Width}-1`:0]       `$reg->{Name}`_d,
+    input wire logic [`$reg->{Width}-1`:0]       `$reg->{Name}`_d,
    //;   }
    //;   if ($reg->{IEO} =~ m/e/i){
-    input logic                        `$reg->{Name}`_en,
+    input wire logic                        `$reg->{Name}`_en,
    //;   }    
    //;   if ($reg->{IEO} =~ m/i/i){
 
@@ -181,14 +181,14 @@ module `mname`
    //; foreach my $reg (@{$reg_list}){
    //;   if ($reg->{IEO} =~ m/o/i){
     // outputs for register `$reg->{Name}`
-    output logic[`$reg->{Width}-1`:0]       `$reg->{Name}`_q,
+    output wire logic[`$reg->{Width}-1`:0]       `$reg->{Name}`_q,
                            
    //;   }                   
    //; } # end of foreach ...
    
    // Generic inputs 
-    input logic			       Clk,
-    input logic                        Reset
+    input wire logic			       Clk,
+    input wire logic                        Reset
    );
 
 

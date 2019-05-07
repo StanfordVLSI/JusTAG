@@ -11,7 +11,6 @@ package const_pack;
 	localparam integer Nv2t = 4;		// number of PI output clock phases
 	localparam integer Nrange = 4;
 	localparam integer N_mem_addr = 10; // number of bits in SRAM address
-
 endpackage
 
 `endif // `ifndef __CONST_PACK_SV__

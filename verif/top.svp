@@ -28,7 +28,6 @@
  ******************************************************************************/
 //; my $mode = parameter(Name=>'GenMode', Val=>'Sim', List=>['Sim', 'GateSim', 'Synth'], 
 //;		       Doc=>"Generation Mode. Can be 'Sim', 'GateSim', or 'Synth'");
-//; include ("analog_defs.vph");
 
 /*******************************************************************************
  * Simulation Control Definitions
@@ -76,7 +75,7 @@ module `mname`();
     * Instantiate DUT interface and DUT
     * *************************************************************************/
    //; # We use generate_base when there is for sure just one of X
-   //; my $dut_obj = generate('phy_top', 'dut', DesignName => $design_name);
+   //; my $dut_obj = generate('template', 'dut', DesignName => $design_name);
    //; my $dut_ifc_path = $dut_obj->get_param('IfcPtr');
    //; my $dut_ifc = clone($dut_ifc_path, 'dut_ifc');
    `$dut_ifc->instantiate` (.Clk(Clk), .Reset(Reset));
