@@ -113,7 +113,7 @@ for name in io_list:
         reg_files[num_reg_file] = {"num_bank":num_bank}
         for ii in range(num_bank):
             reg_files[num_reg_file][ii] = {
-                    "Name": "{}_{}".format(name, ii),
+                    "Name": "{}[{}]".format(name, ii),
                     "Width" : io_list[name]['width'],
                     "IEO"   : io_list[name]['ioe'][0]
                     }
@@ -199,18 +199,18 @@ for ii in range(num_reg_file):
         intf_regfile_gen_str += '// Register Bank {} and Interface Mapping\n'.format(ii)
         for jj in range(num_bank-1):
             reg = reg_files[ii][jj]
-            reg_file_gen_str += '\t\t\t.{}_{}({}),\n'.format(reg["Name"], 'd' if reg['IEO']=='i' else 'q', reg["Name"] )
-            intf_regfile_int_str += 'wire logic [{}:0] {};\n'.format(reg["Width"]-1, reg["Name"])
+            reg_file_gen_str += '\t\t\t.{}_{}_{}(ifc.{}),\n'.format(reg["Name"].split('[')[0], reg["Name"].replace(']','').split('[')[1], 'd' if reg['IEO']=='i' else 'q', reg["Name"] )
+ #           intf_regfile_int_str += 'wire logic [{}:0] {};\n'.format(reg["Width"]-1, reg["Name"])
             name_ = "_".join(reg["Name"].split('_')[0:-1])
             pos_  = reg["Name"].split('_')[-1]
-            intf_regfile_gen_str += 'assign ifc.{}[{}] = {};\n'.format(name_, pos_, reg["Name"])
+#            intf_regfile_gen_str += 'assign ifc.{}[{}] = {};\n'.format(name_, pos_, reg["Name"])
         reg = reg_files[ii][num_bank-1]
-        reg_file_gen_str += '\t\t\t.{}_{}({})\n'.format(reg["Name"], 'd' if reg['IEO']=='i' else 'q', reg["Name"] )
+        reg_file_gen_str += '\t\t\t.{}_{}_{}(ifc.{}),\n'.format(reg["Name"].split('[')[0], reg["Name"].replace(']','').split('[')[1], 'd' if reg['IEO']=='i' else 'q', reg["Name"] )
         reg_file_gen_str += '\t\t\t);\n'
-        intf_regfile_int_str += 'wire logic [{}:0] {};\n'.format(reg["Width"]-1, reg["Name"])
+#        intf_regfile_int_str += 'wire logic [{}:0] {};\n'.format(reg["Width"]-1, reg["Name"])
         name_ = "_".join(reg["Name"].split('_')[0:-1])
         pos_  = reg["Name"].split('_')[-1]
-        intf_regfile_gen_str += 'assign ifc.{}[{}] = {};\n\n\n'.format(name_, pos_, reg["Name"])
+#        intf_regfile_gen_str += 'assign ifc.{}[{}] = {};\n\n\n'.format(name_, pos_, reg["Name"])
 
 cfg_bus_info_str += "//; my $sc_cfg_bus_width = $self->define_param(SYSCLK_CFG_BUS_WIDTH => {});\n".format(max_sc_width)
 cfg_bus_info_str += "//; my $sc_cfg_addr_width =  $self->define_param(SYSCLK_CFG_ADDR_WIDTH => {});\n".format(max_sc_addr)

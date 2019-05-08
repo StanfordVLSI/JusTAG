@@ -52,39 +52,15 @@
       $fclose(svf_file);
       $finish(0);
    end
-
-         
-   /*******************************************************************************
-    * The Test Sequence: configure the analog block and read the result
-    *   #	Offset Pos_in     Neg_in      Out
-    *   1	0      0.1V-4mV   0.1+4mV     0
-    *   2	0      0.1V-2mV   0.1V+2mV    1
-    *   3	0      0.1V	  0.1V	      1
-    *   4	0      0.1V+2mV   0.1V-2mV    1
-    *   	       	   	       
-    *   5	6      0.1V-4mV   0.1+4mV     0
-    *   6	6      0.1V-2mV   0.1V+2mV    0
-    *   7	6      0.1V	  0.1V	      0
-    *   8	6      0.1V+2mV   0.1V-2mV    0
-    *   9	6      0.1V+4mV   0.1V-4mV    1
-    * ****************************************************************************/
-   int offset_vals[9] = {0, 0, 0, 0, 6, 6, 6, 6, 6};
-   real pos_in_vals[9] = {0.996, 0.998, 1.000, 1.002,
-			  0.996, 0.998, 1.000, 1.002, 1.004};
-   real neg_in_vals[9] = {1.004, 1.002, 1.000, 0.998,
-			  1.004, 1.002, 1.000, 0.998, 0.996};
-   logic expect_out[9] = {'b0, 'b1, 'b1, 'b1, 'b0, 'b0, 'b0, 'b0, 'b1};
-   
+ 
    task run_test;
-      begin
-	 logic [47:0] data_out;
-	 int 	      i;
+     begin
 	 jtag_regfile_trans_t jtag_trans;
 	 // Check IDCODE
 	 $fdisplay(svf_file, "! Check IDCODE");
 	 jdrv.ReadID(jtag_trans);
 	 // Run some test
-	 for (i = 0; i < 9; i++) begin
+/*	 for (i = 0; i < 9; i++) begin
 	    @(posedge ifc.Clk);
 	    jtag_write_reg(sc_domain, 18'h400, offset_vals[i]);
 	    ifc.cmp_pos_in = pos_in_vals[i];
@@ -96,7 +72,7 @@
 	       $display("%t: \033[0;31mERROR Found\033[0m", $time);
 	       $finish(2);
 	    end
-	 end
+	 end*/
       end
    endtask // run_test
    
@@ -107,11 +83,11 @@
 	 jdrv.Zero();
 	 jdrv.Reset();
 	 
-	 ifc.signalA_in = '0;
+/*	 ifc.signalA_in = '0;
 	 ifc.signalD_in = '0;
 	 ifc.cmp_Iref_in = 0;
 	 ifc.cmp_pos_in = 0;
-	 ifc.cmp_neg_in = 0;
+	 ifc.cmp_neg_in = 0;*/
 	 repeat (2) @(posedge ifc.Clk); 
       end
    endtask // init_test
@@ -119,7 +95,7 @@
    /****************************************************************************
     * JTAG transaction wrappers:
     * *************************************************************************/
-   task jtag_write_reg(input regfile_t clk_domain, input [17:0] addr ,input[47:0] data);
+   task jtag_write_reg(input regfile_t clk_domain, input [11:0] addr ,input[31:0] data);
       jtag_regfile_trans_t jtag_trans;
       jtag_trans.domain = clk_domain;
       jtag_trans.addr = addr;  // First register in the DP block
@@ -132,7 +108,7 @@
       jdrv.Send(jtag_trans);  
    endtask // jtag_write_reg 
 
-   task jtag_read_reg(input regfile_t clk_domain, input [17:0] addr, output [47:0] data);
+   task jtag_read_reg(input regfile_t clk_domain, input [11:0] addr, output [31:0] data);
       jtag_regfile_trans_t jtag_trans;
       jtag_trans.domain = clk_domain;
       jtag_trans.addr = addr;  // First register in the DP block
@@ -150,42 +126,6 @@
    /****************************************************************************
     * Other Tasks:
     * *************************************************************************/
-   task get_command_line_args ();
-      $display("%t:\t************Loading Arguments*************",$time);
-      begin
-         // if this is a "+wave" run, it must record all signals
-         if ( $test$plusargs("wave") ) begin
-            //         levels  instance
-            $display("time=%10t Starting Wave Capture", $time);
-            $vcdpluson(0,        top);
-         end
-         // if this is a "+memwave" run, it must record all memories
-         if ( $test$plusargs("memwave") ) begin
-            //         levels  instance
-            $display("time=%10t Starting Memories Capture", $time);
-            CaptureMemoriesOn();
-         end
-         // find the seed for this run
-         if ( $test$plusargs("seed") ) begin
-	    $value$plusargs("seed=%d", seed);
-	 end else begin
-            seed = 12345;
-         end
-	 $display("%t:\tUsing seed %d",$time, seed);
-      end
-   endtask // get_command_line_args
-   
-   task CaptureMemoriesOn;
-      begin
-         $vcdplusmemon(0,        top);
-      end
-   endtask // CaptureMemoriesOn
-   
-   task CaptureMemoriesOff;
-      begin
-         $vcdplusmemoff(0,        top);
-      end
-   endtask // CaptureMemoriesOff
    
 endprogram : `mname`
   

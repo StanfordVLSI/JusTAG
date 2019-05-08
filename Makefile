@@ -21,7 +21,8 @@ genesis:
 						        rtl/primitives/reg_file.svp 
 
 genesis_test:
-	Genesis2.pl -parse -generate -top top -input  verif/top.svp \
+	Genesis2.pl -parse -generate -top top -input verif/test.svp \
+								verif/top.svp \
 								verif/clocker.svp \
 								verif/JTAGDriver.svp \
 								verif/test.svp \
