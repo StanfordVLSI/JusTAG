@@ -6,7 +6,9 @@ $(warning Template Name:        $(TOP_NAME))
 $(warning Interface Directory:  $(INTF_DIR))
 $(warning Constants Directory:  $(PACK_DIR))
 
-all: justag genesis
+default: justag genesis
+
+all: justag genesis genesis_test
 
 justag: 
 	python JusTAG.py  $(INTF_DIR)/* $(PACK_DIR)/*
@@ -20,7 +22,7 @@ genesis:
 						        rtl/digital/cfg_and_dbg.svp\
 						        rtl/primitives/reg_file.svp 
 
-genesis_test:
+genesis_test: 
 	Genesis2.pl -parse -generate -top top -input verif/test.svp \
 								verif/top.svp \
 								verif/clocker.svp \

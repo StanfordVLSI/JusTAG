@@ -27,11 +27,13 @@
 // These types could have been generated according to the RTL but I got lazy
 // and just copied them from cfg_and_dbg.vp and from tap.vp
 parameter jtag_inst_width = 5;
-parameter sc_bus_width = 48;
-parameter sc_addr_width = 18;
-parameter sc_op_width = 2;
+parameter sc_bus_width = 32;
+parameter sc_addr_width = 13;
 parameter tc_bus_width = 32;
 parameter tc_addr_width = 12;
+
+
+parameter sc_op_width = 2;
 parameter tc_op_width = 2;
 
 typedef enum {sc_domain, tc_domain} regfile_t;
@@ -68,11 +70,11 @@ class `mname`;
    int reset_done;	// is jtag reset procedure done?
    bit tck_edge;	// Is the next jtag clock edge a 1 or a 0
    int svf_file;        // file handler for SVF file
-   
+
    // current transaction 
    jtag_regfile_trans_t cur_trans;
-   
-   
+
+
 
    function new(virtual template_ifc_unq1.test ifc, int svf_file = 0);
       reset_done = 0;
@@ -96,7 +98,7 @@ class `mname`;
    // initialization of the jtag signals
    /****************************/
    extern task Zero();     
-      
+
    /****************************/
    // task Reset, resets the jtag state machine and registers
    /****************************/
@@ -106,8 +108,8 @@ class `mname`;
    // read the dut ID code
    /****************************/
    extern task ReadID(jtag_regfile_trans_t new_trans);
-	 
-   
+
+
 
 
    /****************************************************************************
@@ -145,7 +147,7 @@ endclass: `mname`
 	    // send instruction
 	    ShiftIR(sc_cfg_inst, jtag_inst_width);
 	    ShiftDR(cur_trans.op, sc_op_width);
-	    
+
 	    // get data
 	    ShiftIR(sc_cfg_data, jtag_inst_width);
 	    ShiftDR(cur_trans.data_in, sc_bus_width, 'b1);	    
@@ -162,7 +164,7 @@ endclass: `mname`
 	    ShiftDR(cur_trans.op, sc_op_width);  
 	 end	 
       end
-      
+
       // first which regfile is it going to?
       if (cur_trans.domain == tc_domain) begin
 	 // send address
@@ -175,7 +177,7 @@ endclass: `mname`
 	    // send instruction
 	    ShiftIR(tc_cfg_inst, jtag_inst_width);
 	    ShiftDR(cur_trans.op, tc_op_width);
-	    
+
 	    // get data
 	    ShiftIR(tc_cfg_data, jtag_inst_width);
 	    ShiftDR(cur_trans.data_in, tc_bus_width, 'b1);	    
@@ -192,7 +194,7 @@ endclass: `mname`
 	    ShiftDR(cur_trans.op, tc_op_width);  
 	 end	 
       end
-      
+
       if (this.svf_file)
 	$fdisplay(this.svf_file, "RUNTEST IDLE 10 TCK IDLE;\n");
       Next_tck();
@@ -206,7 +208,7 @@ endclass: `mname`
    function jtag_regfile_trans_t `mname`::GetResult();
       return cur_trans;
    endfunction // jtag_regfile_trans_t
-   
+
 
    /****************************/
    // initialization of the jtag signals
@@ -217,8 +219,8 @@ endclass: `mname`
       this.ifc.tck = 1'b0;
       this.ifc.trst_n = 1'b0;
    endtask // Zero
-      
-      
+
+
    /****************************/
    // task Reset, resets the jtag state machine and registers
    /****************************/
@@ -253,7 +255,7 @@ task `mname`::ReadID(jtag_regfile_trans_t new_trans);
      $fdisplay(this.svf_file, "RUNTEST IDLE 10 TCK IDLE;\n");
 endtask // `mname`::ReadID
 
-   
+
 
 
    /****************************************************************************
@@ -265,7 +267,7 @@ endtask // `mname`::ReadID
       // Clk: _|-|_|-|_|-|_|-|_|-|_|-|_|-|_|-|_|-
       // tck: _|-------|_______|-------|_______|-
       // tdi: aaaa><bbbbbb><cccccc><ddddddd><eeeeee
-      
+
       @(posedge this.ifc.Clk);
       this.ifc.tck = tck_edge;
       tck_edge = 1-tck_edge;
@@ -279,7 +281,7 @@ endtask // `mname`::ReadID
 	if (tck_edge != 1)
 	  Next_edge();
    endtask // Next_pos_edge
-   
+
    task `mname`::Next_neg_edge();
       if (tck_edge == 0)
 	Next_tck();
@@ -287,7 +289,7 @@ endtask // `mname`::ReadID
 	if (tck_edge != 0)
 	  Next_edge();
    endtask // Next_neg_edge
-   
+
    /****************************/
    task `mname`::Next_tck();
       Next_edge();
@@ -303,7 +305,7 @@ endtask // `mname`::ReadID
       string format;
       string mask;
       string mask_len_s;
-      
+
       if (!reset_done)
 	Reset();
 
@@ -313,22 +315,22 @@ endtask // `mname`::ReadID
       Next_neg_edge();
       Next_neg_edge();
       Next_neg_edge();
-      
+
 
       /***** DR PATH *****/
-      
+
       // Move to Select-DR-Scan state
       this.ifc.tms = 1'b1;
       Next_neg_edge();
-      
+
       // Move to Capture DR state
       this.ifc.tms = 1'b0;
       Next_neg_edge();
-      
+
       // Move to Shift-DR state
       this.ifc.tms = 1'b0;
       Next_neg_edge();
-      
+
       // Remain in Shift-DR state and shift in data_in. Observe the TDO signal to read the data_out
       for (i = 0; i < length-1; i = i + 1) begin
 	 this.ifc.tdi = data_in[i];
@@ -336,24 +338,24 @@ endtask // `mname`::ReadID
 	 cur_trans.data_out[i] = this.ifc.tdo;
 	 Next_neg_edge();
       end
-      
-	  
+
+
       // Shift in the last bit and switch to Exit1-DR state
       this.ifc.tdi = data_in[(length-1)];
       this.ifc.tms = 1'b1;
-      
+
       Next_pos_edge();
       cur_trans.data_out[(length-1)] = this.ifc.tdo;
       Next_neg_edge();
-      
+
       // Move to Update-DR state
       this.ifc.tms = 1'b1;
       Next_neg_edge();
-      
+
       // Move to Run-Test/Idle state
       this.ifc.tms = 1'b0;
       Next_neg_edge();
-      
+
       // wait a cycle... why hurry?
       Next_neg_edge();
 
@@ -373,12 +375,12 @@ endtask // `mname`::ReadID
 	 end
       end
    endtask // shiftDR
-   
 
 
 
 
-   
+
+
    /****************************
     * Shift the jtag instruction in
     * **************************/
@@ -391,7 +393,7 @@ endtask // `mname`::ReadID
       string format;
       string mask;
       string mask_len_s;
-      
+
       if (!reset_done)
 	Reset();
 
@@ -401,26 +403,26 @@ endtask // `mname`::ReadID
       Next_neg_edge();
       Next_neg_edge();
       Next_neg_edge();
-      
+
 
       /***** IR PATH *****/
-      
+
       // Move to Select-DR-Scan state
       this.ifc.tms = 1'b1;
       Next_neg_edge();
-      
+
       // Move to Select-IR-Scan state
       this.ifc.tms = 1'b1;
       Next_neg_edge();
-      
+
       // Move to Capture IR state
       this.ifc.tms = 1'b0;
       Next_neg_edge();
-      
+
       // Move to Shift-IR state
       this.ifc.tms = 1'b0;
       Next_neg_edge();
-      
+
       // Remain in Shift-IR state and shift in inst_in. Observe the TDO signal to read the x_inst_out
       for (i = 0; i < length-1; i = i + 1) begin
 	 this.ifc.tdi = inst_in[i];
@@ -428,11 +430,11 @@ endtask // `mname`::ReadID
 	 // x = this.ifc.tdo; // can also read the previous instruction out here
 	 Next_neg_edge();
       end
-	  
+
       // Shift in the last bit and switch to Exit1-IR state
       this.ifc.tdi = inst_in[(length-1)];
       this.ifc.tms = 1'b1;
-      
+
       Next_pos_edge();
       // x = this.ifc.tdo; // read the last bit out
       Next_neg_edge();
@@ -440,15 +442,15 @@ endtask // `mname`::ReadID
       // Move to Update-IR state
       this.ifc.tms = 1'b1;
       Next_neg_edge();
-      
+
       // Move to Run-Test/Idle state
       this.ifc.tms = 1'b0;
       Next_neg_edge();
-      
+
       // wait a cycle... why hurry?
       Next_neg_edge();
 
-      
+
       // Dump SVF
       if(svf_file) begin
 	 mask_len = (length + 3)/4;   // round up
@@ -458,6 +460,6 @@ endtask // `mname`::ReadID
 	 $fdisplay(svf_file, format, length, inst_in);
       end
    endtask
-   
+
 
 

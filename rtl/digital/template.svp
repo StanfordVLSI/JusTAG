@@ -129,7 +129,7 @@
 //;  
 //; # Now, let's decide upon the parameters of the two configuration buses:
 //; my $sc_cfg_bus_width = $self->define_param(SYSCLK_CFG_BUS_WIDTH => 32);
-//; my $sc_cfg_addr_width =  $self->define_param(SYSCLK_CFG_ADDR_WIDTH => 10);
+//; my $sc_cfg_addr_width =  $self->define_param(SYSCLK_CFG_ADDR_WIDTH => 13);
 //; my $tc_cfg_bus_width =  $self->define_param(TESTCLK_CFG_BUS_WIDTH => 32);
 //; my $tc_cfg_addr_width =  $self->define_param(TESTCLK_CFG_ADDR_WIDTH => 12);
 
@@ -198,9 +198,11 @@ module `mname`
 `$sc_rf122jtag_ifc->instantiate`();
 `$sc_rf112rf12_ifc->instantiate`();
 
+//; my $tc_jtag2jtag_ifc = generate('cfg_ifc', 'tc_jtag2jtag_ifc',
+//;				DataWidth => $tc_cfg_bus_width,
+//;				AddrWidth => $tc_cfg_addr_width);
 
-
-
+`$tc_jtag2jtag_ifc->instantiate`();
 
 
    // Reset to the test clock domain (this is different than the trst signal)
@@ -212,7 +214,8 @@ module `mname`
    //;
    //; # Create the JTAG to reg-files controller object
 //; my $cfg_dbg = generate('cfg_and_dbg', 'cfg_and_dbg',
-//;			SC_CFG_BUS => 'yes', SC_CFG_IFC_REF => $sc_jtag2rf0_ifc);
+//;			SC_CFG_BUS => 'yes', SC_CFG_IFC_REF => $sc_jtag2rf0_ifc,
+//;			TC_CFG_BUS => 'yes', TC_CFG_IFC_REF => $tc_jtag2jtag_ifc);
    //;
 
    // Instantiate the JTAG to reg-files controller
@@ -244,7 +247,8 @@ module `mname`
       .Reset(ifc.Reset),
 
       // signals to the jtag clocked regfile
-
+			.tc_cfgReq(`$tc_jtag2jtag_ifc->iname`.cfgOut),
+			.tc_cfgRep(`$tc_jtag2jtag_ifc->iname`.cfgIn),
 
       .test_logic_reset(test_logic_reset)
       );
@@ -257,7 +261,7 @@ module `mname`
 //;my $regfile0_on_sysclk = generate('reg_file', 'regfile0_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x0,
+//;			BaseAddr => 0x100,
 //;			RegList =>[
 //;					{Name => 'en_v2t', Width=>1, IEO=>'o'},
 //;					{Name => 'en_pi_arb', Width=>1, IEO=>'o'},
@@ -316,12 +320,12 @@ module `mname`
 //;my $regfile1_on_sysclk = generate('reg_file', 'regfile1_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x40,
+//;			BaseAddr => 0x200,
 //;			RegList =>[
-//;					{Name => 'ext_pi_ctl_offset[0]', Width=>9, IEO=>'o'},
-//;					{Name => 'ext_pi_ctl_offset[1]', Width=>9, IEO=>'o'},
-//;					{Name => 'ext_pi_ctl_offset[2]', Width=>9, IEO=>'o'},
-//;					{Name => 'ext_pi_ctl_offset[3]', Width=>9, IEO=>'o'}
+//;					{Name => 'ext_pi_ctl_offset_0', Width=>9, IEO=>'o'},
+//;					{Name => 'ext_pi_ctl_offset_1', Width=>9, IEO=>'o'},
+//;					{Name => 'ext_pi_ctl_offset_2', Width=>9, IEO=>'o'},
+//;					{Name => 'ext_pi_ctl_offset_3', Width=>9, IEO=>'o'}
 //;				]
 //;			);
 `$regfile1_on_sysclk->instantiate` (.Clk(ifc.Clk),
@@ -331,30 +335,30 @@ module `mname`
 			.ext_pi_ctl_offset_0_q(ifc.ext_pi_ctl_offset[0]),
 			.ext_pi_ctl_offset_1_q(ifc.ext_pi_ctl_offset[1]),
 			.ext_pi_ctl_offset_2_q(ifc.ext_pi_ctl_offset[2]),
-			.ext_pi_ctl_offset_3_q(ifc.ext_pi_ctl_offset[3]),
+			.ext_pi_ctl_offset_3_q(ifc.ext_pi_ctl_offset[3])
 			);
 //Register Bank 2:
 //;my $regfile2_on_sysclk = generate('reg_file', 'regfile2_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x80,
+//;			BaseAddr => 0x300,
 //;			RegList =>[
-//;					{Name => 'ext_v2t_ctl[0]', Width=>4, IEO=>'o'},
-//;					{Name => 'ext_v2t_ctl[1]', Width=>4, IEO=>'o'},
-//;					{Name => 'ext_v2t_ctl[2]', Width=>4, IEO=>'o'},
-//;					{Name => 'ext_v2t_ctl[3]', Width=>4, IEO=>'o'},
-//;					{Name => 'ext_v2t_ctl[4]', Width=>4, IEO=>'o'},
-//;					{Name => 'ext_v2t_ctl[5]', Width=>4, IEO=>'o'},
-//;					{Name => 'ext_v2t_ctl[6]', Width=>4, IEO=>'o'},
-//;					{Name => 'ext_v2t_ctl[7]', Width=>4, IEO=>'o'},
-//;					{Name => 'ext_v2t_ctl[8]', Width=>4, IEO=>'o'},
-//;					{Name => 'ext_v2t_ctl[9]', Width=>4, IEO=>'o'},
-//;					{Name => 'ext_v2t_ctl[10]', Width=>4, IEO=>'o'},
-//;					{Name => 'ext_v2t_ctl[11]', Width=>4, IEO=>'o'},
-//;					{Name => 'ext_v2t_ctl[12]', Width=>4, IEO=>'o'},
-//;					{Name => 'ext_v2t_ctl[13]', Width=>4, IEO=>'o'},
-//;					{Name => 'ext_v2t_ctl[14]', Width=>4, IEO=>'o'},
-//;					{Name => 'ext_v2t_ctl[15]', Width=>4, IEO=>'o'}
+//;					{Name => 'ext_v2t_ctl_0', Width=>4, IEO=>'o'},
+//;					{Name => 'ext_v2t_ctl_1', Width=>4, IEO=>'o'},
+//;					{Name => 'ext_v2t_ctl_2', Width=>4, IEO=>'o'},
+//;					{Name => 'ext_v2t_ctl_3', Width=>4, IEO=>'o'},
+//;					{Name => 'ext_v2t_ctl_4', Width=>4, IEO=>'o'},
+//;					{Name => 'ext_v2t_ctl_5', Width=>4, IEO=>'o'},
+//;					{Name => 'ext_v2t_ctl_6', Width=>4, IEO=>'o'},
+//;					{Name => 'ext_v2t_ctl_7', Width=>4, IEO=>'o'},
+//;					{Name => 'ext_v2t_ctl_8', Width=>4, IEO=>'o'},
+//;					{Name => 'ext_v2t_ctl_9', Width=>4, IEO=>'o'},
+//;					{Name => 'ext_v2t_ctl_10', Width=>4, IEO=>'o'},
+//;					{Name => 'ext_v2t_ctl_11', Width=>4, IEO=>'o'},
+//;					{Name => 'ext_v2t_ctl_12', Width=>4, IEO=>'o'},
+//;					{Name => 'ext_v2t_ctl_13', Width=>4, IEO=>'o'},
+//;					{Name => 'ext_v2t_ctl_14', Width=>4, IEO=>'o'},
+//;					{Name => 'ext_v2t_ctl_15', Width=>4, IEO=>'o'}
 //;				]
 //;			);
 `$regfile2_on_sysclk->instantiate` (.Clk(ifc.Clk),
@@ -376,18 +380,18 @@ module `mname`
 			.ext_v2t_ctl_12_q(ifc.ext_v2t_ctl[12]),
 			.ext_v2t_ctl_13_q(ifc.ext_v2t_ctl[13]),
 			.ext_v2t_ctl_14_q(ifc.ext_v2t_ctl[14]),
-			.ext_v2t_ctl_15_q(ifc.ext_v2t_ctl[15]),
+			.ext_v2t_ctl_15_q(ifc.ext_v2t_ctl[15])
 			);
 //Register Bank 3:
 //;my $regfile3_on_sysclk = generate('reg_file', 'regfile3_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0xc0,
+//;			BaseAddr => 0x400,
 //;			RegList =>[
-//;					{Name => 'ext_mismatch_ctl[0]', Width=>32, IEO=>'o'},
-//;					{Name => 'ext_mismatch_ctl[1]', Width=>32, IEO=>'o'},
-//;					{Name => 'ext_mismatch_ctl[2]', Width=>32, IEO=>'o'},
-//;					{Name => 'ext_mismatch_ctl[3]', Width=>32, IEO=>'o'}
+//;					{Name => 'ext_mismatch_ctl_0', Width=>32, IEO=>'o'},
+//;					{Name => 'ext_mismatch_ctl_1', Width=>32, IEO=>'o'},
+//;					{Name => 'ext_mismatch_ctl_2', Width=>32, IEO=>'o'},
+//;					{Name => 'ext_mismatch_ctl_3', Width=>32, IEO=>'o'}
 //;				]
 //;			);
 `$regfile3_on_sysclk->instantiate` (.Clk(ifc.Clk),
@@ -397,30 +401,30 @@ module `mname`
 			.ext_mismatch_ctl_0_q(ifc.ext_mismatch_ctl[0]),
 			.ext_mismatch_ctl_1_q(ifc.ext_mismatch_ctl[1]),
 			.ext_mismatch_ctl_2_q(ifc.ext_mismatch_ctl[2]),
-			.ext_mismatch_ctl_3_q(ifc.ext_mismatch_ctl[3]),
+			.ext_mismatch_ctl_3_q(ifc.ext_mismatch_ctl[3])
 			);
 //Register Bank 4:
 //;my $regfile4_on_sysclk = generate('reg_file', 'regfile4_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x100,
+//;			BaseAddr => 0x500,
 //;			RegList =>[
-//;					{Name => 'ext_pfd_offset[0]', Width=>8, IEO=>'o'},
-//;					{Name => 'ext_pfd_offset[1]', Width=>8, IEO=>'o'},
-//;					{Name => 'ext_pfd_offset[2]', Width=>8, IEO=>'o'},
-//;					{Name => 'ext_pfd_offset[3]', Width=>8, IEO=>'o'},
-//;					{Name => 'ext_pfd_offset[4]', Width=>8, IEO=>'o'},
-//;					{Name => 'ext_pfd_offset[5]', Width=>8, IEO=>'o'},
-//;					{Name => 'ext_pfd_offset[6]', Width=>8, IEO=>'o'},
-//;					{Name => 'ext_pfd_offset[7]', Width=>8, IEO=>'o'},
-//;					{Name => 'ext_pfd_offset[8]', Width=>8, IEO=>'o'},
-//;					{Name => 'ext_pfd_offset[9]', Width=>8, IEO=>'o'},
-//;					{Name => 'ext_pfd_offset[10]', Width=>8, IEO=>'o'},
-//;					{Name => 'ext_pfd_offset[11]', Width=>8, IEO=>'o'},
-//;					{Name => 'ext_pfd_offset[12]', Width=>8, IEO=>'o'},
-//;					{Name => 'ext_pfd_offset[13]', Width=>8, IEO=>'o'},
-//;					{Name => 'ext_pfd_offset[14]', Width=>8, IEO=>'o'},
-//;					{Name => 'ext_pfd_offset[15]', Width=>8, IEO=>'o'}
+//;					{Name => 'ext_pfd_offset_0', Width=>8, IEO=>'o'},
+//;					{Name => 'ext_pfd_offset_1', Width=>8, IEO=>'o'},
+//;					{Name => 'ext_pfd_offset_2', Width=>8, IEO=>'o'},
+//;					{Name => 'ext_pfd_offset_3', Width=>8, IEO=>'o'},
+//;					{Name => 'ext_pfd_offset_4', Width=>8, IEO=>'o'},
+//;					{Name => 'ext_pfd_offset_5', Width=>8, IEO=>'o'},
+//;					{Name => 'ext_pfd_offset_6', Width=>8, IEO=>'o'},
+//;					{Name => 'ext_pfd_offset_7', Width=>8, IEO=>'o'},
+//;					{Name => 'ext_pfd_offset_8', Width=>8, IEO=>'o'},
+//;					{Name => 'ext_pfd_offset_9', Width=>8, IEO=>'o'},
+//;					{Name => 'ext_pfd_offset_10', Width=>8, IEO=>'o'},
+//;					{Name => 'ext_pfd_offset_11', Width=>8, IEO=>'o'},
+//;					{Name => 'ext_pfd_offset_12', Width=>8, IEO=>'o'},
+//;					{Name => 'ext_pfd_offset_13', Width=>8, IEO=>'o'},
+//;					{Name => 'ext_pfd_offset_14', Width=>8, IEO=>'o'},
+//;					{Name => 'ext_pfd_offset_15', Width=>8, IEO=>'o'}
 //;				]
 //;			);
 `$regfile4_on_sysclk->instantiate` (.Clk(ifc.Clk),
@@ -442,30 +446,30 @@ module `mname`
 			.ext_pfd_offset_12_q(ifc.ext_pfd_offset[12]),
 			.ext_pfd_offset_13_q(ifc.ext_pfd_offset[13]),
 			.ext_pfd_offset_14_q(ifc.ext_pfd_offset[14]),
-			.ext_pfd_offset_15_q(ifc.ext_pfd_offset[15]),
+			.ext_pfd_offset_15_q(ifc.ext_pfd_offset[15])
 			);
 //Register Bank 5:
 //;my $regfile5_on_sysclk = generate('reg_file', 'regfile5_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x140,
+//;			BaseAddr => 0x600,
 //;			RegList =>[
-//;					{Name => 'init[0]', Width=>2, IEO=>'o'},
-//;					{Name => 'init[1]', Width=>2, IEO=>'o'},
-//;					{Name => 'init[2]', Width=>2, IEO=>'o'},
-//;					{Name => 'init[3]', Width=>2, IEO=>'o'},
-//;					{Name => 'init[4]', Width=>2, IEO=>'o'},
-//;					{Name => 'init[5]', Width=>2, IEO=>'o'},
-//;					{Name => 'init[6]', Width=>2, IEO=>'o'},
-//;					{Name => 'init[7]', Width=>2, IEO=>'o'},
-//;					{Name => 'init[8]', Width=>2, IEO=>'o'},
-//;					{Name => 'init[9]', Width=>2, IEO=>'o'},
-//;					{Name => 'init[10]', Width=>2, IEO=>'o'},
-//;					{Name => 'init[11]', Width=>2, IEO=>'o'},
-//;					{Name => 'init[12]', Width=>2, IEO=>'o'},
-//;					{Name => 'init[13]', Width=>2, IEO=>'o'},
-//;					{Name => 'init[14]', Width=>2, IEO=>'o'},
-//;					{Name => 'init[15]', Width=>2, IEO=>'o'}
+//;					{Name => 'init_0', Width=>2, IEO=>'o'},
+//;					{Name => 'init_1', Width=>2, IEO=>'o'},
+//;					{Name => 'init_2', Width=>2, IEO=>'o'},
+//;					{Name => 'init_3', Width=>2, IEO=>'o'},
+//;					{Name => 'init_4', Width=>2, IEO=>'o'},
+//;					{Name => 'init_5', Width=>2, IEO=>'o'},
+//;					{Name => 'init_6', Width=>2, IEO=>'o'},
+//;					{Name => 'init_7', Width=>2, IEO=>'o'},
+//;					{Name => 'init_8', Width=>2, IEO=>'o'},
+//;					{Name => 'init_9', Width=>2, IEO=>'o'},
+//;					{Name => 'init_10', Width=>2, IEO=>'o'},
+//;					{Name => 'init_11', Width=>2, IEO=>'o'},
+//;					{Name => 'init_12', Width=>2, IEO=>'o'},
+//;					{Name => 'init_13', Width=>2, IEO=>'o'},
+//;					{Name => 'init_14', Width=>2, IEO=>'o'},
+//;					{Name => 'init_15', Width=>2, IEO=>'o'}
 //;				]
 //;			);
 `$regfile5_on_sysclk->instantiate` (.Clk(ifc.Clk),
@@ -487,30 +491,30 @@ module `mname`
 			.init_12_q(ifc.init[12]),
 			.init_13_q(ifc.init[13]),
 			.init_14_q(ifc.init[14]),
-			.init_15_q(ifc.init[15]),
+			.init_15_q(ifc.init[15])
 			);
 //Register Bank 6:
 //;my $regfile6_on_sysclk = generate('reg_file', 'regfile6_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x180,
+//;			BaseAddr => 0x700,
 //;			RegList =>[
-//;					{Name => 'adcout[0]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout[1]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout[2]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout[3]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout[4]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout[5]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout[6]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout[7]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout[8]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout[9]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout[10]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout[11]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout[12]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout[13]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout[14]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout[15]', Width=>8, IEO=>'i'}
+//;					{Name => 'adcout_0', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_1', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_2', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_3', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_4', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_5', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_6', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_7', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_8', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_9', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_10', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_11', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_12', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_13', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_14', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_15', Width=>8, IEO=>'i'}
 //;				]
 //;			);
 `$regfile6_on_sysclk->instantiate` (.Clk(ifc.Clk),
@@ -532,30 +536,30 @@ module `mname`
 			.adcout_12_d(ifc.adcout[12]),
 			.adcout_13_d(ifc.adcout[13]),
 			.adcout_14_d(ifc.adcout[14]),
-			.adcout_15_d(ifc.adcout[15]),
+			.adcout_15_d(ifc.adcout[15])
 			);
 //Register Bank 7:
 //;my $regfile7_on_sysclk = generate('reg_file', 'regfile7_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x1c0,
+//;			BaseAddr => 0x800,
 //;			RegList =>[
-//;					{Name => 'adcout_avg[0]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_avg[1]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_avg[2]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_avg[3]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_avg[4]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_avg[5]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_avg[6]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_avg[7]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_avg[8]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_avg[9]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_avg[10]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_avg[11]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_avg[12]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_avg[13]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_avg[14]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_avg[15]', Width=>8, IEO=>'i'}
+//;					{Name => 'adcout_avg_0', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_avg_1', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_avg_2', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_avg_3', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_avg_4', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_avg_5', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_avg_6', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_avg_7', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_avg_8', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_avg_9', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_avg_10', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_avg_11', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_avg_12', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_avg_13', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_avg_14', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_avg_15', Width=>8, IEO=>'i'}
 //;				]
 //;			);
 `$regfile7_on_sysclk->instantiate` (.Clk(ifc.Clk),
@@ -577,30 +581,30 @@ module `mname`
 			.adcout_avg_12_d(ifc.adcout_avg[12]),
 			.adcout_avg_13_d(ifc.adcout_avg[13]),
 			.adcout_avg_14_d(ifc.adcout_avg[14]),
-			.adcout_avg_15_d(ifc.adcout_avg[15]),
+			.adcout_avg_15_d(ifc.adcout_avg[15])
 			);
 //Register Bank 8:
 //;my $regfile8_on_sysclk = generate('reg_file', 'regfile8_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x200,
+//;			BaseAddr => 0x900,
 //;			RegList =>[
-//;					{Name => 'adcout_sum[0]', Width=>24, IEO=>'i'},
-//;					{Name => 'adcout_sum[1]', Width=>24, IEO=>'i'},
-//;					{Name => 'adcout_sum[2]', Width=>24, IEO=>'i'},
-//;					{Name => 'adcout_sum[3]', Width=>24, IEO=>'i'},
-//;					{Name => 'adcout_sum[4]', Width=>24, IEO=>'i'},
-//;					{Name => 'adcout_sum[5]', Width=>24, IEO=>'i'},
-//;					{Name => 'adcout_sum[6]', Width=>24, IEO=>'i'},
-//;					{Name => 'adcout_sum[7]', Width=>24, IEO=>'i'},
-//;					{Name => 'adcout_sum[8]', Width=>24, IEO=>'i'},
-//;					{Name => 'adcout_sum[9]', Width=>24, IEO=>'i'},
-//;					{Name => 'adcout_sum[10]', Width=>24, IEO=>'i'},
-//;					{Name => 'adcout_sum[11]', Width=>24, IEO=>'i'},
-//;					{Name => 'adcout_sum[12]', Width=>24, IEO=>'i'},
-//;					{Name => 'adcout_sum[13]', Width=>24, IEO=>'i'},
-//;					{Name => 'adcout_sum[14]', Width=>24, IEO=>'i'},
-//;					{Name => 'adcout_sum[15]', Width=>24, IEO=>'i'}
+//;					{Name => 'adcout_sum_0', Width=>24, IEO=>'i'},
+//;					{Name => 'adcout_sum_1', Width=>24, IEO=>'i'},
+//;					{Name => 'adcout_sum_2', Width=>24, IEO=>'i'},
+//;					{Name => 'adcout_sum_3', Width=>24, IEO=>'i'},
+//;					{Name => 'adcout_sum_4', Width=>24, IEO=>'i'},
+//;					{Name => 'adcout_sum_5', Width=>24, IEO=>'i'},
+//;					{Name => 'adcout_sum_6', Width=>24, IEO=>'i'},
+//;					{Name => 'adcout_sum_7', Width=>24, IEO=>'i'},
+//;					{Name => 'adcout_sum_8', Width=>24, IEO=>'i'},
+//;					{Name => 'adcout_sum_9', Width=>24, IEO=>'i'},
+//;					{Name => 'adcout_sum_10', Width=>24, IEO=>'i'},
+//;					{Name => 'adcout_sum_11', Width=>24, IEO=>'i'},
+//;					{Name => 'adcout_sum_12', Width=>24, IEO=>'i'},
+//;					{Name => 'adcout_sum_13', Width=>24, IEO=>'i'},
+//;					{Name => 'adcout_sum_14', Width=>24, IEO=>'i'},
+//;					{Name => 'adcout_sum_15', Width=>24, IEO=>'i'}
 //;				]
 //;			);
 `$regfile8_on_sysclk->instantiate` (.Clk(ifc.Clk),
@@ -622,30 +626,30 @@ module `mname`
 			.adcout_sum_12_d(ifc.adcout_sum[12]),
 			.adcout_sum_13_d(ifc.adcout_sum[13]),
 			.adcout_sum_14_d(ifc.adcout_sum[14]),
-			.adcout_sum_15_d(ifc.adcout_sum[15]),
+			.adcout_sum_15_d(ifc.adcout_sum[15])
 			);
 //Register Bank 9:
 //;my $regfile9_on_sysclk = generate('reg_file', 'regfile9_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x240,
+//;			BaseAddr => 0xa00,
 //;			RegList =>[
-//;					{Name => 'adcout_hist_center[0]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_center[1]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_center[2]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_center[3]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_center[4]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_center[5]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_center[6]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_center[7]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_center[8]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_center[9]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_center[10]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_center[11]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_center[12]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_center[13]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_center[14]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_center[15]', Width=>16, IEO=>'i'}
+//;					{Name => 'adcout_hist_center_0', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_center_1', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_center_2', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_center_3', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_center_4', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_center_5', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_center_6', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_center_7', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_center_8', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_center_9', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_center_10', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_center_11', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_center_12', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_center_13', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_center_14', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_center_15', Width=>16, IEO=>'i'}
 //;				]
 //;			);
 `$regfile9_on_sysclk->instantiate` (.Clk(ifc.Clk),
@@ -667,30 +671,30 @@ module `mname`
 			.adcout_hist_center_12_d(ifc.adcout_hist_center[12]),
 			.adcout_hist_center_13_d(ifc.adcout_hist_center[13]),
 			.adcout_hist_center_14_d(ifc.adcout_hist_center[14]),
-			.adcout_hist_center_15_d(ifc.adcout_hist_center[15]),
+			.adcout_hist_center_15_d(ifc.adcout_hist_center[15])
 			);
 //Register Bank 10:
 //;my $regfile10_on_sysclk = generate('reg_file', 'regfile10_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x280,
+//;			BaseAddr => 0xb00,
 //;			RegList =>[
-//;					{Name => 'adcout_hist_side[0]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_side[1]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_side[2]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_side[3]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_side[4]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_side[5]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_side[6]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_side[7]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_side[8]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_side[9]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_side[10]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_side[11]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_side[12]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_side[13]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_side[14]', Width=>16, IEO=>'i'},
-//;					{Name => 'adcout_hist_side[15]', Width=>16, IEO=>'i'}
+//;					{Name => 'adcout_hist_side_0', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_side_1', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_side_2', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_side_3', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_side_4', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_side_5', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_side_6', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_side_7', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_side_8', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_side_9', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_side_10', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_side_11', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_side_12', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_side_13', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_side_14', Width=>16, IEO=>'i'},
+//;					{Name => 'adcout_hist_side_15', Width=>16, IEO=>'i'}
 //;				]
 //;			);
 `$regfile10_on_sysclk->instantiate` (.Clk(ifc.Clk),
@@ -712,30 +716,30 @@ module `mname`
 			.adcout_hist_side_12_d(ifc.adcout_hist_side[12]),
 			.adcout_hist_side_13_d(ifc.adcout_hist_side[13]),
 			.adcout_hist_side_14_d(ifc.adcout_hist_side[14]),
-			.adcout_hist_side_15_d(ifc.adcout_hist_side[15]),
+			.adcout_hist_side_15_d(ifc.adcout_hist_side[15])
 			);
 //Register Bank 11:
 //;my $regfile11_on_sysclk = generate('reg_file', 'regfile11_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x2c0,
+//;			BaseAddr => 0xc00,
 //;			RegList =>[
-//;					{Name => 'adcout_pfd_offset[0]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_pfd_offset[1]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_pfd_offset[2]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_pfd_offset[3]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_pfd_offset[4]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_pfd_offset[5]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_pfd_offset[6]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_pfd_offset[7]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_pfd_offset[8]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_pfd_offset[9]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_pfd_offset[10]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_pfd_offset[11]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_pfd_offset[12]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_pfd_offset[13]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_pfd_offset[14]', Width=>8, IEO=>'i'},
-//;					{Name => 'adcout_pfd_offset[15]', Width=>8, IEO=>'i'}
+//;					{Name => 'adcout_pfd_offset_0', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_pfd_offset_1', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_pfd_offset_2', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_pfd_offset_3', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_pfd_offset_4', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_pfd_offset_5', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_pfd_offset_6', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_pfd_offset_7', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_pfd_offset_8', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_pfd_offset_9', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_pfd_offset_10', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_pfd_offset_11', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_pfd_offset_12', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_pfd_offset_13', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_pfd_offset_14', Width=>8, IEO=>'i'},
+//;					{Name => 'adcout_pfd_offset_15', Width=>8, IEO=>'i'}
 //;				]
 //;			);
 `$regfile11_on_sysclk->instantiate` (.Clk(ifc.Clk),
@@ -757,30 +761,30 @@ module `mname`
 			.adcout_pfd_offset_12_d(ifc.adcout_pfd_offset[12]),
 			.adcout_pfd_offset_13_d(ifc.adcout_pfd_offset[13]),
 			.adcout_pfd_offset_14_d(ifc.adcout_pfd_offset[14]),
-			.adcout_pfd_offset_15_d(ifc.adcout_pfd_offset[15]),
+			.adcout_pfd_offset_15_d(ifc.adcout_pfd_offset[15])
 			);
 //Register Bank 12:
 //;my $regfile12_on_sysclk = generate('reg_file', 'regfile12_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x300,
+//;			BaseAddr => 0xd00,
 //;			RegList =>[
-//;					{Name => 'out_data[0]', Width=>8, IEO=>'i'},
-//;					{Name => 'out_data[1]', Width=>8, IEO=>'i'},
-//;					{Name => 'out_data[2]', Width=>8, IEO=>'i'},
-//;					{Name => 'out_data[3]', Width=>8, IEO=>'i'},
-//;					{Name => 'out_data[4]', Width=>8, IEO=>'i'},
-//;					{Name => 'out_data[5]', Width=>8, IEO=>'i'},
-//;					{Name => 'out_data[6]', Width=>8, IEO=>'i'},
-//;					{Name => 'out_data[7]', Width=>8, IEO=>'i'},
-//;					{Name => 'out_data[8]', Width=>8, IEO=>'i'},
-//;					{Name => 'out_data[9]', Width=>8, IEO=>'i'},
-//;					{Name => 'out_data[10]', Width=>8, IEO=>'i'},
-//;					{Name => 'out_data[11]', Width=>8, IEO=>'i'},
-//;					{Name => 'out_data[12]', Width=>8, IEO=>'i'},
-//;					{Name => 'out_data[13]', Width=>8, IEO=>'i'},
-//;					{Name => 'out_data[14]', Width=>8, IEO=>'i'},
-//;					{Name => 'out_data[15]', Width=>8, IEO=>'i'}
+//;					{Name => 'out_data_0', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_1', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_2', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_3', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_4', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_5', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_6', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_7', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_8', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_9', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_10', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_11', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_12', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_13', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_14', Width=>8, IEO=>'i'},
+//;					{Name => 'out_data_15', Width=>8, IEO=>'i'}
 //;				]
 //;			);
 `$regfile12_on_sysclk->instantiate` (.Clk(ifc.Clk),
@@ -802,7 +806,7 @@ module `mname`
 			.out_data_12_d(ifc.out_data[12]),
 			.out_data_13_d(ifc.out_data[13]),
 			.out_data_14_d(ifc.out_data[14]),
-			.out_data_15_d(ifc.out_data[15]),
+			.out_data_15_d(ifc.out_data[15])
 			);
 
 
@@ -810,7 +814,6 @@ module `mname`
    // Note that signals D and E are IO's to the system. We'll also define signal F here.
    // for testing purposes well init this signal (non synthesizable!)
    //; my $tc_cfg_ops = $cfg_dbg->get_param('TC_CFG_OPCODES');
-
 
 
 
