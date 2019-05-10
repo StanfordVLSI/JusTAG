@@ -94,6 +94,7 @@ io_list_strings = []
 num_io_list = 0
 num_reg_file = 1
 num_bank_0_reg = 0
+
 for name in io_list:
     io_list_strings.append("{{name => \'{}\', bitwidth => {}, array=>{},  direction => \'{}\',  bsr => \'yes\', orientation => \'top\'}}".format(
             name, 
