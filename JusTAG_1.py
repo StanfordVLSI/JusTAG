@@ -247,28 +247,30 @@ exit()
 
 for domain in ['tc', 'sc']:
     for ii in range(jtag_properties['num_of_reg_files'][domain]):
-        sc_reg_file_gen_str += '//{} Domain: Register Bank {}:\n'.format(domain, ii)
-        sc_reg_file_gen_str += '//;my $regfile{}_on_sysclk = generate(\'reg_file\', \'regfile{}_on_sysclk\',\n'.format(ii, ii)
-        sc_reg_file_gen_str += '//;\t\t\tCfgBusPtr => $sc_jtag2rf0_ifc,\n'
-        sc_reg_file_gen_str += '//;\t\t\tCfgOpcodes => $sc_cfg_ops,\n'
-        sc_reg_file_gen_str += '//;\t\t\tBaseAddr => {},\n'.format(hex((ii+1)*256))
-        sc_reg_file_gen_str += '//;\t\t\tRegList =>[\n'
+    	output_strings['reg_file_gen'][domain] += 	(
+        											 	"//{} Domain: Register Bank {}:\n"
+        											 	"//;my $regfile{}_on_sysclk = generate(\'reg_file\', \'regfile{}_on_sysclk\',\n"
+        											 	"//;\t\t\tCfgBusPtr => $sc_jtag2rf0_ifc,\n"
+        											 	"//;\t\t\tCfgOpcodes => $sc_cfg_ops,\n"
+        											 	"//;\t\t\tBaseAddr => {},\n"
+        											 	"//;\t\t\tRegList =>[\n"
+        										    ).format(
+        										    	domain, ii,
+        										    	ii, ii
+        										    	hex((ii+1)*256)
+        										    )
+      	
+
         num_bank = reg_files[ii]["num_bank"]
-        for jj in range(num_bank-1):
-            reg = reg_files[ii][jj]
-            if not reg["pos"] == '':
-                out_str =  "{{Name => \'{}_{}\', Width=>{}, IEO=>\'{}\'}}".format(reg["Name"], reg["pos"], reg["Width"], reg["IEO"])
-            else:
-                out_str =  "{{Name => \'{}\', Width=>{}, IEO=>\'{}\'}}".format(reg["Name"], reg["Width"], reg["IEO"])
-            sc_reg_file_gen_str += '//;\t\t\t\t\t{},\n'.format(out_str)
-        reg = reg_files[ii][num_bank-1]
-        if not reg["pos"] == '':
-            out_str =  "{{Name => \'{}_{}\', Width=>{}, IEO=>\'{}\'}}".format(reg["Name"], reg["pos"], reg["Width"], reg["IEO"])
-        else:
-            out_str =  "{{Name => \'{}\', Width=>{}, IEO=>\'{}\'}}".format(reg["Name"], reg["Width"], reg["IEO"])
-        sc_reg_file_gen_str += '//;\t\t\t\t\t{}\n'.format(out_str)
-        sc_reg_file_gen_str += '//;\t\t\t\t]\n'
-        sc_reg_file_gen_str += '//;\t\t\t);\n'
+        for (reg, jj) in enumate(reig_files[ii]):
+        	end_token_sel  = { True : "\n//;\t\t\t\t]\n//;\t\t\t);\n", False : ",\n"}
+            name_token_sel = { True : "{}".format(reg["Name"]),        False : "{}_{}".format(reg["Name"], reg["pos"])}
+
+            name_token = name_token_sel[reg['pos'] == '']
+           	end_token  = end_token_sel[jj == (num_bank-1)]
+
+      		out_str   = "//;{{Name => \'{}\', Width=>{}, IEO=>\'{}\'}}".format(name_token, reg["Width"], reg["IEO"])
+            output_strings['reg_file_gen'][domain] += '//;\t\t\t\t\t{}{}'.format(out_str, end_token)
         
         sc_reg_file_gen_str += '`$regfile{}_on_sysclk->instantiate` (.Clk(ifc.Clk),\n'.format(ii)
         sc_reg_file_gen_str += '\t\t\t.Reset(ifc.Reset),\n'
