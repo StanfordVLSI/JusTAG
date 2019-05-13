@@ -128,7 +128,12 @@
 //;
 //;  
 //; # Now, let's decide upon the parameters of the two configuration buses:
-{'sc': '//; my $sc_cfg_bus_width = $self->define_param(SYSCLK_CFG_BUS_WIDTH => 32);\n//; my $sc_cfg_addr_width =  $self->define_param(SYSCLK_CFG_ADDR_WIDTH => 12);\n', 'tc': '//; my $tc_cfg_bus_width = $self->define_param(TESTCLK_CFG_BUS_WIDTH => 32);\n//; my $tc_cfg_addr_width =  $self->define_param(TESTCLK_CFG_ADDR_WIDTH => 11);\n'}
+//; my $sc_cfg_bus_width = $self->define_param(SYSCLK_CFG_BUS_WIDTH => 32);
+//; my $sc_cfg_addr_width =  $self->define_param(SYSCLK_CFG_ADDR_WIDTH => 12);
+
+//; my $tc_cfg_bus_width = $self->define_param(TESTCLK_CFG_BUS_WIDTH => 32);
+//; my $tc_cfg_addr_width =  $self->define_param(TESTCLK_CFG_ADDR_WIDTH => 11);
+
 
 module `mname`
   (

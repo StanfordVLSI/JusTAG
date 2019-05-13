@@ -35,7 +35,7 @@
     * Main: Main flow of the test
     * *************************************************************************/
    initial begin
-   //   get_command_line_args();
+      get_command_line_args();
       $display("%t: TESTBENCH IS ALIVE (SEED = %0d)", $time, seed);  
       dummy = $urandom(seed);
       
@@ -52,32 +52,13 @@
       $fclose(svf_file);
       $finish(0);
    end
-   logic [31:0] empt;
-   logic [7:0] data_out;
-     integer i;
+ 
    task run_test;
      begin
 	 jtag_regfile_trans_t jtag_trans;
 	 // Check IDCODE
 	 $fdisplay(svf_file, "! Check IDCODE");
 	 jdrv.ReadID(jtag_trans);
-	 @(posedge ifc.Clk);
-     jtag_write_reg(tc_domain, 16'h100, 1'b1);
-	 @(posedge ifc.Clk);
-     jtag_read_reg(tc_domain, 16'h100, empt);
-    $display("%t: \033[0;36m \033[0m: output=%0x\n", $time, empt); 
-	 @(posedge ifc.Clk);
-     jtag_read_reg(sc_domain, 16'h200, empt);
-	 @(posedge ifc.Clk);
-     jtag_read_reg(sc_domain, 16'h300, empt);
-	 @(posedge ifc.Clk);
-     jtag_read_reg(sc_domain, 16'h400, empt);
-     for (i = 0; i < 16; i++) begin
-	    @(posedge ifc.Clk);
-        jtag_read_reg(sc_domain, 13'h200 + i*4, data_out);
-	    $display("%t: \033[0;36mTrans %2d\033[0m: output=%0x\n",
-                    $time, i, data_out);
-     end
 	 // Run some test
 /*	 for (i = 0; i < 9; i++) begin
 	    @(posedge ifc.Clk);
@@ -101,9 +82,7 @@
 	 jdrv = new(ifc, svf_file);
 	 jdrv.Zero();
 	 jdrv.Reset();
-     for (i = 0; i < 16; i++) begin
-        ifc.adcout[i] = i;
-     end	 
+	 
 /*	 ifc.signalA_in = '0;
 	 ifc.signalD_in = '0;
 	 ifc.cmp_Iref_in = 0;
@@ -116,7 +95,7 @@
    /****************************************************************************
     * JTAG transaction wrappers:
     * *************************************************************************/
-   task jtag_write_reg(input regfile_t clk_domain, input [15:0] addr ,input[31:0] data);
+   task jtag_write_reg(input regfile_t clk_domain, input [17:0] addr ,input[47:0] data);
       jtag_regfile_trans_t jtag_trans;
       jtag_trans.domain = clk_domain;
       jtag_trans.addr = addr;  // First register in the DP block
@@ -129,7 +108,7 @@
       jdrv.Send(jtag_trans);  
    endtask // jtag_write_reg 
 
-   task jtag_read_reg(input regfile_t clk_domain, input [11:0] addr, output [31:0] data);
+   task jtag_read_reg(input regfile_t clk_domain, input [17:0] addr, output [47:0] data);
       jtag_regfile_trans_t jtag_trans;
       jtag_trans.domain = clk_domain;
       jtag_trans.addr = addr;  // First register in the DP block

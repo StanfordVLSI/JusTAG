@@ -11,7 +11,7 @@ default: justag genesis
 all: justag genesis genesis_test
 
 justag: 
-	python JusTAG.py  $(INTF_DIR)/* $(PACK_DIR)/*
+	python JusTAG_1.py  $(INTF_DIR)/* $(PACK_DIR)/*
 
 genesis:
 	Genesis2.pl -parse -generate -top template -input  rtl/digital/template.svp \

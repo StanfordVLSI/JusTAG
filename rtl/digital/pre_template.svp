@@ -94,7 +94,8 @@ $$			INSERT io_list_gen
 //;
 //;  
 //; # Now, let's decide upon the parameters of the two configuration buses:
-$$			INSERT cfg_bus_info 
+$$			INSERT sc_cfg_bus_info 
+$$			INSERT tc_cfg_bus_info 
 
 module `mname`
   (
