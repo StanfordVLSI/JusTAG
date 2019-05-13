@@ -53,7 +53,14 @@ def convert_dimensions(expr):
 
 def convert_default(expr):
     if not str(expr) == 'nan':
-        return 0 #needs to be a binary/hex to integer conversion 
+        if 'h' in expr:
+            return int(expr.split('h')[1], 16)
+        elif 'b' in expr:
+            return int(expr.split('b')[1], 2)
+        elif 'd' in expr:
+            return int(expr.split('d')[1], 10)
+        else:
+            return int(expr)
     else:
         return 0
 
@@ -155,7 +162,8 @@ for interface in jtag_properties['io_list']:
                     "pos"   : '',                    
                     "Width" : curr_io_list['width'],
                     "IEO"   : curr_io_list['ieo'][0],
-                    "ifc"   : interface
+                    "ifc"   : interface,
+                    "Default" : curr_io_list['default']
                     }
             jtag_properties['reg_files'][domain][0]['num_of_reg'] += 1
         else:
@@ -174,7 +182,8 @@ for interface in jtag_properties['io_list']:
                     "pos"   : ii,
                     "Width" : curr_io_list['width'],
                     "IEO"   : curr_io_list['ieo'][0],
-                    "ifc"   : interface
+                    "ifc"   : interface,
+                    "Default" : curr_io_list['default']
                     }
             jtag_properties['reg_files'][domain][reg_file_pos]['registers']  = registers
 
@@ -256,12 +265,14 @@ for domain in ['sc', 'tc']:
                                                             "//;\t\t\t\t\t{{"
                                                             "Name  =>\'{}\', "
                                                             "Width => {}, "
-                                                            "IEO   =>\'{}\'"
+                                                            "IEO   =>\'{}\',"
+                                                            "Default => {}"
                                                             "}}{}"
                                                         ).format(
                                                             name_token,
                                                             reg["Width"],
                                                             reg["IEO"],
+                                                            reg["Default"],
                                                             end_token
                                                         )
              
@@ -271,19 +282,52 @@ for domain in ['sc', 'tc']:
         num_of_reg_files = jtag_properties['num_of_reg_files'][domain]
         rf_gen_sel = { 0 : 'jtag', 1 : 'rf0',num_of_reg_files-1: 'rf{}'.format(num_of_reg_files-1), num_of_reg_files : 'jtag'}
         rf_cfg_sel =    { 
-                        0 : { 0 : 'jtag', 1 :'rf0', num_of_reg_files-1: 'rf{}'.format(num_of_reg_files-2), num_of_reg_files : 'rf{}'.format(num_of_reg_files-1) },
-                        1 : { 0 : 'rf0', 1 : 'rf1', num_of_reg_files-1: 'rf{}'.format(num_of_reg_files-1), num_of_reg_files : 'jtag'}
+                        0 : {
+                                0 : 'jtag', 
+                                1 :'rf0',
+                                num_of_reg_files-1: 'rf{}'.format(num_of_reg_files-2), 
+                                num_of_reg_files : 'rf{}'.format(num_of_reg_files-1)
+                            },
+                        1 : { 
+                                0 : 'rf0', 
+                                1 : 'rf1',
+                                num_of_reg_files-1: 'rf{}'.format(num_of_reg_files-1), 
+                                num_of_reg_files : 'jtag'
+                            }
                         }
         rf2rf_gel_sel = {0 : 'generate(\'cfg_ifc\'', num_of_reg_files-1: 'clone(${}_jtag2rf0_ifc'.format(domain)}
         jrf_con = {0 : { 0 : 'q', num_of_reg_files-1 : 'p'}, 1 : { 0 : 'Out', num_of_reg_files-1 : 'In'}}
 
         if (ii==0) or (ii == (num_of_reg_files-1)):
             end_token_sel = {0: ',\n', num_of_reg_files-1:');\n'}
-            output_strings['reg_file_gen'][domain] += '\t\t\t.cfgIn(`${}_{}2{}_ifc->iname`.cfgIn),\n'.format(domain, rf_cfg_sel[0][ii], rf_cfg_sel[0][ii+1])
-            output_strings['reg_file_gen'][domain] += '\t\t\t.cfgOut(`${}_{}2{}_ifc->iname`.cfgOut),\n'.format(domain, rf_cfg_sel[1][ii], rf_cfg_sel[1][ii+1])
-            output_strings['rf2rf_gen'][domain] += '//; my ${}_{}2{}_ifc = {}, \'{}_{}2{}_ifc\'{}'.format(domain, rf_gen_sel[ii], rf_gen_sel[ii+1], rf2rf_gel_sel[ii], domain, rf_gen_sel[ii], rf_gen_sel[ii+1], end_token_sel[ii])
-            output_strings['rf2rf_int'][domain] += '`${}_{}2{}_ifc->instantiate`();\n'.format(domain, rf_gen_sel[ii], rf_gen_sel[ii+1])
-            output_strings['jtag_regfile_con'][domain] += '\t\t\t.{}_cfgRe{}(`${}_{}2{}_ifc->iname`.cfg{}),\n'.format(domain, jrf_con[0][ii], domain, rf_gen_sel[ii], rf_gen_sel[ii+1], jrf_con[1][ii])
+            output_strings['reg_file_gen'][domain] += '\t\t\t.cfgIn(`${}_{}2{}_ifc->iname`.cfgIn),\n'.format(
+                domain,
+                rf_cfg_sel[0][ii],
+                rf_cfg_sel[0][ii+1])
+            output_strings['reg_file_gen'][domain] += '\t\t\t.cfgOut(`${}_{}2{}_ifc->iname`.cfgOut),\n'.format(
+                domain,
+                rf_cfg_sel[1][ii],
+                rf_cfg_sel[1][ii+1])
+            output_strings['rf2rf_gen'][domain] += '//; my ${}_{}2{}_ifc = {}, \'{}_{}2{}_ifc\'{}'.format(
+                domain,
+                rf_gen_sel[ii],
+                rf_gen_sel[ii+1],
+                rf2rf_gel_sel[ii], 
+                domain,
+                rf_gen_sel[ii],
+                rf_gen_sel[ii+1],
+                end_token_sel[ii])
+            output_strings['rf2rf_int'][domain] += '`${}_{}2{}_ifc->instantiate`();\n'.format(
+                domain,
+                rf_gen_sel[ii],
+                rf_gen_sel[ii+1])
+            output_strings['jtag_regfile_con'][domain] += '\t\t\t.{}_cfgRe{}(`${}_{}2{}_ifc->iname`.cfg{}),\n'.format(
+                domain, 
+                jrf_con[0][ii],
+                domain,
+                rf_gen_sel[ii],
+                rf_gen_sel[ii+1],
+                jrf_con[1][ii])
         if ii == 0:
             output_strings['rf2rf_gen'][domain] += '//;\t\t\t\tDataWidth => ${}_cfg_bus_width,\n'.format(domain)
             output_strings['rf2rf_gen'][domain] += '//;\t\t\t\tAddrWidth => ${}_cfg_addr_width);\n'.format(domain)
@@ -291,13 +335,14 @@ for domain in ['sc', 'tc']:
             if not ii == (num_of_reg_files-1):
                 output_strings['reg_file_gen'][domain] += '\t\t\t.cfgIn(`${}_rf{}2rf{}_ifc->iname`.cfgIn),\n'.format(domain, ii-1,ii)
                 output_strings['reg_file_gen'][domain] += '\t\t\t.cfgOut(`${}_rf{}2rf{}_ifc->iname`.cfgOut),\n'.format(domain, ii, ii+1)
-            output_strings['rf2rf_gen'][domain]    += '//; my ${}_rf{}2rf{}_ifc = clone(${}_jtag2rf{}_ifc, \'{}_rf{}2rf{}_ifc\');\n'.format(domain, ii-1, ii, domain, 0, domain, ii-1, ii)
+            output_strings['rf2rf_gen'][domain]    += '//; my ${}_rf{}2rf{}_ifc = clone(${}_jtag2rf{}_ifc, \'{}_rf{}2rf{}_ifc\');\n'.format(
+                domain, ii-1, ii, domain, 0, domain, ii-1, ii)
             output_strings['rf2rf_int'][domain]    += '`${}_rf{}2rf{}_ifc->instantiate`();\n'.format(domain, ii-1,ii)
         for jj, kk in enumerate(registers):
             reg = registers[kk]
             
-            end_token_sel  = { True : "\n\t\t\t);\n", False : ",\n"}
-            name_token_sel= { True : "{}".format(reg["Name"]),        False : "{}_{}".format(reg["Name"], reg["pos"])}
+            end_token_sel      = { True : "\n\t\t\t);\n", False : ",\n"}
+            name_token_sel    = { True : "{}".format(reg["Name"]),        False : "{}_{}".format(reg["Name"], reg["pos"])}
             ifc_name_token_sel = { True : "{}".format(reg["Name"]),        False : "{}[{}]".format(reg["Name"], reg["pos"])}
 
             name_token = name_token_sel[reg['pos'] == '']

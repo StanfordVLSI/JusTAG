@@ -252,7 +252,7 @@ module `mname`
 //;			CfgOpcodes => $sc_cfg_ops,
 //;			BaseAddr => 0x100,
 //;			RegList =>[
-//;					{Name  =>'addr', Width => 10, IEO   =>'i'}
+//;					{Name  =>'addr', Width => 10, IEO   =>'i',Default => 0}
 //;				]
 //;			);
 `$regfile0_on_sysclk->instantiate` (
@@ -268,22 +268,22 @@ module `mname`
 //;			CfgOpcodes => $sc_cfg_ops,
 //;			BaseAddr => 0x200,
 //;			RegList =>[
-//;					{Name  =>'adcout_0', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_1', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_2', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_3', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_4', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_5', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_6', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_7', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_8', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_9', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_10', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_11', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_12', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_13', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_14', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_15', Width => 8, IEO   =>'i'}
+//;					{Name  =>'adcout_0', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_1', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_2', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_3', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_4', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_5', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_6', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_7', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_8', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_9', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_10', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_11', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_12', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_13', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_14', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_15', Width => 8, IEO   =>'i',Default => 0}
 //;				]
 //;			);
 `$regfile1_on_sysclk->instantiate` (
@@ -314,22 +314,22 @@ module `mname`
 //;			CfgOpcodes => $sc_cfg_ops,
 //;			BaseAddr => 0x300,
 //;			RegList =>[
-//;					{Name  =>'adcout_avg_0', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_avg_1', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_avg_2', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_avg_3', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_avg_4', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_avg_5', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_avg_6', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_avg_7', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_avg_8', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_avg_9', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_avg_10', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_avg_11', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_avg_12', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_avg_13', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_avg_14', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_avg_15', Width => 8, IEO   =>'i'}
+//;					{Name  =>'adcout_avg_0', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_avg_1', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_avg_2', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_avg_3', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_avg_4', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_avg_5', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_avg_6', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_avg_7', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_avg_8', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_avg_9', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_avg_10', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_avg_11', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_avg_12', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_avg_13', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_avg_14', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_avg_15', Width => 8, IEO   =>'i',Default => 0}
 //;				]
 //;			);
 `$regfile2_on_sysclk->instantiate` (
@@ -360,22 +360,22 @@ module `mname`
 //;			CfgOpcodes => $sc_cfg_ops,
 //;			BaseAddr => 0x400,
 //;			RegList =>[
-//;					{Name  =>'adcout_sum_0', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_sum_1', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_sum_2', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_sum_3', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_sum_4', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_sum_5', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_sum_6', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_sum_7', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_sum_8', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_sum_9', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_sum_10', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_sum_11', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_sum_12', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_sum_13', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_sum_14', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_sum_15', Width => 8, IEO   =>'i'}
+//;					{Name  =>'adcout_sum_0', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_sum_1', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_sum_2', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_sum_3', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_sum_4', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_sum_5', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_sum_6', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_sum_7', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_sum_8', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_sum_9', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_sum_10', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_sum_11', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_sum_12', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_sum_13', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_sum_14', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_sum_15', Width => 8, IEO   =>'i',Default => 0}
 //;				]
 //;			);
 `$regfile3_on_sysclk->instantiate` (
@@ -406,22 +406,22 @@ module `mname`
 //;			CfgOpcodes => $sc_cfg_ops,
 //;			BaseAddr => 0x500,
 //;			RegList =>[
-//;					{Name  =>'adcout_hist_center_0', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_center_1', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_center_2', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_center_3', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_center_4', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_center_5', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_center_6', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_center_7', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_center_8', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_center_9', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_center_10', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_center_11', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_center_12', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_center_13', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_center_14', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_center_15', Width => 16, IEO   =>'i'}
+//;					{Name  =>'adcout_hist_center_0', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_center_1', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_center_2', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_center_3', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_center_4', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_center_5', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_center_6', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_center_7', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_center_8', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_center_9', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_center_10', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_center_11', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_center_12', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_center_13', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_center_14', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_center_15', Width => 16, IEO   =>'i',Default => 0}
 //;				]
 //;			);
 `$regfile4_on_sysclk->instantiate` (
@@ -452,22 +452,22 @@ module `mname`
 //;			CfgOpcodes => $sc_cfg_ops,
 //;			BaseAddr => 0x600,
 //;			RegList =>[
-//;					{Name  =>'adcout_hist_side_0', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_side_1', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_side_2', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_side_3', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_side_4', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_side_5', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_side_6', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_side_7', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_side_8', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_side_9', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_side_10', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_side_11', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_side_12', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_side_13', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_side_14', Width => 16, IEO   =>'i'},
-//;					{Name  =>'adcout_hist_side_15', Width => 16, IEO   =>'i'}
+//;					{Name  =>'adcout_hist_side_0', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_side_1', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_side_2', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_side_3', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_side_4', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_side_5', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_side_6', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_side_7', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_side_8', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_side_9', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_side_10', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_side_11', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_side_12', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_side_13', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_side_14', Width => 16, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_hist_side_15', Width => 16, IEO   =>'i',Default => 0}
 //;				]
 //;			);
 `$regfile5_on_sysclk->instantiate` (
@@ -498,22 +498,22 @@ module `mname`
 //;			CfgOpcodes => $sc_cfg_ops,
 //;			BaseAddr => 0x700,
 //;			RegList =>[
-//;					{Name  =>'adcout_pfd_offset_0', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_pfd_offset_1', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_pfd_offset_2', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_pfd_offset_3', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_pfd_offset_4', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_pfd_offset_5', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_pfd_offset_6', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_pfd_offset_7', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_pfd_offset_8', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_pfd_offset_9', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_pfd_offset_10', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_pfd_offset_11', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_pfd_offset_12', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_pfd_offset_13', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_pfd_offset_14', Width => 8, IEO   =>'i'},
-//;					{Name  =>'adcout_pfd_offset_15', Width => 8, IEO   =>'i'}
+//;					{Name  =>'adcout_pfd_offset_0', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_pfd_offset_1', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_pfd_offset_2', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_pfd_offset_3', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_pfd_offset_4', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_pfd_offset_5', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_pfd_offset_6', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_pfd_offset_7', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_pfd_offset_8', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_pfd_offset_9', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_pfd_offset_10', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_pfd_offset_11', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_pfd_offset_12', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_pfd_offset_13', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_pfd_offset_14', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'adcout_pfd_offset_15', Width => 8, IEO   =>'i',Default => 0}
 //;				]
 //;			);
 `$regfile6_on_sysclk->instantiate` (
@@ -544,22 +544,22 @@ module `mname`
 //;			CfgOpcodes => $sc_cfg_ops,
 //;			BaseAddr => 0x800,
 //;			RegList =>[
-//;					{Name  =>'out_data_0', Width => 8, IEO   =>'i'},
-//;					{Name  =>'out_data_1', Width => 8, IEO   =>'i'},
-//;					{Name  =>'out_data_2', Width => 8, IEO   =>'i'},
-//;					{Name  =>'out_data_3', Width => 8, IEO   =>'i'},
-//;					{Name  =>'out_data_4', Width => 8, IEO   =>'i'},
-//;					{Name  =>'out_data_5', Width => 8, IEO   =>'i'},
-//;					{Name  =>'out_data_6', Width => 8, IEO   =>'i'},
-//;					{Name  =>'out_data_7', Width => 8, IEO   =>'i'},
-//;					{Name  =>'out_data_8', Width => 8, IEO   =>'i'},
-//;					{Name  =>'out_data_9', Width => 8, IEO   =>'i'},
-//;					{Name  =>'out_data_10', Width => 8, IEO   =>'i'},
-//;					{Name  =>'out_data_11', Width => 8, IEO   =>'i'},
-//;					{Name  =>'out_data_12', Width => 8, IEO   =>'i'},
-//;					{Name  =>'out_data_13', Width => 8, IEO   =>'i'},
-//;					{Name  =>'out_data_14', Width => 8, IEO   =>'i'},
-//;					{Name  =>'out_data_15', Width => 8, IEO   =>'i'}
+//;					{Name  =>'out_data_0', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'out_data_1', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'out_data_2', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'out_data_3', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'out_data_4', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'out_data_5', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'out_data_6', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'out_data_7', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'out_data_8', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'out_data_9', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'out_data_10', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'out_data_11', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'out_data_12', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'out_data_13', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'out_data_14', Width => 8, IEO   =>'i',Default => 0},
+//;					{Name  =>'out_data_15', Width => 8, IEO   =>'i',Default => 0}
 //;				]
 //;			);
 `$regfile7_on_sysclk->instantiate` (
@@ -596,28 +596,28 @@ module `mname`
 //;			CfgOpcodes => $tc_cfg_ops,
 //;			BaseAddr => 0x100,
 //;			RegList =>[
-//;					{Name  =>'en_v2t', Width => 1, IEO   =>'o'},
-//;					{Name  =>'en_pi_arb', Width => 1, IEO   =>'o'},
-//;					{Name  =>'en_ext_pi_ctl_cdr', Width => 1, IEO   =>'o'},
-//;					{Name  =>'ext_pi_ctl_cdr', Width => 9, IEO   =>'o'},
-//;					{Name  =>'en_ext_pi_ctl_offset', Width => 1, IEO   =>'o'},
-//;					{Name  =>'en_ext_v2t_ctl', Width => 1, IEO   =>'o'},
-//;					{Name  =>'en_ext_mismatch_ctl', Width => 1, IEO   =>'o'},
-//;					{Name  =>'en_ext_pfd_offset', Width => 1, IEO   =>'o'},
-//;					{Name  =>'en_skew_cal', Width => 1, IEO   =>'o'},
-//;					{Name  =>'en_v2t_cal', Width => 1, IEO   =>'o'},
-//;					{Name  =>'en_mismatch_cal', Width => 1, IEO   =>'o'},
-//;					{Name  =>'en_pfd_cal', Width => 1, IEO   =>'o'},
-//;					{Name  =>'Navg_adc', Width => 4, IEO   =>'o'},
-//;					{Name  =>'Nbin_adc', Width => 4, IEO   =>'o'},
-//;					{Name  =>'DZ_hist_adc', Width => 4, IEO   =>'o'},
-//;					{Name  =>'DZ_v2t_cal', Width => 3, IEO   =>'o'},
-//;					{Name  =>'en_mdll', Width => 1, IEO   =>'o'},
-//;					{Name  =>'sel_ext_pi', Width => 1, IEO   =>'o'},
-//;					{Name  =>'pi_ctl_ext', Width => 9, IEO   =>'o'},
-//;					{Name  =>'sel_ext_pd_offset', Width => 1, IEO   =>'o'},
-//;					{Name  =>'pd_offset_ext', Width => 8, IEO   =>'o'},
-//;					{Name  =>'in_addr', Width => 10, IEO   =>'o'}
+//;					{Name  =>'en_v2t', Width => 1, IEO   =>'o',Default => 0},
+//;					{Name  =>'en_pi_arb', Width => 1, IEO   =>'o',Default => 0},
+//;					{Name  =>'en_ext_pi_ctl_cdr', Width => 1, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_pi_ctl_cdr', Width => 9, IEO   =>'o',Default => 0},
+//;					{Name  =>'en_ext_pi_ctl_offset', Width => 1, IEO   =>'o',Default => 0},
+//;					{Name  =>'en_ext_v2t_ctl', Width => 1, IEO   =>'o',Default => 0},
+//;					{Name  =>'en_ext_mismatch_ctl', Width => 1, IEO   =>'o',Default => 0},
+//;					{Name  =>'en_ext_pfd_offset', Width => 1, IEO   =>'o',Default => 0},
+//;					{Name  =>'en_skew_cal', Width => 1, IEO   =>'o',Default => 0},
+//;					{Name  =>'en_v2t_cal', Width => 1, IEO   =>'o',Default => 0},
+//;					{Name  =>'en_mismatch_cal', Width => 1, IEO   =>'o',Default => 0},
+//;					{Name  =>'en_pfd_cal', Width => 1, IEO   =>'o',Default => 0},
+//;					{Name  =>'Navg_adc', Width => 4, IEO   =>'o',Default => 0},
+//;					{Name  =>'Nbin_adc', Width => 4, IEO   =>'o',Default => 0},
+//;					{Name  =>'DZ_hist_adc', Width => 4, IEO   =>'o',Default => 0},
+//;					{Name  =>'DZ_v2t_cal', Width => 3, IEO   =>'o',Default => 0},
+//;					{Name  =>'en_mdll', Width => 1, IEO   =>'o',Default => 0},
+//;					{Name  =>'sel_ext_pi', Width => 1, IEO   =>'o',Default => 0},
+//;					{Name  =>'pi_ctl_ext', Width => 9, IEO   =>'o',Default => 0},
+//;					{Name  =>'sel_ext_pd_offset', Width => 1, IEO   =>'o',Default => 0},
+//;					{Name  =>'pd_offset_ext', Width => 8, IEO   =>'o',Default => 0},
+//;					{Name  =>'in_addr', Width => 10, IEO   =>'o',Default => 0}
 //;				]
 //;			);
 `$regfile0_on_tstclk->instantiate` (
@@ -654,10 +654,10 @@ module `mname`
 //;			CfgOpcodes => $tc_cfg_ops,
 //;			BaseAddr => 0x200,
 //;			RegList =>[
-//;					{Name  =>'ext_pi_ctl_offset_0', Width => 9, IEO   =>'o'},
-//;					{Name  =>'ext_pi_ctl_offset_1', Width => 9, IEO   =>'o'},
-//;					{Name  =>'ext_pi_ctl_offset_2', Width => 9, IEO   =>'o'},
-//;					{Name  =>'ext_pi_ctl_offset_3', Width => 9, IEO   =>'o'}
+//;					{Name  =>'ext_pi_ctl_offset_0', Width => 9, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_pi_ctl_offset_1', Width => 9, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_pi_ctl_offset_2', Width => 9, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_pi_ctl_offset_3', Width => 9, IEO   =>'o',Default => 0}
 //;				]
 //;			);
 `$regfile1_on_tstclk->instantiate` (
@@ -676,22 +676,22 @@ module `mname`
 //;			CfgOpcodes => $tc_cfg_ops,
 //;			BaseAddr => 0x300,
 //;			RegList =>[
-//;					{Name  =>'ext_v2t_ctl_0', Width => 4, IEO   =>'o'},
-//;					{Name  =>'ext_v2t_ctl_1', Width => 4, IEO   =>'o'},
-//;					{Name  =>'ext_v2t_ctl_2', Width => 4, IEO   =>'o'},
-//;					{Name  =>'ext_v2t_ctl_3', Width => 4, IEO   =>'o'},
-//;					{Name  =>'ext_v2t_ctl_4', Width => 4, IEO   =>'o'},
-//;					{Name  =>'ext_v2t_ctl_5', Width => 4, IEO   =>'o'},
-//;					{Name  =>'ext_v2t_ctl_6', Width => 4, IEO   =>'o'},
-//;					{Name  =>'ext_v2t_ctl_7', Width => 4, IEO   =>'o'},
-//;					{Name  =>'ext_v2t_ctl_8', Width => 4, IEO   =>'o'},
-//;					{Name  =>'ext_v2t_ctl_9', Width => 4, IEO   =>'o'},
-//;					{Name  =>'ext_v2t_ctl_10', Width => 4, IEO   =>'o'},
-//;					{Name  =>'ext_v2t_ctl_11', Width => 4, IEO   =>'o'},
-//;					{Name  =>'ext_v2t_ctl_12', Width => 4, IEO   =>'o'},
-//;					{Name  =>'ext_v2t_ctl_13', Width => 4, IEO   =>'o'},
-//;					{Name  =>'ext_v2t_ctl_14', Width => 4, IEO   =>'o'},
-//;					{Name  =>'ext_v2t_ctl_15', Width => 4, IEO   =>'o'}
+//;					{Name  =>'ext_v2t_ctl_0', Width => 4, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_v2t_ctl_1', Width => 4, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_v2t_ctl_2', Width => 4, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_v2t_ctl_3', Width => 4, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_v2t_ctl_4', Width => 4, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_v2t_ctl_5', Width => 4, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_v2t_ctl_6', Width => 4, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_v2t_ctl_7', Width => 4, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_v2t_ctl_8', Width => 4, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_v2t_ctl_9', Width => 4, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_v2t_ctl_10', Width => 4, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_v2t_ctl_11', Width => 4, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_v2t_ctl_12', Width => 4, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_v2t_ctl_13', Width => 4, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_v2t_ctl_14', Width => 4, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_v2t_ctl_15', Width => 4, IEO   =>'o',Default => 0}
 //;				]
 //;			);
 `$regfile2_on_tstclk->instantiate` (
@@ -722,10 +722,10 @@ module `mname`
 //;			CfgOpcodes => $tc_cfg_ops,
 //;			BaseAddr => 0x400,
 //;			RegList =>[
-//;					{Name  =>'ext_mismatch_ctl_0', Width => 32, IEO   =>'o'},
-//;					{Name  =>'ext_mismatch_ctl_1', Width => 32, IEO   =>'o'},
-//;					{Name  =>'ext_mismatch_ctl_2', Width => 32, IEO   =>'o'},
-//;					{Name  =>'ext_mismatch_ctl_3', Width => 32, IEO   =>'o'}
+//;					{Name  =>'ext_mismatch_ctl_0', Width => 32, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_mismatch_ctl_1', Width => 32, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_mismatch_ctl_2', Width => 32, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_mismatch_ctl_3', Width => 32, IEO   =>'o',Default => 0}
 //;				]
 //;			);
 `$regfile3_on_tstclk->instantiate` (
@@ -744,22 +744,22 @@ module `mname`
 //;			CfgOpcodes => $tc_cfg_ops,
 //;			BaseAddr => 0x500,
 //;			RegList =>[
-//;					{Name  =>'ext_pfd_offset_0', Width => 8, IEO   =>'o'},
-//;					{Name  =>'ext_pfd_offset_1', Width => 8, IEO   =>'o'},
-//;					{Name  =>'ext_pfd_offset_2', Width => 8, IEO   =>'o'},
-//;					{Name  =>'ext_pfd_offset_3', Width => 8, IEO   =>'o'},
-//;					{Name  =>'ext_pfd_offset_4', Width => 8, IEO   =>'o'},
-//;					{Name  =>'ext_pfd_offset_5', Width => 8, IEO   =>'o'},
-//;					{Name  =>'ext_pfd_offset_6', Width => 8, IEO   =>'o'},
-//;					{Name  =>'ext_pfd_offset_7', Width => 8, IEO   =>'o'},
-//;					{Name  =>'ext_pfd_offset_8', Width => 8, IEO   =>'o'},
-//;					{Name  =>'ext_pfd_offset_9', Width => 8, IEO   =>'o'},
-//;					{Name  =>'ext_pfd_offset_10', Width => 8, IEO   =>'o'},
-//;					{Name  =>'ext_pfd_offset_11', Width => 8, IEO   =>'o'},
-//;					{Name  =>'ext_pfd_offset_12', Width => 8, IEO   =>'o'},
-//;					{Name  =>'ext_pfd_offset_13', Width => 8, IEO   =>'o'},
-//;					{Name  =>'ext_pfd_offset_14', Width => 8, IEO   =>'o'},
-//;					{Name  =>'ext_pfd_offset_15', Width => 8, IEO   =>'o'}
+//;					{Name  =>'ext_pfd_offset_0', Width => 8, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_pfd_offset_1', Width => 8, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_pfd_offset_2', Width => 8, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_pfd_offset_3', Width => 8, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_pfd_offset_4', Width => 8, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_pfd_offset_5', Width => 8, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_pfd_offset_6', Width => 8, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_pfd_offset_7', Width => 8, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_pfd_offset_8', Width => 8, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_pfd_offset_9', Width => 8, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_pfd_offset_10', Width => 8, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_pfd_offset_11', Width => 8, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_pfd_offset_12', Width => 8, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_pfd_offset_13', Width => 8, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_pfd_offset_14', Width => 8, IEO   =>'o',Default => 0},
+//;					{Name  =>'ext_pfd_offset_15', Width => 8, IEO   =>'o',Default => 0}
 //;				]
 //;			);
 `$regfile4_on_tstclk->instantiate` (
@@ -790,22 +790,22 @@ module `mname`
 //;			CfgOpcodes => $tc_cfg_ops,
 //;			BaseAddr => 0x600,
 //;			RegList =>[
-//;					{Name  =>'init_0', Width => 2, IEO   =>'o'},
-//;					{Name  =>'init_1', Width => 2, IEO   =>'o'},
-//;					{Name  =>'init_2', Width => 2, IEO   =>'o'},
-//;					{Name  =>'init_3', Width => 2, IEO   =>'o'},
-//;					{Name  =>'init_4', Width => 2, IEO   =>'o'},
-//;					{Name  =>'init_5', Width => 2, IEO   =>'o'},
-//;					{Name  =>'init_6', Width => 2, IEO   =>'o'},
-//;					{Name  =>'init_7', Width => 2, IEO   =>'o'},
-//;					{Name  =>'init_8', Width => 2, IEO   =>'o'},
-//;					{Name  =>'init_9', Width => 2, IEO   =>'o'},
-//;					{Name  =>'init_10', Width => 2, IEO   =>'o'},
-//;					{Name  =>'init_11', Width => 2, IEO   =>'o'},
-//;					{Name  =>'init_12', Width => 2, IEO   =>'o'},
-//;					{Name  =>'init_13', Width => 2, IEO   =>'o'},
-//;					{Name  =>'init_14', Width => 2, IEO   =>'o'},
-//;					{Name  =>'init_15', Width => 2, IEO   =>'o'}
+//;					{Name  =>'init_0', Width => 2, IEO   =>'o',Default => 0},
+//;					{Name  =>'init_1', Width => 2, IEO   =>'o',Default => 0},
+//;					{Name  =>'init_2', Width => 2, IEO   =>'o',Default => 0},
+//;					{Name  =>'init_3', Width => 2, IEO   =>'o',Default => 0},
+//;					{Name  =>'init_4', Width => 2, IEO   =>'o',Default => 0},
+//;					{Name  =>'init_5', Width => 2, IEO   =>'o',Default => 0},
+//;					{Name  =>'init_6', Width => 2, IEO   =>'o',Default => 0},
+//;					{Name  =>'init_7', Width => 2, IEO   =>'o',Default => 0},
+//;					{Name  =>'init_8', Width => 2, IEO   =>'o',Default => 0},
+//;					{Name  =>'init_9', Width => 2, IEO   =>'o',Default => 0},
+//;					{Name  =>'init_10', Width => 2, IEO   =>'o',Default => 0},
+//;					{Name  =>'init_11', Width => 2, IEO   =>'o',Default => 0},
+//;					{Name  =>'init_12', Width => 2, IEO   =>'o',Default => 0},
+//;					{Name  =>'init_13', Width => 2, IEO   =>'o',Default => 0},
+//;					{Name  =>'init_14', Width => 2, IEO   =>'o',Default => 0},
+//;					{Name  =>'init_15', Width => 2, IEO   =>'o',Default => 0}
 //;				]
 //;			);
 `$regfile5_on_tstclk->instantiate` (
