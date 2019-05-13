@@ -27,11 +27,7 @@
 // These types could have been generated according to the RTL but I got lazy
 // and just copied them from cfg_and_dbg.vp and from tap.vp
 parameter jtag_inst_width = 5;
-parameter sc_bus_width = 32;
-parameter sc_addr_width = 13;
-parameter tc_bus_width = 32;
-parameter tc_addr_width = 12;
-
+{'sc': 'parameter sc_bus_width = 32;\nparameter sc_addr_width = 12;\n', 'tc': 'parameter tc_bus_width = 32;\nparameter tc_addr_width = 11;\n'}
 
 parameter sc_op_width = 2;
 parameter tc_op_width = 2;

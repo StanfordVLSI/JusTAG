@@ -112,9 +112,6 @@ module `mname`
    input wire logic	bsr_tdo
    );
 
-$$ INSERT intf_regfile_int
-$$ INSERT intf_regfile_gen
-				
    //  Config interfaces for system and test clock domains
 $$	INSERT sc_rf2rf_gen
 $$	INSERT sc_rf2rf_int
