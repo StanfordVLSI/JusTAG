@@ -84,7 +84,7 @@ for interface in interfaces:
 
             width   = convert_dimensions( io_info['Packed Dim'][ii])
             array   = convert_dimensions( io_info['Unpacked Dim'][ii])
-            signed  =                     io_info['Signed'][ii] == 'yes'
+            signed  =                     io_info['Signed?'][ii] == 'yes'
             ieo     =                     io_info['JTAG Dir'][ii]
 
             default_tokens = in_info['Reset Val'][ii].split(',')
@@ -92,6 +92,7 @@ for interface in interfaces:
             assert(num_of_default <= array)
 
             default = []
+            print(default_tokens)
            	for tok in default_tokens:
            		default += [convert_default(tok)]
 
