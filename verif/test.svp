@@ -78,25 +78,11 @@
 	    $display("%t: \033[0;36mTrans %2d\033[0m: output=%0x\n",
                     $time, i, data_out);
      end
-	 // Run some test
-/*	 for (i = 0; i < 9; i++) begin
-	    @(posedge ifc.Clk);
-	    jtag_write_reg(sc_domain, 18'h400, offset_vals[i]);
-	    ifc.cmp_pos_in = pos_in_vals[i];
-	    ifc.cmp_neg_in = neg_in_vals[i];
-	    jtag_read_reg(sc_domain, 18'h408, data_out);
-	    $display("%t: \033[0;36mTrans %2d\033[0m: offset=%0d, pos=%.3f, neg=%.3f, output=%0x\n",  
-		     $time, i+1, offset_vals[i], ifc.cmp_pos_in, ifc.cmp_neg_in, data_out);
-	    if (data_out != expect_out[i]) begin
-	       $display("%t: \033[0;31mERROR Found\033[0m", $time);
-	       $finish(2);
-	    end
-	 end*/
-      end
+   end
    endtask // run_test
    
    task init_test();
-      begin
+   begin
 	 // init the environment
 	 jdrv = new(ifc, svf_file);
 	 jdrv.Zero();
@@ -104,13 +90,7 @@
      for (i = 0; i < 16; i++) begin
         ifc.adcout[i] = i;
      end	 
-/*	 ifc.signalA_in = '0;
-	 ifc.signalD_in = '0;
-	 ifc.cmp_Iref_in = 0;
-	 ifc.cmp_pos_in = 0;
-	 ifc.cmp_neg_in = 0;*/
-	 repeat (2) @(posedge ifc.Clk); 
-      end
+   end
    endtask // init_test
 
    /****************************************************************************
