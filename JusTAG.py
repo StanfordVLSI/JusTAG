@@ -86,7 +86,20 @@ for interface in interfaces:
             array   = convert_dimensions( io_info['Unpacked Dim'][ii])
             signed  =                     io_info['Signed'][ii] == 'yes'
             ieo     =                     io_info['JTAG Dir'][ii]
-            default = convert_default(    io_info['Reset Val'][ii])
+
+            default_tokens = in_info['Reset Val'][ii].split(',')
+            num_of_default = len(default_tokens)
+            assert(num_of_default <= array)
+
+            default = []
+           	for tok in default_tokens:
+           		default += [convert_default(tok)]
+
+           	for jj in range(num_of_default, array, 1):
+           		default += [default[num_of_default-1]]
+
+           	print(default)
+            #default = convert_default(    io_info['Reset Val'][ii])
             domain  = convert_domains[    io_info['Clock Domain'][ii]]
             
             io_list[clean_interface][name] = {
@@ -163,7 +176,7 @@ for interface in jtag_properties['io_list']:
                     "Width" : curr_io_list['width'],
                     "IEO"   : curr_io_list['ieo'][0],
                     "ifc"   : interface,
-                    "Default" : curr_io_list['default']
+                    "Default" : curr_io_list['default'][0]
                     }
             jtag_properties['reg_files'][domain][0]['num_of_reg'] += 1
         else:
@@ -183,7 +196,7 @@ for interface in jtag_properties['io_list']:
                     "Width" : curr_io_list['width'],
                     "IEO"   : curr_io_list['ieo'][0],
                     "ifc"   : interface,
-                    "Default" : curr_io_list['default']
+                    "Default" : curr_io_list['default'][ii]
                     }
             jtag_properties['reg_files'][domain][reg_file_pos]['registers']  = registers
 
