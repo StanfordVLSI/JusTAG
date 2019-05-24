@@ -86,21 +86,21 @@ for interface in interfaces:
             array   = convert_dimensions( io_info['Unpacked Dim'][ii])
             signed  =                     io_info['Signed?'][ii] == 'yes'
             ieo     =                     io_info['JTAG Dir'][ii]
+            default = []
+            if not str(io_info['Reset Val'][ii]) == 'nan': 
+                default_tokens = io_info['Reset Val'][ii].split('&')
+            else:
+                default_tokens = ['nan']
 
-            default_tokens = in_info['Reset Val'][ii].split(',')
             num_of_default = len(default_tokens)
             assert(num_of_default <= array)
 
-            default = []
-            print(default_tokens)
-           	for tok in default_tokens:
-           		default += [convert_default(tok)]
+            for tok in default_tokens:
+                default += [convert_default(tok)]
 
-           	for jj in range(num_of_default, array, 1):
-           		default += [default[num_of_default-1]]
+            for jj in range(num_of_default, array, 1):
+           	    default += [default[num_of_default-1]]
 
-           	print(default)
-            #default = convert_default(    io_info['Reset Val'][ii])
             domain  = convert_domains[    io_info['Clock Domain'][ii]]
             
             io_list[clean_interface][name] = {
@@ -272,23 +272,40 @@ for domain in ['sc', 'tc']:
             
             end_token_sel  = { True : "\n//;\t\t\t\t]\n//;\t\t\t);\n", False : ",\n"}
             name_token_sel = { True : "{}".format(reg["Name"]),        False : "{}_{}".format(reg["Name"], reg["pos"])}
-
             name_token = name_token_sel[reg['pos'] == '']
             end_token  = end_token_sel[jj == (num_of_reg-1)]
-            output_strings['reg_file_gen'][domain] +=   ( 
-                                                            "//;\t\t\t\t\t{{"
-                                                            "Name  =>\'{}\', "
-                                                            "Width => {}, "
-                                                            "IEO   =>\'{}\',"
-                                                            "Default => {}"
-                                                            "}}{}"
-                                                        ).format(
-                                                            name_token,
-                                                            reg["Width"],
-                                                            reg["IEO"],
-                                                            reg["Default"],
-                                                            end_token
-                                                        )
+            reg_string_sel = { 'i' : 
+                                        (
+                                          "//;\t\t\t\t\t{{"
+                                          "Name  =>\'{}\', "
+                                          "Width => {}, "
+                                          "IEO   =>\'{}\'"
+                                          "}}{}"
+                                         ).format(
+                                           name_token,
+                                           reg["Width"],
+                                           reg["IEO"],
+                                           end_token
+                                         ),
+                               'o' :
+                                         ( 
+                                           "//;\t\t\t\t\t{{"
+                                           "Name  =>\'{}\', "
+                                           "Width => {}, "
+                                           "IEO   =>\'{}\',"
+                                           "Default => {}"
+                                           "}}{}"
+                                         ).format(
+                                           name_token,
+                                           reg["Width"],
+                                           reg["IEO"],
+                                           reg["Default"],
+                                           end_token
+                                         )
+                             }
+             
+             
+            output_strings['reg_file_gen'][domain] += reg_string_sel[reg["IEO"]]
              
         output_strings['reg_file_gen'][domain] += '`$regfile{}_on_{}->instantiate` (\n\t\t\t.Clk(ifc.Clk),\n'.format(ii, clock)
         output_strings['reg_file_gen'][domain] += '\t\t\t.Reset(ifc.Reset),\n'
