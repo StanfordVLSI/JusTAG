@@ -26,7 +26,7 @@
 interface `mname`(input wire Clk, input wire Reset) import `$const_pack`::*; (
 );
 //; } else {
-interface `mname`(input Clk, input Reset);
+interface `mname`(input wire Clk, input wire Reset);
 //;}
    //; foreach my $io (@{$io_list}){
    //; my $type = 'logic';

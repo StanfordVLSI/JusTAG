@@ -1,4 +1,4 @@
-import sys
+import sys, os
 from math import *
 import mistune, pandas
 
@@ -9,22 +9,21 @@ consts      = {}
 list_of_files = sys.argv[1:]
 
 sort_files = {
-                'intf': interfaces,
-                'pack': const_packs
-                
+                'reg'  : interfaces,
+                'all' : const_packs
              }
 
 for dir_file_name in list_of_files:
     tokens    = dir_file_name.strip().split('/')
-    directory = tokens[0]
-    file_name = tokens[-1]
-   
-    sort_files[directory][file_name] = []
-
-
+    directory = tokens[-2]
+    file_name = tokens[-1]  
+    sort_files[directory][dir_file_name] = []
+    
+current_dir = os.getcwd()
+os.chdir(os.environ['JUSTAG_HOME']) 
 #Modify the Genesis code to take constant parameters and remove this
 for const_pack in const_packs:
-    with open('pack/' + const_pack) as f:
+    with open(const_pack) as f:
         for line in f:
             line = line.split(';')[0]
             tokens = line.strip().split()
@@ -32,10 +31,9 @@ for const_pack in const_packs:
             if not tokens:
                 continue
             
-            if tokens[0] == 'localparam':
+            if (tokens[0] == 'localparam') and (tokens[1] == 'integer'):
                 consts[tokens[2]] = int(tokens[4])
                 exec(str(tokens[2]) + ' = ' + str(tokens[4]))
-
 def clog2(val):
     return ceil(log2(val))
 
@@ -67,14 +65,16 @@ def convert_default(expr):
 io_list = {}      
 
 for interface in interfaces:
-    with open('intf/' + interface) as intf_f:
+    with open(interface) as intf_f:
         intf_txt = intf_f.read()
         intf_html = mistune.markdown(intf_txt)
         io_info = pandas.read_html(intf_html)[0]
         
         num_of_io = len(io_info)
 
-        clean_interface = interface.split('_')[0]
+        interface_wo_path = interface.split('/')[-1]
+
+        clean_interface = interface_wo_path.split('_')[0]
         io_list[clean_interface] = {}
 
         for ii in range(num_of_io):
@@ -264,7 +264,8 @@ for domain in ['sc', 'tc']:
         										    )
       	
         num_of_reg = jtag_properties['reg_files'][domain][ii]['num_of_reg']
-        print(num_of_reg)
+        assert(num_of_reg <= 64 if ii==0 else 64), 'Register Overflow for Bank[{}] on {}_CLK'.format(ii, domain.upper())
+        
         registers  = jtag_properties['reg_files'][domain][ii]['registers']
 
         for jj, kk in enumerate(registers):
@@ -400,8 +401,8 @@ actions = {
             'INSERT' : insertion_strings
           }
 
-with open('rtl/digital/pre_template.svp', 'r') as fin:
-    with open('rtl/digital/template.svp','w') as fout:
+with open('rtl/digital/pre_jtag.svp', 'r') as fin:
+    with open('rtl/digital/raw_jtag.svp','w') as fout:
         for line in fin:
             tokens = line.strip().split()
             if not tokens:

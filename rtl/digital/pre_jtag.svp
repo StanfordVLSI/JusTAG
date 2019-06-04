@@ -87,7 +87,7 @@ $$			INSERT io_list_gen
 //;
 //;
 //; # First we create an interface for this chip
-//; my $ifc = generate('template_ifc', 'ifc', IOList => $io_list);
+//; my $ifc = generate('raw_jtag_ifc', 'ifc', IOList => $io_list);
 //;
 //; # this would enable others to use this interface
 //; parameter(Name=>'IfcPtr', Val=>$ifc, force=>1, Doc=>"Declaring our interface object for others to use");
