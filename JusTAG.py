@@ -1,6 +1,11 @@
-import sys, os
+import sys
+import os
+import os.path
 from math import *
 import mistune, pandas
+
+# get the top-level folder location
+JUSTAG_HOME = os.path.dirname(os.path.realpath(os.path.expanduser(__file__)))
 
 const_packs = {}
 interfaces  = {} 
@@ -20,7 +25,7 @@ for dir_file_name in list_of_files:
     sort_files[directory][dir_file_name] = []
     
 current_dir = os.getcwd()
-os.chdir(os.environ['JUSTAG_HOME']) 
+os.chdir(JUSTAG_HOME) 
 #Modify the Genesis code to take constant parameters and remove this
 for const_pack in const_packs:
     with open(const_pack) as f:
