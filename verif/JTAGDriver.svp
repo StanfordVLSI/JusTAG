@@ -66,7 +66,7 @@ typedef enum logic [jtag_inst_width-1:0]
 
 /*************************** CLASS JTAGDRIVER ********************************/
 class `mname`;
-   virtual template_ifc_unq1.test ifc; // interface for the jtag signals
+   virtual raw_jtag_ifc_unq1.test ifc; // interface for the jtag signals
 
    int reset_done;	// is jtag reset procedure done?
    bit tck_edge;	// Is the next jtag clock edge a 1 or a 0
@@ -77,7 +77,7 @@ class `mname`;
 
 
 
-   function new(virtual template_ifc_unq1.test ifc, int svf_file = 0);
+   function new(virtual raw_jtag_ifc_unq1.test ifc, int svf_file = 0);
       reset_done = 0;
       tck_edge = 1;
       this.ifc = ifc;
