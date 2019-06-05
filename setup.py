@@ -9,7 +9,8 @@ setup(
     packages=['justag'],
     install_requires=[
         'mistune',
-        'pandas'
+        'pandas',
+        'lxml'
     ],
     include_package_data=True,
     zip_safe=False,
