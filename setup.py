@@ -8,6 +8,8 @@ setup(
     author='Stanford University',
     packages=['justag'],
     install_requires=[
+        'mistune',
+        'pandas'
     ],
     include_package_data=True,
     zip_safe=False,
