@@ -89,7 +89,7 @@ for interface in interfaces:
 
             width   = convert_dimensions( io_info['Packed Dim'][ii])
             array   = convert_dimensions( io_info['Unpacked Dim'][ii])
-            signed  =                     io_info['Signed?'][ii] == 'yes'
+            signed  =                     int(io_info['Signed?'][ii] == 'yes')
             ieo     =                     io_info['JTAG Dir'][ii]
             default = []
             if not str(io_info['Reset Val'][ii]) == 'nan': 
@@ -165,11 +165,13 @@ for interface in jtag_properties['io_list']:
                                         "array=>{},  "
                                         "direction => \'{}\',  "
                                         "bsr => \'yes\', "
+                                        "signed =>{}, "
                                         "orientation => \'top\'}}").format(
                                         name, 
                                         curr_io_list['width'],
                                         curr_io_list['array'],
-                                        curr_io_list['ieo']) +\
+                                        curr_io_list['ieo'],
+                                        curr_io_list['signed']) +\
                                         end_token
 
         domain = curr_io_list['domain']
