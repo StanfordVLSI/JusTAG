@@ -63,7 +63,7 @@ def convert_default(expr):
         elif 'd' in expr:
             return int(expr.split('d')[1], 10)
         else:
-            return int(expr)
+            return int(float(expr))
     else:
         return 0
 
@@ -92,8 +92,8 @@ for interface in interfaces:
             signed  =                     int(io_info['Signed?'][ii] == 'yes')
             ieo     =                     io_info['JTAG Dir'][ii]
             default = []
-            if not str(io_info['Reset Val'][ii]) == 'nan': 
-                default_tokens = io_info['Reset Val'][ii].split('&')
+            if not str(io_info['Reset Val'][ii]) == 'nan':
+                default_tokens = str(io_info['Reset Val'][ii]).split('&')
             else:
                 default_tokens = ['nan']
 

@@ -95,7 +95,7 @@
 //;			{name => 'en_inbuf', bitwidth => 1, array=>1,  direction => 'out',  bsr => 'yes', signed =>0, orientation => 'top'},
 //;			{name => 'sel_inbuf_in', bitwidth => 1, array=>1,  direction => 'out',  bsr => 'yes', signed =>0, orientation => 'top'},
 //;			{name => 'bypass_inbuf_div', bitwidth => 1, array=>1,  direction => 'out',  bsr => 'yes', signed =>0, orientation => 'top'},
-//;			{name => 'inbuf_ndiv', bitwidth => 2, array=>1,  direction => 'out',  bsr => 'yes', signed =>0, orientation => 'top'},
+//;			{name => 'inbuf_ndiv', bitwidth => 3, array=>1,  direction => 'out',  bsr => 'yes', signed =>0, orientation => 'top'},
 //;			{name => 'en_inbuf_meas', bitwidth => 1, array=>1,  direction => 'out',  bsr => 'yes', signed =>0, orientation => 'top'},
 //;			{name => 'en_biasgen', bitwidth => 4, array=>1,  direction => 'out',  bsr => 'yes', signed =>0, orientation => 'top'},
 //;			{name => 'ctl_biasgen', bitwidth => 5, array=>4,  direction => 'out',  bsr => 'yes', signed =>0, orientation => 'top'},
@@ -148,8 +148,9 @@
 //;			{name => 'adcout_hist_side_rep', bitwidth => 16, array=>2,  direction => 'in',  bsr => 'yes', signed =>0, orientation => 'top'},
 //;			{name => 'pfd_offset_rep', bitwidth => 8, array=>2,  direction => 'in',  bsr => 'yes', signed =>1, orientation => 'top'},
 //;			{name => 'Ndiv_clk_avg', bitwidth => 5, array=>1,  direction => 'out',  bsr => 'yes', signed =>0, orientation => 'top'},
+//;			{name => 'int_rstb', bitwidth => 1, array=>1,  direction => 'out',  bsr => 'yes', signed =>0, orientation => 'top'},
 //;			{name => 'in_addr', bitwidth => 10, array=>1,  direction => 'out',  bsr => 'yes', signed =>0, orientation => 'top'},
-//;			{name => 'out_data', bitwidth => 8, array=>16,  direction => 'in',  bsr => 'yes', signed =>1, orientation => 'top'},
+//;			{name => 'out_data', bitwidth => 8, array=>18,  direction => 'in',  bsr => 'yes', signed =>1, orientation => 'top'},
 //;			{name => 'addr', bitwidth => 10, array=>1,  direction => 'in',  bsr => 'yes', signed =>0, orientation => 'top'},
 //;							     				       
 //;		# Digital, non-design specific IOs	     				       
@@ -937,7 +938,9 @@ module `mname`
 //;					{Name  =>'out_data_12', Width => 8, IEO   =>'i'},
 //;					{Name  =>'out_data_13', Width => 8, IEO   =>'i'},
 //;					{Name  =>'out_data_14', Width => 8, IEO   =>'i'},
-//;					{Name  =>'out_data_15', Width => 8, IEO   =>'i'}
+//;					{Name  =>'out_data_15', Width => 8, IEO   =>'i'},
+//;					{Name  =>'out_data_16', Width => 8, IEO   =>'i'},
+//;					{Name  =>'out_data_17', Width => 8, IEO   =>'i'}
 //;				]
 //;			);
 `$regfile18_on_sysclk->instantiate` (
@@ -960,7 +963,9 @@ module `mname`
 			.out_data_12_d(ifc.out_data[12]),
 			.out_data_13_d(ifc.out_data[13]),
 			.out_data_14_d(ifc.out_data[14]),
-			.out_data_15_d(ifc.out_data[15])
+			.out_data_15_d(ifc.out_data[15]),
+			.out_data_16_d(ifc.out_data[16]),
+			.out_data_17_d(ifc.out_data[17])
 			);
 
 
@@ -983,12 +988,12 @@ module `mname`
 //;					{Name  =>'en_sw_test', Width => 16, IEO   =>'o',Default => 0},
 //;					{Name  =>'en_gf', Width => 1, IEO   =>'o',Default => 0},
 //;					{Name  =>'en_arb_pi', Width => 4, IEO   =>'o',Default => 1},
-//;					{Name  =>'en_delay_pi', Width => 4, IEO   =>'o',Default => 0},
+//;					{Name  =>'en_delay_pi', Width => 4, IEO   =>'o',Default => 1},
 //;					{Name  =>'en_ext_Qperi', Width => 4, IEO   =>'o',Default => 0},
 //;					{Name  =>'en_pm_pi', Width => 4, IEO   =>'o',Default => 0},
 //;					{Name  =>'en_cal_pi', Width => 4, IEO   =>'o',Default => 0},
 //;					{Name  =>'disable_state', Width => 4, IEO   =>'o',Default => 0},
-//;					{Name  =>'en_clk_sw', Width => 4, IEO   =>'o',Default => 0},
+//;					{Name  =>'en_clk_sw', Width => 4, IEO   =>'o',Default => 1},
 //;					{Name  =>'en_meas_pi', Width => 4, IEO   =>'o',Default => 0},
 //;					{Name  =>'sel_meas_pi', Width => 4, IEO   =>'o',Default => 0},
 //;					{Name  =>'en_slice_rep', Width => 2, IEO   =>'o',Default => 0},
@@ -997,12 +1002,12 @@ module `mname`
 //;					{Name  =>'en_pm_rep', Width => 2, IEO   =>'o',Default => 0},
 //;					{Name  =>'en_v2t_clk_next_rep', Width => 2, IEO   =>'o',Default => 0},
 //;					{Name  =>'en_sw_test_rep', Width => 2, IEO   =>'o',Default => 0},
-//;					{Name  =>'en_inbuf', Width => 1, IEO   =>'o',Default => 0},
+//;					{Name  =>'en_inbuf', Width => 1, IEO   =>'o',Default => 1},
 //;					{Name  =>'sel_inbuf_in', Width => 1, IEO   =>'o',Default => 0},
-//;					{Name  =>'bypass_inbuf_div', Width => 1, IEO   =>'o',Default => 0},
-//;					{Name  =>'inbuf_ndiv', Width => 2, IEO   =>'o',Default => 0},
+//;					{Name  =>'bypass_inbuf_div', Width => 1, IEO   =>'o',Default => 1},
+//;					{Name  =>'inbuf_ndiv', Width => 3, IEO   =>'o',Default => 0},
 //;					{Name  =>'en_inbuf_meas', Width => 1, IEO   =>'o',Default => 0},
-//;					{Name  =>'en_biasgen', Width => 4, IEO   =>'o',Default => 0},
+//;					{Name  =>'en_biasgen', Width => 4, IEO   =>'o',Default => 1},
 //;					{Name  =>'sel_ext_pi', Width => 1, IEO   =>'o',Default => 0},
 //;					{Name  =>'pi_ctl_ext', Width => 9, IEO   =>'o',Default => 0},
 //;					{Name  =>'sel_ext_pd_offset', Width => 1, IEO   =>'o',Default => 0},
@@ -1026,7 +1031,8 @@ module `mname`
 //;					{Name  =>'Nbin_adc_rep', Width => 4, IEO   =>'o',Default => 6},
 //;					{Name  =>'DZ_hist_adc_rep', Width => 4, IEO   =>'o',Default => 3},
 //;					{Name  =>'DZ_v2t_cal', Width => 3, IEO   =>'o',Default => 5},
-//;					{Name  =>'Ndiv_clk_avg', Width => 5, IEO   =>'o',Default => 0},
+//;					{Name  =>'Ndiv_clk_avg', Width => 5, IEO   =>'o',Default => 8},
+//;					{Name  =>'int_rstb', Width => 1, IEO   =>'o',Default => 1},
 //;					{Name  =>'in_addr', Width => 10, IEO   =>'o',Default => 0}
 //;				]
 //;			);
@@ -1088,6 +1094,7 @@ module `mname`
 			.DZ_hist_adc_rep_q(ifc.DZ_hist_adc_rep),
 			.DZ_v2t_cal_q(ifc.DZ_v2t_cal),
 			.Ndiv_clk_avg_q(ifc.Ndiv_clk_avg),
+			.int_rstb_q(ifc.int_rstb),
 			.in_addr_q(ifc.in_addr)
 			);
 //tc Domain: Register Bank 1:
@@ -1096,22 +1103,22 @@ module `mname`
 //;			CfgOpcodes => $tc_cfg_ops,
 //;			BaseAddr => 0x200,
 //;			RegList =>[
-//;					{Name  =>'ctl_v2tn_0', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tn_1', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tn_2', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tn_3', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tn_4', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tn_5', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tn_6', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tn_7', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tn_8', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tn_9', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tn_10', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tn_11', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tn_12', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tn_13', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tn_14', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tn_15', Width => 5, IEO   =>'o',Default => 0}
+//;					{Name  =>'ctl_v2tn_0', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tn_1', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tn_2', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tn_3', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tn_4', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tn_5', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tn_6', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tn_7', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tn_8', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tn_9', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tn_10', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tn_11', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tn_12', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tn_13', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tn_14', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tn_15', Width => 5, IEO   =>'o',Default => 16}
 //;				]
 //;			);
 `$regfile1_on_tstclk->instantiate` (
@@ -1142,22 +1149,22 @@ module `mname`
 //;			CfgOpcodes => $tc_cfg_ops,
 //;			BaseAddr => 0x300,
 //;			RegList =>[
-//;					{Name  =>'ctl_v2tp_0', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tp_1', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tp_2', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tp_3', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tp_4', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tp_5', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tp_6', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tp_7', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tp_8', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tp_9', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tp_10', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tp_11', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tp_12', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tp_13', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tp_14', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tp_15', Width => 5, IEO   =>'o',Default => 0}
+//;					{Name  =>'ctl_v2tp_0', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tp_1', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tp_2', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tp_3', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tp_4', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tp_5', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tp_6', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tp_7', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tp_8', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tp_9', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tp_10', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tp_11', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tp_12', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tp_13', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tp_14', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tp_15', Width => 5, IEO   =>'o',Default => 16}
 //;				]
 //;			);
 `$regfile2_on_tstclk->instantiate` (
@@ -1464,10 +1471,10 @@ module `mname`
 //;			CfgOpcodes => $tc_cfg_ops,
 //;			BaseAddr => 0xa00,
 //;			RegList =>[
-//;					{Name  =>'ext_Qperi_0', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ext_Qperi_1', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ext_Qperi_2', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ext_Qperi_3', Width => 5, IEO   =>'o',Default => 0}
+//;					{Name  =>'ext_Qperi_0', Width => 5, IEO   =>'o',Default => 17},
+//;					{Name  =>'ext_Qperi_1', Width => 5, IEO   =>'o',Default => 17},
+//;					{Name  =>'ext_Qperi_2', Width => 5, IEO   =>'o',Default => 17},
+//;					{Name  =>'ext_Qperi_3', Width => 5, IEO   =>'o',Default => 17}
 //;				]
 //;			);
 `$regfile9_on_tstclk->instantiate` (
@@ -1574,8 +1581,8 @@ module `mname`
 //;			CfgOpcodes => $tc_cfg_ops,
 //;			BaseAddr => 0xf00,
 //;			RegList =>[
-//;					{Name  =>'ctl_v2tn_rep_0', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tn_rep_1', Width => 5, IEO   =>'o',Default => 0}
+//;					{Name  =>'ctl_v2tn_rep_0', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tn_rep_1', Width => 5, IEO   =>'o',Default => 16}
 //;				]
 //;			);
 `$regfile14_on_tstclk->instantiate` (
@@ -1592,8 +1599,8 @@ module `mname`
 //;			CfgOpcodes => $tc_cfg_ops,
 //;			BaseAddr => 0x1000,
 //;			RegList =>[
-//;					{Name  =>'ctl_v2tp_rep_0', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_v2tp_rep_1', Width => 5, IEO   =>'o',Default => 0}
+//;					{Name  =>'ctl_v2tp_rep_0', Width => 5, IEO   =>'o',Default => 16},
+//;					{Name  =>'ctl_v2tp_rep_1', Width => 5, IEO   =>'o',Default => 16}
 //;				]
 //;			);
 `$regfile15_on_tstclk->instantiate` (
@@ -1718,10 +1725,10 @@ module `mname`
 //;			CfgOpcodes => $tc_cfg_ops,
 //;			BaseAddr => 0x1700,
 //;			RegList =>[
-//;					{Name  =>'ctl_biasgen_0', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_biasgen_1', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_biasgen_2', Width => 5, IEO   =>'o',Default => 0},
-//;					{Name  =>'ctl_biasgen_3', Width => 5, IEO   =>'o',Default => 0}
+//;					{Name  =>'ctl_biasgen_0', Width => 5, IEO   =>'o',Default => 7},
+//;					{Name  =>'ctl_biasgen_1', Width => 5, IEO   =>'o',Default => 7},
+//;					{Name  =>'ctl_biasgen_2', Width => 5, IEO   =>'o',Default => 7},
+//;					{Name  =>'ctl_biasgen_3', Width => 5, IEO   =>'o',Default => 7}
 //;				]
 //;			);
 `$regfile22_on_tstclk->instantiate` (
