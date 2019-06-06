@@ -227,17 +227,21 @@ with open('jtag_file_list.txt', 'w') as file:
     for domain in ['tc', 'sc']:
         print("Domain: {}\nPrimary Reg File:".format(domain), file=file)
         for ii in range(jtag_properties['reg_files'][domain][0]['num_of_reg']):
-            print("register: {} at address: {}".format(
+            print("register: {} at address: {} is writeable?: {}".format(
                 jtag_properties['reg_files'][domain][0]['registers'][ii]['Name'],
                 hex(ii*4 + 256),
+                'Yes' if jtag_properties['reg_files'][domain][0]['registers'][ii]['IEO'] == 'o' else 'No'
                 ), file=file)
         print(file=file)
         for ii in range(1, jtag_properties['num_of_reg_files'][domain]):
-            print("Reg File: {} (unrolled)\nStart Address: {}\nLast Address: {}\n".format(
+            print("Reg File: {} (unrolled)\nStart Address: {}\nLast Address: {}\nCan Write?: {}".format(
                 jtag_properties['reg_files'][domain][ii]['registers'][0]['Name'],
                 jtag_properties['reg_files'][domain][ii]['address'],
-                hex((jtag_properties['reg_files'][domain][ii]['num_of_reg']-1)*4 + 256 + 256*ii)
+                hex((jtag_properties['reg_files'][domain][ii]['num_of_reg']-1)*4 + 256 + 256*ii),
+                'Yes' if jtag_properties['reg_files'][domain][ii]['registers'][0]['IEO'] == 'o' else 'No'
                 ), file=file)
+        print(file=file)
+
 os.chdir(JUSTAG_HOME)
 output_strings['reg_file_gen'] = domain_sel.copy()
 output_strings['rf2rf_int'] = domain_sel.copy()
@@ -332,8 +336,10 @@ for domain in ['sc', 'tc']:
              
             output_strings['reg_file_gen'][domain] += reg_string_sel[reg["IEO"]]
              
-        output_strings['reg_file_gen'][domain] += '`$regfile{}_on_{}->instantiate` (\n\t\t\t.Clk(ifc.Clk),\n'.format(ii, clock)
-        output_strings['reg_file_gen'][domain] += '\t\t\t.Reset(ifc.Reset),\n'
+        regfile_clk_sel = { 'sc' : 'Clk', 'tc' : 'tck'}
+        regfile_reset_sel = { 'sc' : 'ifc.Reset', 'tc' : 'test_logic_reset'}
+        output_strings['reg_file_gen'][domain] += '`$regfile{}_on_{}->instantiate` (\n\t\t\t.Clk(ifc.{}),\n'.format(ii, clock, regfile_clk_sel[domain])
+        output_strings['reg_file_gen'][domain] += '\t\t\t.Reset({}),\n'.format(regfile_reset_sel[domain])
 
         num_of_reg_files = jtag_properties['num_of_reg_files'][domain]
         rf_gen_sel = { 0 : 'jtag', 1 : 'rf0',num_of_reg_files-1: 'rf{}'.format(num_of_reg_files-1), num_of_reg_files : 'jtag'}

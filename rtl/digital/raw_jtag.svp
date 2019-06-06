@@ -1037,8 +1037,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile0_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_jtag2rf0_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf02rf1_ifc->iname`.cfgOut),
 			.en_v2t_q(ifc.en_v2t),
@@ -1122,8 +1122,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile1_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf02rf1_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf12rf2_ifc->iname`.cfgOut),
 			.ctl_v2tn_0_q(ifc.ctl_v2tn[0]),
@@ -1168,8 +1168,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile2_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf12rf2_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf22rf3_ifc->iname`.cfgOut),
 			.ctl_v2tp_0_q(ifc.ctl_v2tp[0]),
@@ -1214,8 +1214,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile3_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf22rf3_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf32rf4_ifc->iname`.cfgOut),
 			.init_0_q(ifc.init[0]),
@@ -1260,8 +1260,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile4_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf32rf4_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf42rf5_ifc->iname`.cfgOut),
 			.sel_pm_sign_0_q(ifc.sel_pm_sign[0]),
@@ -1306,8 +1306,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile5_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf42rf5_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf52rf6_ifc->iname`.cfgOut),
 			.sel_pm_in_0_q(ifc.sel_pm_in[0]),
@@ -1352,8 +1352,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile6_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf52rf6_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf62rf7_ifc->iname`.cfgOut),
 			.ctl_dcdl_late_0_q(ifc.ctl_dcdl_late[0]),
@@ -1398,8 +1398,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile7_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf62rf7_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf72rf8_ifc->iname`.cfgOut),
 			.ctl_dcdl_early_0_q(ifc.ctl_dcdl_early[0]),
@@ -1444,8 +1444,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile8_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf72rf8_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf82rf9_ifc->iname`.cfgOut),
 			.ctl_dcdl_TDC_0_q(ifc.ctl_dcdl_TDC[0]),
@@ -1478,8 +1478,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile9_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf82rf9_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf92rf10_ifc->iname`.cfgOut),
 			.ext_Qperi_0_q(ifc.ext_Qperi[0]),
@@ -1500,8 +1500,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile10_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf92rf10_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf102rf11_ifc->iname`.cfgOut),
 			.sel_pm_sign_pi_0_q(ifc.sel_pm_sign_pi[0]),
@@ -1522,8 +1522,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile11_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf102rf11_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf112rf12_ifc->iname`.cfgOut),
 			.del_inc_0_q(ifc.del_inc[0]),
@@ -1544,8 +1544,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile12_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf112rf12_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf122rf13_ifc->iname`.cfgOut),
 			.ctl_dcdl_slice_0_q(ifc.ctl_dcdl_slice[0]),
@@ -1566,8 +1566,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile13_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf122rf13_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf132rf14_ifc->iname`.cfgOut),
 			.ctl_dcdl_sw_0_q(ifc.ctl_dcdl_sw[0]),
@@ -1586,8 +1586,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile14_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf132rf14_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf142rf15_ifc->iname`.cfgOut),
 			.ctl_v2tn_rep_0_q(ifc.ctl_v2tn_rep[0]),
@@ -1604,8 +1604,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile15_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf142rf15_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf152rf16_ifc->iname`.cfgOut),
 			.ctl_v2tp_rep_0_q(ifc.ctl_v2tp_rep[0]),
@@ -1622,8 +1622,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile16_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf152rf16_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf162rf17_ifc->iname`.cfgOut),
 			.init_rep_0_q(ifc.init_rep[0]),
@@ -1640,8 +1640,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile17_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf162rf17_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf172rf18_ifc->iname`.cfgOut),
 			.sel_pm_sign_rep_0_q(ifc.sel_pm_sign_rep[0]),
@@ -1658,8 +1658,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile18_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf172rf18_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf182rf19_ifc->iname`.cfgOut),
 			.sel_pm_in_rep_0_q(ifc.sel_pm_in_rep[0]),
@@ -1676,8 +1676,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile19_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf182rf19_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf192rf20_ifc->iname`.cfgOut),
 			.ctl_dcdl_late_rep_0_q(ifc.ctl_dcdl_late_rep[0]),
@@ -1694,8 +1694,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile20_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf192rf20_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf202rf21_ifc->iname`.cfgOut),
 			.ctl_dcdl_early_rep_0_q(ifc.ctl_dcdl_early_rep[0]),
@@ -1712,8 +1712,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile21_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf202rf21_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf212rf22_ifc->iname`.cfgOut),
 			.ctl_dcdl_TDC_rep_0_q(ifc.ctl_dcdl_TDC_rep[0]),
@@ -1732,8 +1732,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile22_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf212rf22_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf222rf23_ifc->iname`.cfgOut),
 			.ctl_biasgen_0_q(ifc.ctl_biasgen[0]),
@@ -1754,8 +1754,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile23_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf222rf23_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf232rf24_ifc->iname`.cfgOut),
 			.ext_pi_ctl_offset_0_q(ifc.ext_pi_ctl_offset[0]),
@@ -1788,8 +1788,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile24_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf232rf24_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf242rf25_ifc->iname`.cfgOut),
 			.ext_v2t_ctl_0_q(ifc.ext_v2t_ctl[0]),
@@ -1822,8 +1822,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile25_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf242rf25_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf252rf26_ifc->iname`.cfgOut),
 			.ext_mismatch_ctl_0_q(ifc.ext_mismatch_ctl[0]),
@@ -1856,8 +1856,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile26_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf252rf26_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf262rf27_ifc->iname`.cfgOut),
 			.ext_pfd_offset_0_q(ifc.ext_pfd_offset[0]),
@@ -1888,8 +1888,8 @@ module `mname`
 //;				]
 //;			);
 `$regfile27_on_tstclk->instantiate` (
-			.Clk(ifc.Clk),
-			.Reset(ifc.Reset),
+			.Clk(ifc.tck),
+			.Reset(test_logic_reset),
 			.cfgIn(`$tc_rf262rf27_ifc->iname`.cfgIn),
 			.cfgOut(`$tc_rf272jtag_ifc->iname`.cfgOut),
 			.ext_pfd_offset_rep_0_q(ifc.ext_pfd_offset_rep[0]),
