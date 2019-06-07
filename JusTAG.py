@@ -4,6 +4,8 @@ import os.path
 from math import *
 import mistune, pandas
 
+from justag.reg_pack import write_reg_pack
+
 # get the top-level folder location
 JUSTAG_HOME = os.path.dirname(os.path.realpath(os.path.expanduser(__file__)))
 
@@ -222,25 +224,8 @@ for domain in curr_reg_file:
     jtag_properties['max_width'][domain] = default_or_sized['default'][domain]
     jtag_properties['max_addr'][domain]  = clog2(curr_reg_file[domain]*256 + 256)
 
-os.chdir(current_dir)
-with open('jtag_file_list.txt', 'w') as file:
-    for domain in ['tc', 'sc']:
-        print("Domain: {}\nPrimary Reg File:".format(domain), file=file)
-        for ii in range(jtag_properties['reg_files'][domain][0]['num_of_reg']):
-            print("register: {} at address: {} is writeable?: {}".format(
-                jtag_properties['reg_files'][domain][0]['registers'][ii]['Name'],
-                hex(ii*4 + 256),
-                'Yes' if jtag_properties['reg_files'][domain][0]['registers'][ii]['IEO'] == 'o' else 'No'
-                ), file=file)
-        print(file=file)
-        for ii in range(1, jtag_properties['num_of_reg_files'][domain]):
-            print("Reg File: {} (unrolled)\nStart Address: {}\nLast Address: {}\nCan Write?: {}".format(
-                jtag_properties['reg_files'][domain][ii]['registers'][0]['Name'],
-                jtag_properties['reg_files'][domain][ii]['address'],
-                hex((jtag_properties['reg_files'][domain][ii]['num_of_reg']-1)*4 + 256 + 256*ii),
-                'Yes' if jtag_properties['reg_files'][domain][ii]['registers'][0]['IEO'] == 'o' else 'No'
-                ), file=file)
-        print(file=file)
+# write register map to a SystemVerilog package
+write_reg_pack(current_dir, jtag_properties)
 
 os.chdir(JUSTAG_HOME)
 output_strings['reg_file_gen'] = domain_sel.copy()
