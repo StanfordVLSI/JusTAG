@@ -463,3 +463,4 @@ module `mname`
    //; } # end of "if ($tc_cfg_bus =~ m/on|yes/i)..."
 
 endmodule // `mname`
+`default_nettype wire
