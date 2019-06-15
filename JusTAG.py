@@ -197,7 +197,7 @@ for interface in jtag_properties['io_list']:
             jtag_properties['reg_files'][domain][reg_file_pos]               = {}
             jtag_properties['reg_files'][domain][reg_file_pos]['registers']  = {}
             jtag_properties['reg_files'][domain][reg_file_pos]['num_of_reg'] = num_of_reg
-            jtag_properties['reg_files'][domain][reg_file_pos]['address']    = hex(256 + 256*reg_file_pos)
+            jtag_properties['reg_files'][domain][reg_file_pos]['address']    = hex(512 + 256*reg_file_pos)
             registers = {}
             for ii in range(num_of_reg):
                 registers[ii] = {
@@ -222,7 +222,7 @@ default_or_sized = {
 
 for domain in curr_reg_file:
     jtag_properties['max_width'][domain] = default_or_sized['default'][domain]
-    jtag_properties['max_addr'][domain]  = clog2(curr_reg_file[domain]*256 + 256)
+    jtag_properties['max_addr'][domain]  = clog2(curr_reg_file[domain]*256 + 512)
 
 # write register map to a SystemVerilog package
 write_reg_pack(current_dir, jtag_properties)
@@ -259,7 +259,6 @@ for domain in ['sc', 'tc']:
     clock = clock_sel[domain]
     jtag_regfile_gen_str = '{}_CFG_BUS => \'yes\', {}_CFG_IFC_REF => ${}_jtag2rf0_ifc'.format(domain.upper(), domain.upper(), domain)
     output_strings['jtag_regfile_gen'] += '//;\t\t\t{}{}'.format(jtag_regfile_gen_str, domain_end_token_sel[domain])
-
     for ii in range(jtag_properties['num_of_reg_files'][domain]):
         output_strings['reg_file_gen'][domain] += 	(
                                                         "//{} Domain: Register Bank {}:\n"
@@ -273,11 +272,11 @@ for domain in ['sc', 'tc']:
         										    	ii, clock, ii, clock,
         										    	domain,
         										    	domain,
-        										    	hex((ii+1)*256)
+        										    	hex(256) if ii==0 else hex((ii+2)*256)
         										    )
       	
         num_of_reg = jtag_properties['reg_files'][domain][ii]['num_of_reg']
-        assert(num_of_reg <= 64 if ii==0 else 64), 'Register Overflow for Bank[{}] on {}_CLK'.format(ii, domain.upper())
+        assert(num_of_reg <= 128 if ii==0 else 64), 'Register Overflow for Bank[{}] on {}_CLK'.format(ii, domain.upper())
         
         registers  = jtag_properties['reg_files'][domain][ii]['registers']
 
