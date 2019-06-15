@@ -135,7 +135,10 @@
 //; my $base_addr_trunc = $base_addr / 2**($num_req_addr_bits+$num_not_used_lsbs);
 //; my $base_addr_hex = sprintf("%d\'h%x", $base_addr_width, $base_addr_trunc);
 //;
-
+// `$base_addr_range`
+// `$base_addr_width`
+// `$base_addr_trunc`
+// `$base_addr_hex`
 // =============================================================================
 //                  LIST OF REGISTERS IN THIS MODULE:
 // =============================================================================

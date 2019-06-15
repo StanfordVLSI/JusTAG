@@ -32,7 +32,7 @@ def write_reg_pack(dir_name, jtag_properties, pack_name='jtag_reg_pack'):
 
             for ii in range(jtag_properties['reg_files'][domain][0]['num_of_reg']):
                 name = jtag_properties['reg_files'][domain][0]['registers'][ii]['Name']
-                address = ii*4 + 256
+                address = ii*4 + 4096
 
                 if jtag_properties['reg_files'][domain][0]['registers'][ii]['IEO'] == 'o':
                     writeable = True
@@ -52,7 +52,7 @@ def write_reg_pack(dir_name, jtag_properties, pack_name='jtag_reg_pack'):
                 else:
                     writeable = False
 
-                addresses = [jj*4 + 512 + 256*ii for jj in range(num_of_reg)]
+                addresses = [jj*4 + 4096 + 256*ii for jj in range(num_of_reg)]
 
                 f.write(arrparam(base_name, addresses, f'Writeable: {writeable}'))
 

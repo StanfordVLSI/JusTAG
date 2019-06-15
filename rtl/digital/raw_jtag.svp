@@ -97,6 +97,10 @@
 //;			{name => 'en_pfd_inp_meas', bitwidth => 1, array=>1,  direction => 'out',  bsr => 'yes', signed =>0, orientation => 'top'},
 //;			{name => 'en_pfd_inn_meas', bitwidth => 1, array=>1,  direction => 'out',  bsr => 'yes', signed =>0, orientation => 'top'},
 //;			{name => 'sel_del_out', bitwidth => 1, array=>1,  direction => 'out',  bsr => 'yes', signed =>0, orientation => 'top'},
+//;			{name => 'disable_ibuf_async', bitwidth => 1, array=>1,  direction => 'out',  bsr => 'yes', signed =>0, orientation => 'top'},
+//;			{name => 'disable_ibuf_aux', bitwidth => 1, array=>1,  direction => 'out',  bsr => 'yes', signed =>0, orientation => 'top'},
+//;			{name => 'disable_ibuf_test0', bitwidth => 1, array=>1,  direction => 'out',  bsr => 'yes', signed =>0, orientation => 'top'},
+//;			{name => 'disable_ibuf_test1', bitwidth => 1, array=>1,  direction => 'out',  bsr => 'yes', signed =>0, orientation => 'top'},
 //;			{name => 'en_inbuf', bitwidth => 1, array=>1,  direction => 'out',  bsr => 'yes', signed =>0, orientation => 'top'},
 //;			{name => 'sel_inbuf_in', bitwidth => 1, array=>1,  direction => 'out',  bsr => 'yes', signed =>0, orientation => 'top'},
 //;			{name => 'bypass_inbuf_div', bitwidth => 1, array=>1,  direction => 'out',  bsr => 'yes', signed =>0, orientation => 'top'},
@@ -211,10 +215,10 @@
 //;  
 //; # Now, let's decide upon the parameters of the two configuration buses:
 //; my $sc_cfg_bus_width = $self->define_param(SYSCLK_CFG_BUS_WIDTH => 32);
-//; my $sc_cfg_addr_width =  $self->define_param(SYSCLK_CFG_ADDR_WIDTH => 13);
+//; my $sc_cfg_addr_width =  $self->define_param(SYSCLK_CFG_ADDR_WIDTH => 14);
 
 //; my $tc_cfg_bus_width = $self->define_param(TESTCLK_CFG_BUS_WIDTH => 32);
-//; my $tc_cfg_addr_width =  $self->define_param(TESTCLK_CFG_ADDR_WIDTH => 13);
+//; my $tc_cfg_addr_width =  $self->define_param(TESTCLK_CFG_ADDR_WIDTH => 14);
 
 
 module `mname`
@@ -394,7 +398,7 @@ module `mname`
 //;my $regfile0_on_sysclk = generate('reg_file', 'regfile0_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x100,
+//;			BaseAddr => 0x1000,
 //;			RegList =>[
 //;					{Name  =>'del_out_pi', Width => 1, IEO   =>'i'},
 //;					{Name  =>'cal_out_pi', Width => 4, IEO   =>'i'},
@@ -418,7 +422,7 @@ module `mname`
 //;my $regfile1_on_sysclk = generate('reg_file', 'regfile1_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x300,
+//;			BaseAddr => 0x1200,
 //;			RegList =>[
 //;					{Name  =>'pm_out_0', Width => 20, IEO   =>'i'},
 //;					{Name  =>'pm_out_1', Width => 20, IEO   =>'i'},
@@ -464,7 +468,7 @@ module `mname`
 //;my $regfile2_on_sysclk = generate('reg_file', 'regfile2_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x400,
+//;			BaseAddr => 0x1300,
 //;			RegList =>[
 //;					{Name  =>'pm_out_pi_0', Width => 20, IEO   =>'i'},
 //;					{Name  =>'pm_out_pi_1', Width => 20, IEO   =>'i'},
@@ -486,7 +490,7 @@ module `mname`
 //;my $regfile3_on_sysclk = generate('reg_file', 'regfile3_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x500,
+//;			BaseAddr => 0x1400,
 //;			RegList =>[
 //;					{Name  =>'Qperi_0', Width => 5, IEO   =>'i'},
 //;					{Name  =>'Qperi_1', Width => 5, IEO   =>'i'},
@@ -508,7 +512,7 @@ module `mname`
 //;my $regfile4_on_sysclk = generate('reg_file', 'regfile4_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x600,
+//;			BaseAddr => 0x1500,
 //;			RegList =>[
 //;					{Name  =>'max_sel_mux_0', Width => 5, IEO   =>'i'},
 //;					{Name  =>'max_sel_mux_1', Width => 5, IEO   =>'i'},
@@ -530,7 +534,7 @@ module `mname`
 //;my $regfile5_on_sysclk = generate('reg_file', 'regfile5_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x700,
+//;			BaseAddr => 0x1600,
 //;			RegList =>[
 //;					{Name  =>'pm_out_rep_0', Width => 20, IEO   =>'i'},
 //;					{Name  =>'pm_out_rep_1', Width => 20, IEO   =>'i'}
@@ -548,7 +552,7 @@ module `mname`
 //;my $regfile6_on_sysclk = generate('reg_file', 'regfile6_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x800,
+//;			BaseAddr => 0x1700,
 //;			RegList =>[
 //;					{Name  =>'adcout_0', Width => 8, IEO   =>'i'},
 //;					{Name  =>'adcout_1', Width => 8, IEO   =>'i'},
@@ -594,7 +598,7 @@ module `mname`
 //;my $regfile7_on_sysclk = generate('reg_file', 'regfile7_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x900,
+//;			BaseAddr => 0x1800,
 //;			RegList =>[
 //;					{Name  =>'adcout_avg_0', Width => 8, IEO   =>'i'},
 //;					{Name  =>'adcout_avg_1', Width => 8, IEO   =>'i'},
@@ -640,7 +644,7 @@ module `mname`
 //;my $regfile8_on_sysclk = generate('reg_file', 'regfile8_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0xa00,
+//;			BaseAddr => 0x1900,
 //;			RegList =>[
 //;					{Name  =>'adcout_sum_0', Width => 24, IEO   =>'i'},
 //;					{Name  =>'adcout_sum_1', Width => 24, IEO   =>'i'},
@@ -686,7 +690,7 @@ module `mname`
 //;my $regfile9_on_sysclk = generate('reg_file', 'regfile9_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0xb00,
+//;			BaseAddr => 0x1a00,
 //;			RegList =>[
 //;					{Name  =>'adcout_hist_center_0', Width => 16, IEO   =>'i'},
 //;					{Name  =>'adcout_hist_center_1', Width => 16, IEO   =>'i'},
@@ -732,7 +736,7 @@ module `mname`
 //;my $regfile10_on_sysclk = generate('reg_file', 'regfile10_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0xc00,
+//;			BaseAddr => 0x1b00,
 //;			RegList =>[
 //;					{Name  =>'adcout_hist_side_0', Width => 16, IEO   =>'i'},
 //;					{Name  =>'adcout_hist_side_1', Width => 16, IEO   =>'i'},
@@ -778,7 +782,7 @@ module `mname`
 //;my $regfile11_on_sysclk = generate('reg_file', 'regfile11_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0xd00,
+//;			BaseAddr => 0x1c00,
 //;			RegList =>[
 //;					{Name  =>'pfd_offset_0', Width => 8, IEO   =>'i'},
 //;					{Name  =>'pfd_offset_1', Width => 8, IEO   =>'i'},
@@ -824,7 +828,7 @@ module `mname`
 //;my $regfile12_on_sysclk = generate('reg_file', 'regfile12_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0xe00,
+//;			BaseAddr => 0x1d00,
 //;			RegList =>[
 //;					{Name  =>'adcout_rep_0', Width => 8, IEO   =>'i'},
 //;					{Name  =>'adcout_rep_1', Width => 8, IEO   =>'i'}
@@ -842,7 +846,7 @@ module `mname`
 //;my $regfile13_on_sysclk = generate('reg_file', 'regfile13_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0xf00,
+//;			BaseAddr => 0x1e00,
 //;			RegList =>[
 //;					{Name  =>'adcout_avg_rep_0', Width => 8, IEO   =>'i'},
 //;					{Name  =>'adcout_avg_rep_1', Width => 8, IEO   =>'i'}
@@ -860,7 +864,7 @@ module `mname`
 //;my $regfile14_on_sysclk = generate('reg_file', 'regfile14_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x1000,
+//;			BaseAddr => 0x1f00,
 //;			RegList =>[
 //;					{Name  =>'adcout_sum_rep_0', Width => 24, IEO   =>'i'},
 //;					{Name  =>'adcout_sum_rep_1', Width => 24, IEO   =>'i'}
@@ -878,7 +882,7 @@ module `mname`
 //;my $regfile15_on_sysclk = generate('reg_file', 'regfile15_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x1100,
+//;			BaseAddr => 0x2000,
 //;			RegList =>[
 //;					{Name  =>'adcout_hist_center_rep_0', Width => 16, IEO   =>'i'},
 //;					{Name  =>'adcout_hist_center_rep_1', Width => 16, IEO   =>'i'}
@@ -896,7 +900,7 @@ module `mname`
 //;my $regfile16_on_sysclk = generate('reg_file', 'regfile16_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x1200,
+//;			BaseAddr => 0x2100,
 //;			RegList =>[
 //;					{Name  =>'adcout_hist_side_rep_0', Width => 16, IEO   =>'i'},
 //;					{Name  =>'adcout_hist_side_rep_1', Width => 16, IEO   =>'i'}
@@ -914,7 +918,7 @@ module `mname`
 //;my $regfile17_on_sysclk = generate('reg_file', 'regfile17_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x1300,
+//;			BaseAddr => 0x2200,
 //;			RegList =>[
 //;					{Name  =>'pfd_offset_rep_0', Width => 8, IEO   =>'i'},
 //;					{Name  =>'pfd_offset_rep_1', Width => 8, IEO   =>'i'}
@@ -932,7 +936,7 @@ module `mname`
 //;my $regfile18_on_sysclk = generate('reg_file', 'regfile18_on_sysclk',
 //;			CfgBusPtr => $sc_jtag2rf0_ifc,
 //;			CfgOpcodes => $sc_cfg_ops,
-//;			BaseAddr => 0x1400,
+//;			BaseAddr => 0x2300,
 //;			RegList =>[
 //;					{Name  =>'out_data_0', Width => 8, IEO   =>'i'},
 //;					{Name  =>'out_data_1', Width => 8, IEO   =>'i'},
@@ -988,7 +992,7 @@ module `mname`
 //;my $regfile0_on_tstclk = generate('reg_file', 'regfile0_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0x100,
+//;			BaseAddr => 0x1000,
 //;			RegList =>[
 //;					{Name  =>'en_v2t', Width => 1, IEO   =>'o',Default => 0},
 //;					{Name  =>'en_slice', Width => 16, IEO   =>'o',Default => 65535},
@@ -1018,6 +1022,10 @@ module `mname`
 //;					{Name  =>'en_pfd_inp_meas', Width => 1, IEO   =>'o',Default => 0},
 //;					{Name  =>'en_pfd_inn_meas', Width => 1, IEO   =>'o',Default => 0},
 //;					{Name  =>'sel_del_out', Width => 1, IEO   =>'o',Default => 0},
+//;					{Name  =>'disable_ibuf_async', Width => 1, IEO   =>'o',Default => 1},
+//;					{Name  =>'disable_ibuf_aux', Width => 1, IEO   =>'o',Default => 1},
+//;					{Name  =>'disable_ibuf_test0', Width => 1, IEO   =>'o',Default => 1},
+//;					{Name  =>'disable_ibuf_test1', Width => 1, IEO   =>'o',Default => 1},
 //;					{Name  =>'en_inbuf', Width => 1, IEO   =>'o',Default => 0},
 //;					{Name  =>'sel_inbuf_in', Width => 1, IEO   =>'o',Default => 0},
 //;					{Name  =>'bypass_inbuf_div', Width => 1, IEO   =>'o',Default => 1},
@@ -1094,6 +1102,10 @@ module `mname`
 			.en_pfd_inp_meas_q(ifc.en_pfd_inp_meas),
 			.en_pfd_inn_meas_q(ifc.en_pfd_inn_meas),
 			.sel_del_out_q(ifc.sel_del_out),
+			.disable_ibuf_async_q(ifc.disable_ibuf_async),
+			.disable_ibuf_aux_q(ifc.disable_ibuf_aux),
+			.disable_ibuf_test0_q(ifc.disable_ibuf_test0),
+			.disable_ibuf_test1_q(ifc.disable_ibuf_test1),
 			.en_inbuf_q(ifc.en_inbuf),
 			.sel_inbuf_in_q(ifc.sel_inbuf_in),
 			.bypass_inbuf_div_q(ifc.bypass_inbuf_div),
@@ -1140,7 +1152,7 @@ module `mname`
 //;my $regfile1_on_tstclk = generate('reg_file', 'regfile1_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0x300,
+//;			BaseAddr => 0x1200,
 //;			RegList =>[
 //;					{Name  =>'ctl_v2tn_0', Width => 5, IEO   =>'o',Default => 7},
 //;					{Name  =>'ctl_v2tn_1', Width => 5, IEO   =>'o',Default => 7},
@@ -1186,7 +1198,7 @@ module `mname`
 //;my $regfile2_on_tstclk = generate('reg_file', 'regfile2_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0x400,
+//;			BaseAddr => 0x1300,
 //;			RegList =>[
 //;					{Name  =>'ctl_v2tp_0', Width => 5, IEO   =>'o',Default => 7},
 //;					{Name  =>'ctl_v2tp_1', Width => 5, IEO   =>'o',Default => 7},
@@ -1232,7 +1244,7 @@ module `mname`
 //;my $regfile3_on_tstclk = generate('reg_file', 'regfile3_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0x500,
+//;			BaseAddr => 0x1400,
 //;			RegList =>[
 //;					{Name  =>'init_0', Width => 2, IEO   =>'o',Default => 0},
 //;					{Name  =>'init_1', Width => 2, IEO   =>'o',Default => 0},
@@ -1278,7 +1290,7 @@ module `mname`
 //;my $regfile4_on_tstclk = generate('reg_file', 'regfile4_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0x600,
+//;			BaseAddr => 0x1500,
 //;			RegList =>[
 //;					{Name  =>'sel_pm_sign_0', Width => 2, IEO   =>'o',Default => 0},
 //;					{Name  =>'sel_pm_sign_1', Width => 2, IEO   =>'o',Default => 0},
@@ -1324,7 +1336,7 @@ module `mname`
 //;my $regfile5_on_tstclk = generate('reg_file', 'regfile5_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0x700,
+//;			BaseAddr => 0x1600,
 //;			RegList =>[
 //;					{Name  =>'sel_pm_in_0', Width => 2, IEO   =>'o',Default => 0},
 //;					{Name  =>'sel_pm_in_1', Width => 2, IEO   =>'o',Default => 0},
@@ -1370,7 +1382,7 @@ module `mname`
 //;my $regfile6_on_tstclk = generate('reg_file', 'regfile6_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0x800,
+//;			BaseAddr => 0x1700,
 //;			RegList =>[
 //;					{Name  =>'ctl_dcdl_late_0', Width => 2, IEO   =>'o',Default => 0},
 //;					{Name  =>'ctl_dcdl_late_1', Width => 2, IEO   =>'o',Default => 0},
@@ -1416,7 +1428,7 @@ module `mname`
 //;my $regfile7_on_tstclk = generate('reg_file', 'regfile7_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0x900,
+//;			BaseAddr => 0x1800,
 //;			RegList =>[
 //;					{Name  =>'ctl_dcdl_early_0', Width => 2, IEO   =>'o',Default => 0},
 //;					{Name  =>'ctl_dcdl_early_1', Width => 2, IEO   =>'o',Default => 0},
@@ -1462,7 +1474,7 @@ module `mname`
 //;my $regfile8_on_tstclk = generate('reg_file', 'regfile8_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0xa00,
+//;			BaseAddr => 0x1900,
 //;			RegList =>[
 //;					{Name  =>'ctl_dcdl_TDC_0', Width => 5, IEO   =>'o',Default => 0},
 //;					{Name  =>'ctl_dcdl_TDC_1', Width => 5, IEO   =>'o',Default => 0},
@@ -1508,7 +1520,7 @@ module `mname`
 //;my $regfile9_on_tstclk = generate('reg_file', 'regfile9_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0xb00,
+//;			BaseAddr => 0x1a00,
 //;			RegList =>[
 //;					{Name  =>'ext_Qperi_0', Width => 5, IEO   =>'o',Default => 17},
 //;					{Name  =>'ext_Qperi_1', Width => 5, IEO   =>'o',Default => 17},
@@ -1530,7 +1542,7 @@ module `mname`
 //;my $regfile10_on_tstclk = generate('reg_file', 'regfile10_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0xc00,
+//;			BaseAddr => 0x1b00,
 //;			RegList =>[
 //;					{Name  =>'sel_pm_sign_pi_0', Width => 2, IEO   =>'o',Default => 0},
 //;					{Name  =>'sel_pm_sign_pi_1', Width => 2, IEO   =>'o',Default => 0},
@@ -1552,7 +1564,7 @@ module `mname`
 //;my $regfile11_on_tstclk = generate('reg_file', 'regfile11_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0xd00,
+//;			BaseAddr => 0x1c00,
 //;			RegList =>[
 //;					{Name  =>'del_inc_0', Width => 32, IEO   =>'o',Default => 0},
 //;					{Name  =>'del_inc_1', Width => 32, IEO   =>'o',Default => 0},
@@ -1574,7 +1586,7 @@ module `mname`
 //;my $regfile12_on_tstclk = generate('reg_file', 'regfile12_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0xe00,
+//;			BaseAddr => 0x1d00,
 //;			RegList =>[
 //;					{Name  =>'ctl_dcdl_slice_0', Width => 2, IEO   =>'o',Default => 0},
 //;					{Name  =>'ctl_dcdl_slice_1', Width => 2, IEO   =>'o',Default => 0},
@@ -1596,7 +1608,7 @@ module `mname`
 //;my $regfile13_on_tstclk = generate('reg_file', 'regfile13_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0xf00,
+//;			BaseAddr => 0x1e00,
 //;			RegList =>[
 //;					{Name  =>'ctl_dcdl_sw_0', Width => 2, IEO   =>'o',Default => 0},
 //;					{Name  =>'ctl_dcdl_sw_1', Width => 2, IEO   =>'o',Default => 0},
@@ -1618,7 +1630,7 @@ module `mname`
 //;my $regfile14_on_tstclk = generate('reg_file', 'regfile14_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0x1000,
+//;			BaseAddr => 0x1f00,
 //;			RegList =>[
 //;					{Name  =>'ctl_v2tn_rep_0', Width => 5, IEO   =>'o',Default => 16},
 //;					{Name  =>'ctl_v2tn_rep_1', Width => 5, IEO   =>'o',Default => 16}
@@ -1636,7 +1648,7 @@ module `mname`
 //;my $regfile15_on_tstclk = generate('reg_file', 'regfile15_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0x1100,
+//;			BaseAddr => 0x2000,
 //;			RegList =>[
 //;					{Name  =>'ctl_v2tp_rep_0', Width => 5, IEO   =>'o',Default => 16},
 //;					{Name  =>'ctl_v2tp_rep_1', Width => 5, IEO   =>'o',Default => 16}
@@ -1654,7 +1666,7 @@ module `mname`
 //;my $regfile16_on_tstclk = generate('reg_file', 'regfile16_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0x1200,
+//;			BaseAddr => 0x2100,
 //;			RegList =>[
 //;					{Name  =>'init_rep_0', Width => 2, IEO   =>'o',Default => 0},
 //;					{Name  =>'init_rep_1', Width => 2, IEO   =>'o',Default => 0}
@@ -1672,7 +1684,7 @@ module `mname`
 //;my $regfile17_on_tstclk = generate('reg_file', 'regfile17_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0x1300,
+//;			BaseAddr => 0x2200,
 //;			RegList =>[
 //;					{Name  =>'sel_pm_sign_rep_0', Width => 2, IEO   =>'o',Default => 0},
 //;					{Name  =>'sel_pm_sign_rep_1', Width => 2, IEO   =>'o',Default => 0}
@@ -1690,7 +1702,7 @@ module `mname`
 //;my $regfile18_on_tstclk = generate('reg_file', 'regfile18_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0x1400,
+//;			BaseAddr => 0x2300,
 //;			RegList =>[
 //;					{Name  =>'sel_pm_in_rep_0', Width => 2, IEO   =>'o',Default => 0},
 //;					{Name  =>'sel_pm_in_rep_1', Width => 2, IEO   =>'o',Default => 0}
@@ -1708,7 +1720,7 @@ module `mname`
 //;my $regfile19_on_tstclk = generate('reg_file', 'regfile19_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0x1500,
+//;			BaseAddr => 0x2400,
 //;			RegList =>[
 //;					{Name  =>'ctl_dcdl_late_rep_0', Width => 2, IEO   =>'o',Default => 0},
 //;					{Name  =>'ctl_dcdl_late_rep_1', Width => 2, IEO   =>'o',Default => 0}
@@ -1726,7 +1738,7 @@ module `mname`
 //;my $regfile20_on_tstclk = generate('reg_file', 'regfile20_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0x1600,
+//;			BaseAddr => 0x2500,
 //;			RegList =>[
 //;					{Name  =>'ctl_dcdl_early_rep_0', Width => 2, IEO   =>'o',Default => 0},
 //;					{Name  =>'ctl_dcdl_early_rep_1', Width => 2, IEO   =>'o',Default => 0}
@@ -1744,7 +1756,7 @@ module `mname`
 //;my $regfile21_on_tstclk = generate('reg_file', 'regfile21_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0x1700,
+//;			BaseAddr => 0x2600,
 //;			RegList =>[
 //;					{Name  =>'ctl_dcdl_TDC_rep_0', Width => 5, IEO   =>'o',Default => 0},
 //;					{Name  =>'ctl_dcdl_TDC_rep_1', Width => 5, IEO   =>'o',Default => 0}
@@ -1762,7 +1774,7 @@ module `mname`
 //;my $regfile22_on_tstclk = generate('reg_file', 'regfile22_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0x1800,
+//;			BaseAddr => 0x2700,
 //;			RegList =>[
 //;					{Name  =>'ctl_biasgen_0', Width => 4, IEO   =>'o',Default => 7},
 //;					{Name  =>'ctl_biasgen_1', Width => 4, IEO   =>'o',Default => 7},
@@ -1784,7 +1796,7 @@ module `mname`
 //;my $regfile23_on_tstclk = generate('reg_file', 'regfile23_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0x1900,
+//;			BaseAddr => 0x2800,
 //;			RegList =>[
 //;					{Name  =>'ext_pi_ctl_offset_0', Width => 9, IEO   =>'o',Default => 0},
 //;					{Name  =>'ext_pi_ctl_offset_1', Width => 9, IEO   =>'o',Default => 110},
@@ -1806,7 +1818,7 @@ module `mname`
 //;my $regfile24_on_tstclk = generate('reg_file', 'regfile24_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0x1a00,
+//;			BaseAddr => 0x2900,
 //;			RegList =>[
 //;					{Name  =>'ext_pfd_offset_0', Width => 8, IEO   =>'o',Default => 37},
 //;					{Name  =>'ext_pfd_offset_1', Width => 8, IEO   =>'o',Default => 37},
@@ -1852,7 +1864,7 @@ module `mname`
 //;my $regfile25_on_tstclk = generate('reg_file', 'regfile25_on_tstclk',
 //;			CfgBusPtr => $tc_jtag2rf0_ifc,
 //;			CfgOpcodes => $tc_cfg_ops,
-//;			BaseAddr => 0x1b00,
+//;			BaseAddr => 0x2a00,
 //;			RegList =>[
 //;					{Name  =>'ext_pfd_offset_rep_0', Width => 8, IEO   =>'o',Default => 27},
 //;					{Name  =>'ext_pfd_offset_rep_1', Width => 8, IEO   =>'o',Default => 27}

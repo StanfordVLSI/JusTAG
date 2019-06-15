@@ -128,8 +128,8 @@ domain_sel = {
 
 jtag_properties =   { 
                         'reg_files' :   { 
-                                           'tc' : {0 : {'address' : hex(256), 'num_of_reg' : 0, 'registers' : {}}},
-                                           'sc' : {0 : {'address' : hex(256), 'num_of_reg' : 0, 'registers' : {}}}
+                                           'tc' : {0 : {'address' : hex(4096), 'num_of_reg' : 0, 'registers' : {}}},
+                                           'sc' : {0 : {'address' : hex(4096), 'num_of_reg' : 0, 'registers' : {}}}
                                         },
                         'max_width' :   {
                                            'tc' : 0, 
@@ -179,7 +179,7 @@ for interface in jtag_properties['io_list']:
         domain = curr_io_list['domain']
         if curr_io_list['array'] == 1:
             bank_0_pos = jtag_properties['reg_files'][domain][0]['num_of_reg']
-            jtag_properties['reg_files'][domain][0]['address'] = hex(256) 
+            jtag_properties['reg_files'][domain][0]['address'] = hex(4096) 
             jtag_properties['reg_files'][domain][0]['registers'][bank_0_pos] = {
                     "Name"  : "{}".format(name),
                     "pos"   : '',                    
@@ -197,7 +197,7 @@ for interface in jtag_properties['io_list']:
             jtag_properties['reg_files'][domain][reg_file_pos]               = {}
             jtag_properties['reg_files'][domain][reg_file_pos]['registers']  = {}
             jtag_properties['reg_files'][domain][reg_file_pos]['num_of_reg'] = num_of_reg
-            jtag_properties['reg_files'][domain][reg_file_pos]['address']    = hex(512 + 256*reg_file_pos)
+            jtag_properties['reg_files'][domain][reg_file_pos]['address']    = hex(4096 + 256*reg_file_pos)
             registers = {}
             for ii in range(num_of_reg):
                 registers[ii] = {
@@ -222,7 +222,7 @@ default_or_sized = {
 
 for domain in curr_reg_file:
     jtag_properties['max_width'][domain] = default_or_sized['default'][domain]
-    jtag_properties['max_addr'][domain]  = clog2(curr_reg_file[domain]*256 + 512)
+    jtag_properties['max_addr'][domain]  = clog2(curr_reg_file[domain]*256 + 4096)
 
 # write register map to a SystemVerilog package
 write_reg_pack(current_dir, jtag_properties)
@@ -272,7 +272,7 @@ for domain in ['sc', 'tc']:
         										    	ii, clock, ii, clock,
         										    	domain,
         										    	domain,
-        										    	hex(256) if ii==0 else hex((ii+2)*256)
+        										    	hex(4096) if ii==0 else hex((ii+1)*256 + 4096)
         										    )
       	
         num_of_reg = jtag_properties['reg_files'][domain][ii]['num_of_reg']
