@@ -2,8 +2,9 @@ import os.path
 import json
 
 class Register:
-    def __init__(self, name, addresses, writeable):
+    def __init__(self, name, width, addresses, writeable):
         self.name = name
+        self.width = width
         self.addresses = addresses
         self.writeable = writeable
 
@@ -13,17 +14,19 @@ class Register:
     def to_dict(self):
         return {
             'name': self.name,
+            'width': self.width,
             'addresses': self.addresses,
             'writeable': self.writeable
         }
 
     def __str__(self):
-        return f'{self.name} @ {str(self.addresses)}'
+        return f'{self.name} @ {str(self.addresses)}: width {self.width}'
 
     @staticmethod
     def from_dict(d):
         return Register(
             name=d['name'],
+            width=d['width'],
             addresses=d['addresses'],
             writeable=d['writeable']
         )
@@ -48,6 +51,7 @@ def to_reg_list(jtag_properties):
     for domain in ['tc', 'sc']:
         for ii in range(jtag_properties['reg_files'][domain][0]['num_of_reg']):
             name = jtag_properties['reg_files'][domain][0]['registers'][ii]['Name']
+            width = jtag_properties['reg_files'][domain][0]['registers'][ii]['Width']
             address = ii*4 + 4096
 
             if jtag_properties['reg_files'][domain][0]['registers'][ii]['IEO'] == 'o':
@@ -55,10 +59,11 @@ def to_reg_list(jtag_properties):
             else:
                 writeable = False
 
-            reg_list.append(Register(name=name, addresses=address, writeable=writeable))
+            reg_list.append(Register(name=name, width=width, addresses=address, writeable=writeable))
 
         for ii in range(1, jtag_properties['num_of_reg_files'][domain]):
             base_name = jtag_properties['reg_files'][domain][ii]['registers'][0]['Name']
+            width = jtag_properties['reg_files'][domain][ii]['registers'][0]['Width']
             num_of_reg = jtag_properties['reg_files'][domain][ii]['num_of_reg']
 
             if jtag_properties['reg_files'][domain][ii]['registers'][0]['IEO'] == 'o':
@@ -68,6 +73,6 @@ def to_reg_list(jtag_properties):
 
             addresses = [jj*4 + 4096 + 256 + 256*ii for jj in range(num_of_reg)]
 
-            reg_list.append(Register(name=base_name, addresses=addresses, writeable=writeable))
+            reg_list.append(Register(name=base_name, width=width, addresses=addresses, writeable=writeable))
 
     return reg_list
