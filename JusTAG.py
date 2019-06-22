@@ -5,6 +5,7 @@ from math import *
 import mistune, pandas
 
 from justag.reg_pack import write_reg_pack
+from justag.json_file import write_json_file
 
 # get the top-level folder location
 JUSTAG_HOME = os.path.dirname(os.path.realpath(os.path.expanduser(__file__)))
@@ -226,6 +227,9 @@ for domain in curr_reg_file:
 
 # write register map to a SystemVerilog package
 write_reg_pack(current_dir, jtag_properties)
+
+# write register information to a JSON format
+write_json_file(current_dir, jtag_properties)
 
 os.chdir(JUSTAG_HOME)
 output_strings['reg_file_gen'] = domain_sel.copy()
