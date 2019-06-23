@@ -2,10 +2,11 @@ import os.path
 import json
 
 class Register:
-    def __init__(self, name, width, addresses, writeable):
+    def __init__(self, name, width, addresses, domain, writeable):
         self.name = name
         self.width = width
         self.addresses = addresses
+        self.domain = domain
         self.writeable = writeable
 
     def is_array_reg(self):
@@ -16,6 +17,7 @@ class Register:
             'name': self.name,
             'width': self.width,
             'addresses': self.addresses,
+            'domain': self.domain,
             'writeable': self.writeable
         }
 
@@ -28,6 +30,7 @@ class Register:
             name=d['name'],
             width=d['width'],
             addresses=d['addresses'],
+            domain=d['domain'],
             writeable=d['writeable']
         )
 
@@ -59,7 +62,7 @@ def to_reg_list(jtag_properties):
             else:
                 writeable = False
 
-            reg_list.append(Register(name=name, width=width, addresses=address, writeable=writeable))
+            reg_list.append(Register(name=name, width=width, addresses=address, domain=domain, writeable=writeable))
 
         for ii in range(1, jtag_properties['num_of_reg_files'][domain]):
             base_name = jtag_properties['reg_files'][domain][ii]['registers'][0]['Name']
@@ -73,6 +76,6 @@ def to_reg_list(jtag_properties):
 
             addresses = [jj*4 + 4096 + 256 + 256*ii for jj in range(num_of_reg)]
 
-            reg_list.append(Register(name=base_name, width=width, addresses=addresses, writeable=writeable))
+            reg_list.append(Register(name=base_name, width=width, addresses=addresses, domain=domain, writeable=writeable))
 
     return reg_list
