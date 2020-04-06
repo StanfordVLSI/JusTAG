@@ -22,6 +22,7 @@
 // in a genesis type parameterization.
 ////////////////////////////////////////////////////////////////////////////////
 
+package jtag_drv_pack;
 
 // To make life just a bit cleaner, we can define types for our transactions
 // These types could have been generated according to the RTL but I got lazy
@@ -99,7 +100,24 @@ class `mname`;
    /****************************/
    // task Reset, resets the jtag state machine and registers
    /****************************/
-   extern task Reset();
+   task Reset();
+      repeat (2) @(posedge this.ifc.Clk);
+      this.ifc.tck = 1'b0;
+      this.ifc.trst_n = 1'b1;
+      this.ifc.tms = 1'b1;
+
+      // wait a couple of jtag clocks
+      repeat (2) Next_tck();
+
+      // now un-reset
+      this.ifc.trst_n = 1'b1;
+      repeat (2) Next_tck();
+
+      // move to Run Test Idle
+      this.ifc.tms = 1'b0;
+      Next_tck();
+      reset_done = 1;
+   endtask
 
    /****************************/
    // read the dut ID code
@@ -112,7 +130,19 @@ class `mname`;
    /****************************************************************************
     ************* Very low level tasks to manipulate the jtag state machine 
     ***************************************************************************/
-    extern task Next_edge();
+    task Next_edge();
+      // To make life simpler, tck is actually synchrionized as 1/4 Clk with a
+      // phase shift of 1 Clk:
+      // Clk: _|-|_|-|_|-|_|-|_|-|_|-|_|-|_|-|_|-
+      // tck: _|-------|_______|-------|_______|-
+      // tdi: aaaa><bbbbbb><cccccc><ddddddd><eeeeee
+
+      @(posedge this.ifc.Clk);
+      this.ifc.tck = tck_edge;
+      tck_edge = 1-tck_edge;
+      @(posedge this.ifc.Clk);
+    endtask
+
     extern task Next_pos_edge();
     extern task Next_neg_edge();
     extern task Next_tck();
@@ -216,29 +246,6 @@ endclass: `mname`
       this.ifc.tck = 1'b0;
       this.ifc.trst_n = 1'b0;
    endtask // Zero
-      
-      
-   /****************************/
-   // task Reset, resets the jtag state machine and registers
-   /****************************/
-   task `mname`::Reset();
-      repeat (2) @(posedge this.ifc.Clk);
-      this.ifc.tck = 1'b0;
-      this.ifc.trst_n = 1'b1;
-      this.ifc.tms = 1'b1;
-
-      // wait a couple of jtag clocks
-      repeat (2) Next_tck();
-
-      // now un-reset
-      this.ifc.trst_n = 1'b1;
-      repeat (2) Next_tck();
-
-      // move to Run Test Idle
-      this.ifc.tms = 1'b0;
-      Next_tck();
-      reset_done = 1;
-   endtask // Reset
 
 /****************************/
 // read the dut ID code
@@ -258,19 +265,6 @@ endtask // `mname`::ReadID
    /****************************************************************************
     ************* Very low level tasks to manipulate the jtag state machine 
     ***************************************************************************/
-   task `mname`::Next_edge();
-      // To make life simpler, tck is actually synchrionized as 1/4 Clk with a
-      // phase shift of 1 Clk:
-      // Clk: _|-|_|-|_|-|_|-|_|-|_|-|_|-|_|-|_|-
-      // tck: _|-------|_______|-------|_______|-
-      // tdi: aaaa><bbbbbb><cccccc><ddddddd><eeeeee
-      
-      @(posedge this.ifc.Clk);
-      this.ifc.tck = tck_edge;
-      tck_edge = 1-tck_edge;
-      @(posedge this.ifc.Clk);
-   endtask // Reset
-
    task `mname`::Next_pos_edge();
       if (tck_edge == 1)
 	Next_tck();
@@ -458,5 +452,4 @@ endtask // `mname`::ReadID
       end
    endtask
    
-
-
+endpackage
