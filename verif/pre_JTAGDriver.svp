@@ -22,8 +22,6 @@
 // in a genesis type parameterization.
 ////////////////////////////////////////////////////////////////////////////////
 
-package jtag_drv_pack;
-
 // To make life just a bit cleaner, we can define types for our transactions
 // These types could have been generated according to the RTL but I got lazy
 // and just copied them from cfg_and_dbg.vp and from tap.vp
@@ -451,5 +449,3 @@ endtask // `mname`::ReadID
 	 $fdisplay(svf_file, format, length, inst_in);
       end
    endtask
-   
-endpackage
