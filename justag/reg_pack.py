@@ -16,7 +16,7 @@ def intparam(name, value, comment=None, tab_count=1, tab_str='    '):
     return retval
 
 def arrparam(name, values, comment=None, tab_count=1, tab_str='    '):
-    name = name + ' []'
+    name = name + f' [{len(values)}]'
     value = "'{" + ", ".join([str(value) for value in values]) + "}"
     
     return intparam(name, value, comment=comment, tab_count=tab_count, tab_str=tab_str)
