@@ -1,0 +1,3 @@
+include justag/rtl/digital/*.svp
+include justag/rtl/primitives/*.svp
+include justag/verif/*.svp
