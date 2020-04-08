@@ -42,8 +42,8 @@ def main():
     # get the top-level folder location
     JUSTAG_HOME = jtag_directory()
 
-    const_packs = {}
-    interfaces  = {} 
+    const_packs = set()
+    interfaces  = set()
     consts      = {} 
 
     list_of_files = sys.argv[1:]
@@ -56,8 +56,13 @@ def main():
     for dir_file_name in list_of_files:
         tokens    = dir_file_name.strip().split('/')
         directory = tokens[-2]
-        file_name = tokens[-1]  
-        sort_files[directory][dir_file_name] = []
+        file_name, *file_exts = tokens[-1].split('.')
+        if not len(file_exts) == 1:
+            continue
+        if file_exts[0] == 'md':
+            interfaces = interfaces | {dir_file_name}
+        elif file_exts[0] == 'sv':
+            const_packs = const_packs | {dir_file_name}
 
     current_dir = os.getcwd()
     os.chdir(JUSTAG_HOME) 
@@ -76,7 +81,6 @@ def main():
 
     for const in consts:
         exec(str(const) + ' = ' + str(consts[const]), globals())
-
 
     io_list = {}      
 
