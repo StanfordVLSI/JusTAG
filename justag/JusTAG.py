@@ -46,7 +46,9 @@ def main():
     interfaces  = set()
     consts      = {} 
 
-    list_of_files = sys.argv[1:]
+
+    ID_code       = sys.argv[1]
+    list_of_files = sys.argv[2:]
 
     sort_files = {
                     'reg'  : interfaces,
@@ -426,6 +428,10 @@ def main():
 
     insertion_strings['io_list_gen'           ] = output_strings['io_list']
     insertion_strings['jtag_regfile_gen'      ] = output_strings['jtag_regfile_gen']
+    
+    
+    output_strings['jtag_id'] = "//; my $IDCODE = 1;\n"
+    insertion_strings['jtag_id'               ] = output_strings['jtag_id']
 
     actions = {
                 'INSERT' : insertion_strings
@@ -436,6 +442,18 @@ def main():
             for line in fin:
                 tokens = line.strip().split()
                 if not tokens:
+                    print(file=fout)
+                    continue
+                if tokens[0] == '$$':
+                    print(actions[tokens[1]][tokens[2]], file=fout)
+                else:
+                    print(line, file=fout, end="")
+
+    with open('rtl/digtal/pre_tap.svp', 'r') as fin:
+        with open('rtl/digital/tap.svp', 'w') as fout:
+            for line in fin:
+                tokens = line.strip().split()
+                if not token:
                     print(file=fout)
                     continue
                 if tokens[0] == '$$':
@@ -454,6 +472,7 @@ def main():
                     print(actions[tokens[1]][tokens[2]], file=fout)
                 else:
                     print(line, file=fout, end="")
+
 
 if __name__ == "__main__":
     main()

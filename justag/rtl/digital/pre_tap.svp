@@ -37,7 +37,7 @@
 //; #					{name => 'CFG_ADDR', code => 0xA}
 //; #				     ]
 //; 
-//; my $IDCODE = 1;
+$$  INSERT idcode
 //; my ($IDCODE_num, $man_num, $part, $version);
 //; if (looks_like_number($IDCODE)){ 
 //;     $IDCODE_num = $IDCODE;
