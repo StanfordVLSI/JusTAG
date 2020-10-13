@@ -165,9 +165,10 @@ def main():
 
     num_io_list = 0
 
+    size_pack_reg = 2
     curr_reg_file = domain_sel.copy()
-    curr_reg_file['tc'] = 1
-    curr_reg_file['sc'] = 1
+    curr_reg_file['tc'] = 1 
+    curr_reg_file['sc'] = 1  
     output_strings['io_list'] = ""
 
     for interface in jtag_properties['io_list']:
@@ -212,7 +213,7 @@ def main():
                 jtag_properties['reg_files'][domain][reg_file_pos]               = {}
                 jtag_properties['reg_files'][domain][reg_file_pos]['registers']  = {}
                 jtag_properties['reg_files'][domain][reg_file_pos]['num_of_reg'] = num_of_reg
-                jtag_properties['reg_files'][domain][reg_file_pos]['address']    = hex(4096 + 256*reg_file_pos)
+                jtag_properties['reg_files'][domain][reg_file_pos]['address']    = hex(4096 + (size_pack_reg-1)*256+ 256*reg_file_pos)
                 registers = {}
                 for ii in range(num_of_reg):
                     registers[ii] = {
@@ -237,7 +238,7 @@ def main():
 
     for domain in curr_reg_file:
         jtag_properties['max_width'][domain] = default_or_sized['default'][domain]
-        jtag_properties['max_addr'][domain]  = clog2(1+curr_reg_file[domain]*256 + 4096)
+        jtag_properties['max_addr'][domain]  = clog2((size_pack_reg-1)*256+curr_reg_file[domain]*256 + 4096)
 
     # write register map to a SystemVerilog package
     write_reg_pack(current_dir, jtag_properties)
@@ -278,6 +279,7 @@ def main():
         jtag_regfile_gen_str = '{}_CFG_BUS => \'yes\', {}_CFG_IFC_REF => ${}_jtag2rf0_ifc'.format(domain.upper(), domain.upper(), domain)
         output_strings['jtag_regfile_gen'] += '//;\t\t\t{}{}'.format(jtag_regfile_gen_str, domain_end_token_sel[domain])
         for ii in range(jtag_properties['num_of_reg_files'][domain]):
+            addr_val = jtag_properties['reg_files'][domain][ii]['address']
             output_strings['reg_file_gen'][domain] += 	(
                                                             "//{} Domain: Register Bank {}:\n"
                                                          	"//;my $regfile{}_on_{} = generate(\'reg_file\', \'regfile{}_on_{}\',\n"
@@ -290,7 +292,7 @@ def main():
             										    	ii, clock, ii, clock,
             										    	domain,
             										    	domain,
-            										    	hex(4096) if ii==0 else hex((ii+1)*256 + 4096)
+            										    	addr_val #hex(4096) if ii==0 else hex((ii+1)*256 + 4096)
             										    )
           	
             num_of_reg = jtag_properties['reg_files'][domain][ii]['num_of_reg']
