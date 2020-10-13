@@ -237,7 +237,7 @@ def main():
 
     for domain in curr_reg_file:
         jtag_properties['max_width'][domain] = default_or_sized['default'][domain]
-        jtag_properties['max_addr'][domain]  = clog2(curr_reg_file[domain]*256 + 4096)
+        jtag_properties['max_addr'][domain]  = clog2(1+curr_reg_file[domain]*256 + 4096)
 
     # write register map to a SystemVerilog package
     write_reg_pack(current_dir, jtag_properties)
