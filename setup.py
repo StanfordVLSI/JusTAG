@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='justag',
-    version='0.0.3.0',
+    version='0.0.3.3',
     description='Generating JTAG debug hardware from Markdown files.',
     url='https://github.com/StanfordVLSI/JusTAG',
     author='Stanford University',

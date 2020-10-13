@@ -430,8 +430,8 @@ def main():
     insertion_strings['jtag_regfile_gen'      ] = output_strings['jtag_regfile_gen']
     
     
-    output_strings['jtag_id'] = "//; my $IDCODE = 1;\n"
-    insertion_strings['jtag_id'               ] = output_strings['jtag_id']
+    output_strings['idcode'] = '//; my $IDCODE = {};\n'.format(ID_code)
+    insertion_strings['idcode'               ] = output_strings['idcode']
 
     actions = {
                 'INSERT' : insertion_strings
@@ -449,11 +449,11 @@ def main():
                 else:
                     print(line, file=fout, end="")
 
-    with open('rtl/digtal/pre_tap.svp', 'r') as fin:
+    with open('rtl/digital/pre_tap.svp', 'r') as fin:
         with open('rtl/digital/tap.svp', 'w') as fout:
             for line in fin:
                 tokens = line.strip().split()
-                if not token:
+                if not tokens:
                     print(file=fout)
                     continue
                 if tokens[0] == '$$':
