@@ -69,12 +69,13 @@ def to_reg_list(jtag_properties):
             width = jtag_properties['reg_files'][domain][ii]['registers'][0]['Width']
             num_of_reg = jtag_properties['reg_files'][domain][ii]['num_of_reg']
 
+            base_addr_val = jtag_properties['reg_files'][domain][ii]['address']
             if jtag_properties['reg_files'][domain][ii]['registers'][0]['IEO'] == 'o':
                 writeable = True
             else:
                 writeable = False
 
-            addresses = [jj*4 + 4096 + 256 + 256*ii for jj in range(num_of_reg)]
+            addresses = [jj*4 + base_addr_val for jj in range(num_of_reg)]
 
             reg_list.append(Register(name=base_name, width=width, addresses=addresses, domain=domain, writeable=writeable))
 
