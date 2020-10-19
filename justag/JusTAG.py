@@ -296,7 +296,7 @@ def main():
             										    )
           	
             num_of_reg = jtag_properties['reg_files'][domain][ii]['num_of_reg']
-            assert(num_of_reg <= 128 if ii==0 else 64), 'Register Overflow for Bank[{}] on {}_CLK'.format(ii, domain.upper())
+            assert(num_of_reg <= (size_pack_reg*64 if ii==0 else 64), 'Register Overflow for Bank[{}] on {}_CLK'.format(ii, domain.upper())
             
             registers  = jtag_properties['reg_files'][domain][ii]['registers']
 
