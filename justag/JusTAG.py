@@ -3,7 +3,7 @@ import os
 import os.path
 from math import *
 import mistune, pandas
-
+from ordered_set import OrderedSet 
 from justag import write_reg_pack, write_json_file
 
 
@@ -42,8 +42,8 @@ def main():
     # get the top-level folder location
     JUSTAG_HOME = jtag_directory()
 
-    const_packs = set()
-    interfaces  = set()
+    const_packs = OrderedSet()
+    interfaces  = OrderedSet()
     consts      = {} 
 
 
@@ -296,7 +296,7 @@ def main():
             										    )
           	
             num_of_reg = jtag_properties['reg_files'][domain][ii]['num_of_reg']
-            assert(num_of_reg <= (size_pack_reg*64 if ii==0 else 64), 'Register Overflow for Bank[{}] on {}_CLK'.format(ii, domain.upper())
+            assert num_of_reg <= (size_pack_reg*64 if ii==0 else 64), 'Register Overflow for Bank[{}] on {}_CLK'.format(ii, domain.upper())
             
             registers  = jtag_properties['reg_files'][domain][ii]['registers']
 
